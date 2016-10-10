@@ -27,6 +27,9 @@
     'sequence': 150,
     'category': 'Anybox',
     'description': """
+
+    Nu este OK!
+
     """,
     'author': 'ANYBOX',
     'website': 'www.anybox.fr',

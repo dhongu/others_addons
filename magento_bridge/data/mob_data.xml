@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <!-- After installation of the module, open the related menu -->
+        
+        <record id="action_client_mob_menu" model="ir.actions.client">
+            <field name="name">Open Mob Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('magento_parent_menu')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_mob_menu"/>
+            <field name="state">open</field>
+        </record>
+
+        <record id="account.act_open" model="workflow.activity">
+            <field name="wkf_id" ref="account.wkf"/>
+            <field name="name">open</field>
+            <field name="action">action_date_assign()
+                action_move_create()
+                invoice_validate()
+                mage_invoice_trigger()</field>
+            <field name="kind">function</field>
+        </record>
+    </data>
+</openerp>

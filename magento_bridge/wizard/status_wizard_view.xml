@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+	<!-- ######################### Mapping Update model ################################### -->
+		
+	<record id="mapping_update_wizard_form" model="ir.ui.view">
+		<field name="name">mapping.update</field>
+		<field name="model">mapping.update</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Message" version="7.0">
+				<group colspan="4" string="Choose An Option">
+					<field name="need_sync" required="1"/>
+				</group>
+				<footer>
+					<button name="update_mapping_status" icon="gtk-ok" string="Done" type="object" />
+					<button string="Cancel" class="oe_highlight" special="cancel" icon="gtk-cancel"/>
+				</footer>
+			</form>
+		</field>
+	</record>	
+</data>	
+</openerp>

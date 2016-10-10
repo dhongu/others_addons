@@ -1,10 +1,11 @@
-from openerp import models, fields, api
-from openerp.addons.base.res.res_users import res_users
+from odoo import models, fields, api
+"""
+from odoo.addons.base.res.res_users import res_users
 
 
 res_users.SELF_WRITEABLE_FIELDS.append('notification_sticky')
 res_users.SELF_READABLE_FIELDS.append('notification_sticky')
-
+"""
 
 class ResUsers(models.Model):
     _inherit = 'res.users'

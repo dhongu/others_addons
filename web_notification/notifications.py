@@ -1,4 +1,4 @@
-from openerp import models, fields, api
+from odoo import models, fields, api
 
 
 class IrNotification(models.Model):
@@ -24,6 +24,7 @@ class IrNotification(models.Model):
         for user in res.user_ids:
             message = vals.copy()
             message['sticky'] = user.notification_sticky
-            bus.sendone('notify_res_user_%d' % user.id, message)
+            #bus.sendone('notify_res_user_%d' % user.id, message)
+            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), message.body)
 
         return res

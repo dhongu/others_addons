@@ -1,0 +1,841 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Magento configuration -->
+		<record id="magento_configure_form" model="ir.ui.view">
+		<field name="name">magento.configure.form</field>
+		<field name="model">magento.configure</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Magento Connection" >
+				<header>
+					<button name="test_connection" 
+						type='object' icon="gtk-network" class="oe_highlight" string='Test Connection'/>
+				</header>
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+							<button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
+								<field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
+							</button>
+						</div>
+						<div class="oe_horizontal_separator oe_clear ">
+							Magento API Settings
+						</div>
+						<group>
+							<label for="name"/>
+							<h3><field name="name" colspan="4" placeholder="Example: http://mymagento.com"/></h3>
+							<field name="credential"/>
+							<field name="correct_mapping"/>
+						</group>
+						<notebook>
+							<page string="API Credentials" attrs="{'invisible': [('credential','!=', True)]}">
+								<group>
+									<group>
+										<label for="user"/>
+										<h3><field name="user" placeholder="Example: apiuser"/></h3>
+									</group>
+									<group>
+										<label for="pwd"/>
+										<h3><field name="pwd" placeholder="Example: apipassword"/></h3>
+									</group>
+								</group>
+							</page>
+							<page string="Sales Settings" attrs="{'invisible': [('credential','!=', True)]}">
+								<div class="oe_horizontal_separator oe_clear">
+									Sales Orders Related Settings
+								</div>
+								<group>
+									<group>
+										<label for="notify"/>
+										<h4><field name="notify"/></h4>
+									</group>
+									<group>
+										<label for="state"/>
+										<h4><field name="state"/></h4>
+									</group>
+									<group>
+										<label for="inventory_sync"/>
+										<h4><field name="inventory_sync"/></h4>
+									</group>
+								</group>
+							</page>
+							<page string="Default Settings" attrs="{'invisible': [('credential','!=', True)]}">
+								<div class="oe_horizontal_separator oe_clear">
+									Default Settings
+								</div>
+								<group>
+									<group>
+										<field name="store_id" readonly="1"/>
+										<field name="website_id" widget="selection"/>
+									</group>
+								</group>
+								<group>
+									<group>
+										<label for="language"/>
+										<h4><field name="language" required="1" widget="selection"/></h4>
+									</group>
+									<group>
+										<label for="category"/>
+										<h4><field name="category" required="1" widget="selection"/></h4>
+									</group>
+									<group>
+										<label for="warehouse_id"/>
+										<h4><field name="warehouse_id" required="1" widget="selection"/></h4>
+										<field name="location_id" widget="selection" readonly='1	'/>
+									</group>
+								</group>
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}'/>
+                    </div>
+				</form>
+			</field>
+        </record>
+
+		<record id="magento_configure_tree" model="ir.ui.view">
+            <field name="name">magento.configure.tree</field>
+            <field name="model">magento.configure</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Magento Connection">
+					<field name="name"/>
+					<field name="user"/>
+					<field name="active"/>
+					<field name="create_date"/>
+				</tree>
+			</field>
+        </record>
+		
+		<record id="magento_configure_tree_action" model="ir.actions.act_window">
+            <field name="name">Magento Connection</field>
+            <field name="res_model">magento.configure</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+			<p class="oe_view_nocontent_create">
+                Click to define a new magento connection.
+            </p><p>
+               At first create a Web Services(Xml-rpc user/roles) on Magento.
+			   And then Define those credentials for magento connection.
+              </p>
+			</field>
+            <field name="view_id" ref="magento_configure_tree"/>
+        </record>
+		
+		<!-- Magento synchronization -->
+		<record id="magento_synchronization_form" model="ir.ui.view">
+            <field name="name">magento.synchronization.form</field>
+            <field name="model">magento.synchronization</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form create="false" save="false" string="Magento Synchronization" >
+					<header>
+						<separator colspan="5" string="Magento Synchronization"/>
+					</header>
+					<sheet>
+						<div>
+							<p>
+								<h3><label string="Click here to configure your Magento Api."/></h3>
+								<button type="object" name="open_configuration" string="Configure Magento Connection" icon="gtk-execute" class="oe_inline oe_link"/>
+								<label string="Before synchronization, Please Configure your Magento Connection."/>
+							</p>
+						</div><br/>
+						<group name="d" col="4">
+							<label for="id" string="Export Attributes and Values"/>
+							<div>
+								<button icon="gtk-go-forward" name="export_attributes_and_their_values" string="Export All Attributes and their Values" type="object" class="oe_highlight" help="Export / Update Attribute and their Values to Magento"/>
+								<label for="export_attributes_and_their_values"/>
+							</div><newline/>
+
+							<label for="id" string="Synchronize Categories"/>
+							<div>
+								<button icon="gtk-go-forward" class="oe_highlight" name="%(id_magento_action)d" string="Synchronize Categories" type="action" help="It'll Export/Update All Odoo Category at Magento."/>
+								<label for="export_categories"/>
+							</div><newline/>
+
+							<label for="id" string="Synchronize Products"/>
+							<div>
+								<button icon="gtk-go-forward" class="oe_highlight" name="%(id_magento_product_action)d" string="Synchronize Products" type="action" help="Export/Update products button will synch all unsynched products at magento"/> 
+							</div>
+							<newline/>
+							
+							<label for="id" string="Import Magento Regions"/>
+							<div> 
+								<button icon="gtk-go-back" class="oe_highlight" name="%(action_synchronize_now)d" string="Import Regions" type="action"/>
+							</div>
+						</group>
+						<div class="oe_inline">
+							<separator string="NOTE :"/>
+							<h4>
+								<p>
+									1. For best practice please first sync all Attribute Sets from Your Magento Site.
+								</p>
+								<p>
+									2. After that "Synchronize Attribute and their Values" and Assign Attribute Sets.
+								</p>
+								<p>
+									3. Before starting Product synchronization, it's highly recommended to do all "Attribute Synchronization".
+								</p>
+								<p>
+									4. If All Attributes Are Already Synced And Assigned then no need to do Attribute Sync operation.
+								</p>
+							</h4>
+						</div>
+					</sheet>
+				</form>
+			</field>			
+        </record>
+
+		<record id="magento_synchronization_action" model="ir.actions.act_window">
+            <field name="name">Magento Synchronization</field>
+            <field name="res_model">magento.synchronization</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="view_id" ref="magento_synchronization_form"/>
+        </record>
+
+        <!--~~======================== Template Mapping ======================~~~-->
+
+   		<record id="magento_product_template_form" model="ir.ui.view">
+            <field name="name">magento_product_template.form</field>
+            <field name="model">magento.product.template</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Template Mapping" edit="false">
+                	<group>
+						<field name="template_name" required="1" />
+						<field name="mage_product_id" readonly="1" />
+						<field name="erp_template_id" readonly="1"/>						
+						<field name="is_variants" readonly="1"/>
+					</group>
+				</form>
+			</field>
+			
+        </record>
+		
+		<record id="magento_product_template_tree" model="ir.ui.view">
+            <field name="name">magento_product_template.tree</field>
+            <field name="model">magento.product.template</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree create="false" string="Magento Product Templates"  colors="red:need_sync=='Yes'" >	
+					<field name="id"/>	
+					<field name="template_name"/>
+					<field name="erp_template_id"/>	
+					<field name="mage_product_id"/>					
+					<field name="base_price"/>
+					<field name="is_variants"/>
+					<field name="created_by" readonly="1"/>
+					<field name="create_date" readonly="1"/>
+					<field name="write_date" readonly="1"/>	
+					<field name="need_sync"/>
+				</tree>
+			</field>
+        </record>
+
+        <!-- Search View for Magento Product Template -->
+	    <record id="magento_product_template_search" model="ir.ui.view">
+	            <field name="name">magento_product_template.search</field>
+	            <field name="model">magento.product.template</field>
+	            <field name="arch" type="xml">
+	                <search string="MOB">	                    
+	                    <field name="template_name" filter_domain="[('template_name','ilike',self)]"/>
+	                    <field name="erp_template_id"/>
+	                    <field name="mage_product_id"/>
+	                    <filter name="variants" string="Configurable Products" icon="terp-project" domain="[('is_variants','=','True')]" />	                    
+	                    <group expand="0" string="Group By">
+	                        <filter string="Is Variants" context="{'group_by':'is_variants'}" />
+	                        <filter string="Need Sync"  context="{'group_by':'need_sync'}" />
+	                        <filter string="Created By" context="{'group_by':'created_by'}" />
+	                    </group>
+	                </search>
+	            </field>
+	    </record>
+
+		<record id="magento_product_template_action" model="ir.actions.act_window">
+            <field name="name">Magento Product Template</field>
+            <field name="res_model">magento.product.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="magento_product_template_tree"/>
+	        <field name="search_view_id" ref = "magento_product_template_search"/>
+	        <field name="context">{"search_default_variants":True}</field>
+        </record>
+
+
+        <!--~~====================== Product Mapping ======================~~~-->
+		
+		<record id="map_product_form" model="ir.ui.view">
+            <field name="name">magento.product.form</field>
+            <field name="model">magento.product</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Product Mapping" >
+                	<group>
+						<field name="pro_name" readonly="1"/>
+						<field name="oe_product_id" readonly="1"/>
+						<field name="mag_product_id" readonly="1"/>
+						<field name="need_sync" readonly="1"/>
+					</group>
+				</form>
+			</field>
+        </record>
+
+		<record id="map_product_tree" model="ir.ui.view">
+            <field name="name">magento.product.tree</field>
+            <field name="model">magento.product</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree create="false" string="Product Mapping" colors="red:need_sync=='Yes'">
+					<field name="id"/>
+					<field name="pro_name"/>
+					<field name="oe_product_id"/>
+					<field name="mag_product_id"/>					
+					<field name="created_by" readonly="1"/>
+					<field name="create_date" readonly="1"/>
+					<field name="write_date" readonly="1"/>
+					<field name="need_sync"/>
+				</tree>
+			</field>
+        </record>
+
+			<!-- Search View for Magento Product  -->
+		<record id="magento_product_search" model="ir.ui.view">
+			<field name="name">magento.product.search</field>
+			<field name="model">magento.product</field>
+			<field name="arch" type="xml">
+				<search string="MOB">
+					<field name="pro_name" filter_domain="[('pro_name','ilike',self)]"/>
+					<field name="oe_product_id"/>
+					<field name="mag_product_id"/>
+					<group expand="0" string="Group By">
+						<filter string="Need Sync"  context="{'group_by':'need_sync'}" />
+						<filter string="Created By" context="{'group_by':'created_by'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+		
+		<record id="magento_product_tree_action" model="ir.actions.act_window">
+            <field name="name">Magento product Mapping</field>
+            <field name="res_model">magento.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="map_product_tree"/>
+	        <field name="search_view_id" ref = "magento_product_search"/>            
+        </record>
+		
+		<!--~~=================== Category Mapping ======================~~~-->
+
+		<record id="map_category_form" model="ir.ui.view">
+			<field name="name">magento.category.form</field>
+			<field name="model">magento.category</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Category Mapping" >
+					<group>
+						<field name="cat_name" readonly="1"/>
+						<field name="oe_category_id" readonly="1"/>	
+						<field name="mag_category_id" readonly="1"/>
+						<field name="need_sync" readonly="1"/>
+					</group>
+				</form>
+			</field>
+		</record>
+		
+		<record id="map_category_tree" model="ir.ui.view">
+			<field name="name">magento.category.tree</field>
+			<field name="model">magento.category</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree create="false" string="Category Mapping" colors="red:need_sync=='Yes'">
+					<field name="id"/>
+					<field name="cat_name"/>
+					<field name="oe_category_id"/>
+					<field name="mag_category_id"/>
+					<field name="created_by" readonly="1"/>
+					<field name="create_date" readonly="1"/>
+					<field name="write_date" readonly="1"/>
+					<field name="need_sync"/>
+				</tree>
+			</field>
+        </record>
+
+        	<!-- Search View for Magento Category  -->
+		<record id="magento_category_search" model="ir.ui.view">
+			<field name="name">magento.category.search</field>
+			<field name="model">magento.category</field>
+			<field name="arch" type="xml">
+				<search string="MOB">
+					<field name="cat_name" filter_domain="[('cat_name','ilike',self)]"/>
+					<field name="oe_category_id"/>
+					<field name="mag_category_id"/>
+					<group expand="0" string="Group By">
+						<filter string="Need Sync"  context="{'group_by':'need_sync'}" />
+						<filter string="Created By" context="{'group_by':'created_by'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+		
+		<record id="magento_category_tree_action" model="ir.actions.act_window">
+            <field name="name">Magento Category Mapping</field>
+            <field name="res_model">magento.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="map_category_tree"/>
+	        <field name="search_view_id" ref = "magento_category_search"/>            
+        </record>
+
+
+       	<!--~~=================== Magento Attribute Set Mapping ======================~~~-->
+
+		<record id="magento_attribute_set_form" model="ir.ui.view">
+            <field name="name">magento.attribute.set.form</field>
+            <field name="model">magento.attribute.set</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Attribute Set Type" >
+                	<sheet>
+                		<group>
+							<field name="name" />
+							<field name="set_id" />
+						</group>
+						<notebook>
+							<page string="Magento Attributes">
+								<field name="attribute_ids" nolabel="1" colspan="2"/>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+        </record>
+		
+		<record id="magento_attribute_set_tree" model="ir.ui.view">
+			<field name="name">magento.attribute.set.tree</field>
+			<field name="model">magento.attribute.set</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+			    <tree create="false" string="Product Attribute">
+					<field name="name"/>
+					<field name="set_id"/>
+					<field name="created_by" readonly="1"/>
+					<field name="create_date" readonly="1"/>
+					<field name="write_date" readonly="1"/>	
+				</tree>
+			</field>
+        </record>
+
+        	<!-- Search View for Magento Attribute Set  -->
+		<record id="magento_attribute_set_search" model="ir.ui.view">
+			<field name="name">magento.attribute.set.search</field>
+			<field name="model">magento.attribute.set</field>
+			<field name="arch" type="xml">
+				<search string="MOB">
+					<field name="name" filter_domain="[('name','ilike',self)]"/>
+					<field name="set_id"/>
+					<group expand="0" string="Group By">
+						<filter string="Created By" context="{'group_by':'created_by'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="magento_attribute_set_action" model="ir.actions.act_window">
+            <field name="name">Magento Attribute Set</field>
+            <field name="res_model">magento.attribute.set</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="magento_attribute_set_tree"/>
+	        <field name="search_view_id" ref = "magento_attribute_set_search"/>            
+        </record>
+
+
+       	<!--~~=========== Magento Product Attribute Mapping ======================~~~-->
+
+		<record id="magento_product_attribute_form" model="ir.ui.view">
+            <field name="name">magento.product.attribute.form</field>
+            <field name="model">magento.product.attribute</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Dimension Type" >
+                	<group>
+						<field name="name" readonly="1"/>
+						<newline/>
+						<field name="mage_id" readonly="1"/>
+						<field name="erp_id" readonly="1"/>
+					</group>
+				</form>
+			</field>
+        </record>
+		
+		<record id="magento_product_attribute_tree" model="ir.ui.view">
+            <field name="name">magento.product.attribute.tree</field>
+            <field name="model">magento.product.attribute</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree create="false" string="Product Attribute">
+					<field name="id"/>	
+					<field name="name"/>
+					<field name="erp_id"/>
+					<field name="mage_id"/>
+					<field name="created_by" readonly="1"/>
+					<field name="create_date" readonly="1"/>
+					<field name="write_date" readonly="1"/>	
+				</tree>
+			</field>			
+        </record>
+
+            <!-- Search View for Magento Product Attribute  -->
+		<record id="magento_product_attribute_search" model="ir.ui.view">
+			<field name="name">magento.product.attribute.search</field>
+			<field name="model">magento.product.attribute</field>
+			<field name="arch" type="xml">
+				<search string="MOB">
+					<field name="name" filter_domain="[('name','ilike',self)]"/>
+					<field name="erp_id"/>
+					<field name="mage_id"/>
+					<group expand="0" string="Group By">						
+						<filter string="Created By" context="{'group_by':'created_by'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="magento_product_attribute_action" model="ir.actions.act_window">
+            <field name="name">Magento Product Attribute</field>
+            <field name="res_model">magento.product.attribute</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="magento_product_attribute_tree"/>
+	        <field name="search_view_id" ref = "magento_product_attribute_search"/>            
+        </record>
+		
+		<!--~~=========== Magento Product Attribute Value Mapping ======================~~~-->
+
+		<record id="magento_product_attribute_value_form" model="ir.ui.view">
+            <field name="name">magento_product_attribute.value.form</field>
+            <field name="model">magento.product.attribute.value</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+		        <form string="Attribute Value" >
+		        	<group>
+						<field name="name" readonly="1"/>
+						<newline/>
+						<field name="mage_id" readonly="1"/>
+						<field name="erp_id" readonly="1"/>
+					</group>
+				</form>
+			</field>
+        </record>
+		
+		<record id="magento_product_attribute_value_tree" model="ir.ui.view">
+            <field name="name">magento.product.attribute.value.tree</field>
+            <field name="model">magento.product.attribute.value</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree create="false" string="Attribute Value">	
+					<field name="id"/>
+					<field name="name"/>
+					<field name="erp_id"/>
+					<field name="mage_id"/>
+					<field name="created_by" readonly="1"/>
+					<field name="create_date" readonly="1"/>
+					<field name="write_date" readonly="1"/>
+				</tree>
+			</field>
+        </record>
+
+		<!-- Search View for Magento Product Attribute Value  -->
+		<record id="magento_product_attribute_value_search" model="ir.ui.view">
+			<field name="name">magento.product.attribute.value.search</field>
+			<field name="model">magento.product.attribute.value</field>
+			<field name="arch" type="xml">
+				<search string="MOB">
+					<field name="name" filter_domain="[('name','ilike',self)]"/>
+					<field name="erp_id"/>
+					<field name="mage_id"/>
+					<group expand="0" string="Group By">
+						<filter string="Created By" context="{'group_by':'created_by'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+        
+		<record id="magento_product_attribute_value_action" model="ir.actions.act_window">
+            <field name="name">Magento Attribute Value</field>
+            <field name="res_model">magento.product.attribute.value</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="magento_product_attribute_value_tree"/>
+	        <field name="search_view_id" ref = "magento_product_attribute_value_search"/>            
+        </record>
+
+		
+		<!--========== Magento Customer Mapping ===============-->
+
+		<record id="map_customer_form" model="ir.ui.view">
+            <field name="name">magento.customers.form</field>
+            <field name="model">magento.customers</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Customers Mapping" >
+                	<group>
+						<field name="cus_name" readonly="1"/>
+						<field name="oe_customer_id" readonly="1"/>
+						<field name="mag_customer_id" readonly="1"/>
+						<field name="mag_address_id" readonly="1"/>
+					</group>
+				</form>
+			</field>
+			
+        </record>
+
+		<record id="map_customer_tree" model="ir.ui.view">
+            <field name="name">magento.customers.tree</field>
+            <field name="model">magento.customers</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree create="false" string="Magento Customer Mapping">
+					<field name="id"/>
+					<field name="cus_name"/>
+					<field name="oe_customer_id"/>
+					<field name="mag_customer_id"/>
+					<field name="mag_address_id"/>
+					<field name="created_by" readonly="1"/>
+					<field name="create_date" readonly="1"/>
+					<field name="write_date" readonly="1"/>					
+				</tree>
+			</field>
+        </record>
+		
+		<!-- Search View for Magento Customers  -->
+		<record id="magento_customers_search" model="ir.ui.view">
+			<field name="name">magento.customers.search</field>
+			<field name="model">magento.customers</field>
+			<field name="arch" type="xml">
+				<search string="MOB">
+					<field name="cus_name" filter_domain="[('cus_name','ilike',self)]"/>
+					<field name="oe_customer_id"/>
+					<field name="mag_customer_id"/>
+					<group expand="0" string="Group By">						
+						<filter string="Created By" context="{'group_by':'created_by'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="magento_customer_tree_action" model="ir.actions.act_window">
+            <field name="name">Magento Customer Mapping</field>
+            <field name="res_model">magento.customers</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>          
+            <field name="view_id" ref="map_customer_tree"/>
+	        <field name="search_view_id" ref = "magento_customers_search"/>            
+        </record>
+		
+		<!--======================= Magento Region Mapping ==================-->
+		
+		<record id="map_region_form" model="ir.ui.view">
+            <field name="name">magento.region.form</field>
+            <field name="model">magento.region</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Region Mapping">
+	                <group>
+						<field name="mag_region_id" readonly="1"/>
+						<field name="country_code" readonly="1"/>
+						<field name="region_code" readonly="1"/>
+						<field name="name" readonly="1"/>
+					</group>
+				</form>
+			</field>
+        </record>
+		
+		<record id="map_region_tree" model="ir.ui.view">
+            <field name="name">magento.region.tree</field>
+            <field name="model">magento.region</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree create="false" string="Magento Region Mapping">
+					<field name="mag_region_id"/>
+					<field name="country_code"/>
+					<field name="region_code"/>
+					<field name="name"/>
+					<field name="created_by" readonly="1"/>
+					<field name="create_date" readonly="1"/>
+					<field name="write_date" readonly="1"/>
+				</tree>
+			</field>
+        </record>
+
+		<!-- Search View for Magento Region  -->
+		<record id="magento_region_search" model="ir.ui.view">
+			<field name="name">magento.region.search</field>
+			<field name="model">magento.region</field>
+			<field name="arch" type="xml">
+				<search string="MOB">
+					<field name="name" filter_domain="['|',('name','ilike',self),('country_code','ilike',self)]"/>
+					<field name="country_code"/>
+					<field name="mag_region_id"/>
+					<field name="region_code"/>
+					<group expand="0" string="Group By">
+						<filter string="Created By" context="{'group_by':'created_by'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+		
+		<record id="magento_region_tree_action" model="ir.actions.act_window">
+            <field name="name">Magento Region Mapping</field>
+            <field name="res_model">magento.region</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="map_region_tree"/>
+	        <field name="search_view_id" ref = "magento_region_search"/>            
+        </record>
+		
+		<!-- Magento and erp Sale Order  Mapping-->
+		
+		<record id="map_order_form" model="ir.ui.view">
+            <field name="name">wk.order.mapping.form</field>
+            <field name="model">wk.order.mapping</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Order Mapping">
+	                <group>
+						<field name="name" readonly="1"/>
+						<field name="ecommerce_channel" readonly="1"/>						
+					</group>
+					<group>
+						<field name="erp_order_id" readonly="1"/>
+						<field name="ecommerce_order_id" readonly="1"/>
+					</group>
+				</form>
+			</field>
+        </record>
+		
+		<record id="map_order_tree" model="ir.ui.view">
+            <field name="name">wk.order.mapping.tree</field>
+            <field name="model">wk.order.mapping</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree create="false" string="Magento Order Mapping">
+					<field name="id"/>
+					<field name="name"/>
+					<field name="ecommerce_channel"/>
+					<field name="erp_order_id"/>
+					<field name="ecommerce_order_id"/>
+					<field name="order_status"/>
+					<field name="is_invoiced"/>
+					<field name="is_shipped"/>					
+				</tree>
+			</field>
+        </record>
+
+		<!-- Search View for Magento Orders  -->
+		<record id="magento_orders_search" model="ir.ui.view">
+			<field name="name">wk.order.mapping.search</field>
+			<field name="model">wk.order.mapping</field>
+			<field name="arch" type="xml">
+				<search string="MOB">
+					<field name="name" filter_domain="['|',('name','ilike',self),('ecommerce_channel','ilike',self)]"/>					
+				</search>
+			</field>
+		</record>
+		
+		<record id="magento_order_tree_action" model="ir.actions.act_window">
+            <field name="name">Magento Orders Mapping</field>
+            <field name="res_model">wk.order.mapping</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="map_order_tree"/>
+	        <field name="search_view_id" ref = "magento_orders_search"/>
+	        <field name="domain">[("ecommerce_channel", '=', 'magento')]</field>
+        </record>
+		
+		
+		<!--====================	Synchronization History ==================-->
+	
+		<record id="magento_sync_history_form" model="ir.ui.view">
+            <field name="name">magento.sync.history</field>
+            <field name="model">magento.sync.history</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Magento synchronization History">
+                	<group>
+						<field name="status" readonly="1"/>
+						<field name="action_on" readonly="1"/>
+						<field name="action" readonly="1"/>
+						<field name="create_date" readonly="1"/>
+						<field name="error_message" readonly="1"/>	
+					</group>
+				</form>
+			</field>
+        </record>
+
+		<record id="magento_sync_history_tree" model="ir.ui.view">
+            <field name="name">magento.sync.history</field>
+            <field name="model">magento.sync.history</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Magento synchronization History" colors="red:status=='no';green:status=='yes'">
+					<field name="status" />
+					<field name="action_on" />
+					<field name="action" />
+					<field name="create_date" />
+					<field name="error_message" />
+				</tree>
+			</field>
+        </record>
+		
+		<record id="filter_magento_openerp_mapping" model="ir.ui.view">
+            <field name="name">magento.sync.history</field>
+            <field name="model">magento.sync.history</field>
+            <field name="arch" type="xml">
+                <search string="Product">
+                   <filter name="group_object_name" string="Object" icon="terp-product" context="{'group_by':'action_on'}"/>
+				</search>
+			</field>
+		</record>
+		
+		<record id="magento_sync_history_action" model="ir.actions.act_window">
+            <field name="name">Magento Synchronization History</field>
+            <field name="res_model">magento.sync.history</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+			<field name="context">{'search_default_group_object_name':1}</field>
+			<field name="search_view_id" ref="filter_magento_openerp_mapping"/>
+            <field name="view_id" ref="magento_sync_history_tree"/>
+        </record>
+
+		<!--     Bridge Menu      -->
+		<menuitem id="magento_parent_menu" name="Magento Odoo Bridge" />		
+					
+			<menuitem  id="menu_magento_id2" name="Synchronization" parent="magento_parent_menu" sequence="1"/>
+				<menuitem  id="mag_id0" name="Magento Synchronization" parent="menu_magento_id2" action="magento_synchronization_action"/>
+				
+				
+			<menuitem  id="menu_mapping_id" name="Mapping" parent="magento_parent_menu" sequence="2"/>
+				<menuitem  id="mapping_id1" name="Region Mapping" parent="menu_mapping_id" action="magento_region_tree_action" sequence="1"/>
+				<menuitem  id="mapping_id2" name="Category Mapping" parent="menu_mapping_id" action="magento_category_tree_action" sequence="2"/>
+				<menuitem  id="mapping_id3" name="Product Attribute" parent="menu_mapping_id" action="magento_product_attribute_action" sequence="3"/>
+				<menuitem  id="mapping_id4" name="Product Attribute Value" parent="menu_mapping_id" action="magento_product_attribute_value_action" sequence="4"/>
+				<menuitem  id="mapping_id5" name="Product Template Mapping" parent="menu_mapping_id" action="magento_product_template_action" sequence="5"/>
+				<menuitem  id="mapping_id6" name="Product Mapping" parent="menu_mapping_id" action="magento_product_tree_action" sequence="6"/>
+				<menuitem  id="mapping_id7" name="Customer Mapping" parent="menu_mapping_id" action="magento_customer_tree_action" sequence="7"/>
+				<menuitem id="mapping_id8" name="Sales Order Mapping" parent="menu_mapping_id" action="magento_order_tree_action" sequence="8"/>
+			
+			<menuitem  id="id_synchro" name="History" parent="magento_parent_menu" sequence="3" />
+				<menuitem  id="sync_history" name="Synchronisation History" parent="id_synchro" action="magento_sync_history_action"/>
+				
+			<menuitem  id="menu_magento_id1" name="Configuration" parent="magento_parent_menu" sequence="4"/>
+				<menuitem  id="mag_id1" name="Magento Connection" parent="menu_magento_id1" action="magento_configure_tree_action" sequence="2"/>
+				<menuitem  id="product_id3" name="Magento Attribute Sets" parent="menu_magento_id1" action="magento_attribute_set_action"/>
+		</data>
+</openerp>
+		

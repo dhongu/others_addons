@@ -1,0 +1,1630 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* magento_bridge
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-04-23 06:05+0000\n"
+"PO-Revision-Date: 2015-04-24 17:31+0530\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"X-Generator: Poedit 1.5.4\n"
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid ""
+"1. For best practice please first sync all Attribute Sets from Your Magento "
+"Site."
+msgstr ""
+"1. para  mejor practica porfavor primero sync todos Conjuntos de atributos "
+"desde sus sitio de magento"
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid ""
+"2. After that \"Synchronize Attribute and their Values\" and Assign "
+"Attribute Sets."
+msgstr ""
+"2. despues que  \" sincronizar Atributo y sus valores\" y  asignar Atributo "
+"conjuntos."
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid ""
+"3. Before starting Product synchronization, it's highly recommended to do "
+"all \"Attribute Synchronization\"."
+msgstr ""
+"3. antes  empizando producto   sincronización,  Es muy recomendable a todos  "
+"\"Attributo    sincronización \"."
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid ""
+"4. If All Attributes Are Already Synced And Assigned then no need to do "
+"Attribute Sync operation."
+msgstr ""
+"4. si todos attributos estan sincronizado  y asignado entonces no necesita  "
+"a hacer attributo sync  operación"
+
+#. module: magento_bridge
+#: model:ir.actions.act_window,help:magento_bridge.magento_configure_tree_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new magento connection.\n"
+"            </p><p>\n"
+"               At first create a Web Services(Xml-rpc user/roles) on "
+"Magento.\n"
+"And then Define those credentials for magento connection.\n"
+"              </p>\n"
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"               hacer clic definir un nueva conexión del Magento            </"
+"p><p>\n"
+"         primero crear un sitio webservicio (Xml-rpc user/roles) en "
+"magento.\n"
+"y entonces definir  aquellos credenciales para magento conexión \n"
+"              </p>\n"
+
+#. module: magento_bridge
+#: view:magento.configure:magento_bridge.magento_configure_form
+msgid "API Credentials"
+msgstr "API  credenciales "
+
+#. module: magento_bridge
+#: field:magento.configure,pwd:0
+msgid "API Password"
+msgstr "API  contraseña"
+
+#. module: magento_bridge
+#: field:magento.configure,user:0
+msgid "API User Name"
+msgstr "API  Nombre de usuario"
+
+#. module: magento_bridge
+#: field:magento.sync.history,action:0
+msgid "Action"
+msgstr " acción"
+
+#. module: magento_bridge
+#: field:magento.sync.history,action_on:0
+msgid "Action On"
+msgstr " acción  en"
+
+#. module: magento_bridge
+#: field:magento.configure,active:0 field:magento.store.view,is_active:0
+msgid "Active"
+msgstr "Activo"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/bridge_backbone.py:366
+#, python-format
+msgid "Active ID is not set in Context"
+msgstr "Activo ID no establecer en contexto"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/mob_synchronization.py:376
+#, python-format
+msgid "All category(s) has been already exported on magento."
+msgstr "todos categoría(s) ha sido  ya exportado en magento"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/wizard/message_wizard.py:107
+#, python-format
+msgid "All regions of %s are already imported to OpenERP."
+msgstr "All  región   de  %s son importado a  OpenERP."
+
+#. module: magento_bridge
+#: view:mob.config.settings:magento_bridge.view_oob_config_settings
+msgid "Apply"
+msgstr "aplicar"
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "Assign Attribute Sets"
+msgstr "Assignar Atributo conjunto"
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "Assign Attribute Sets To All Existing Template"
+msgstr "Assignar Atributo  conjunto a todos  To All Plantilla existente"
+
+#. module: magento_bridge
+#: view:magento.attribute.set:magento_bridge.magento_attribute_set_form
+msgid "Attribute Set Type"
+msgstr "tipo de Atributo conjunto "
+
+#. module: magento_bridge
+#: view:magento.product.attribute.value:magento_bridge.magento_product_attribute_value_form
+#: view:magento.product.attribute.value:magento_bridge.magento_product_attribute_value_tree
+#: field:magento.product.attribute.value,name:0
+msgid "Attribute Value"
+msgstr "Atributo valor"
+
+#. module: magento_bridge
+#: field:magento.configure,auto_invoice:0
+msgid "Auto Invoice"
+msgstr " automático  factura"
+
+#. module: magento_bridge
+#: field:magento.configure,auto_ship:0
+msgid "Auto Shipment"
+msgstr " automático  envío"
+
+#. module: magento_bridge
+#: field:magento.product.template,base_price:0
+msgid "Base Price(excl. impact)"
+msgstr " precio base(excl. impacto)"
+
+#. module: magento_bridge
+#: field:magento.configure,name:0
+msgid "Base URL"
+msgstr "base URL"
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "Before synchronization, Please Configure your Magento Connection."
+msgstr "antes sincronización ,  porfavor  configurar  sus  Magento  conexión"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/wizard/status_wizard.py:32
+#, python-format
+msgid "Bulk Action"
+msgstr "masivo acción"
+
+#. module: magento_bridge
+#: selection:product.template,prod_type:0
+msgid "Bundle Product"
+msgstr " masivo Producto"
+
+#. module: magento_bridge
+#: view:mapping.update:magento_bridge.mapping_update_wizard_form
+#: view:mob.config.settings:magento_bridge.view_oob_config_settings
+#: view:region.wizard:magento_bridge.region_wizard_form
+msgid "Cancel"
+msgstr " cancelar"
+
+#. module: magento_bridge
+#: model:ir.model,name:magento_bridge.model_delivery_carrier
+msgid "Carrier"
+msgstr " Transportista"
+
+#. module: magento_bridge
+#: selection:magento.sync.history,action_on:0
+msgid "Category"
+msgstr " categoría"
+
+#. module: magento_bridge
+#: model:ir.ui.menu,name:magento_bridge.mapping_id2
+#: view:magento.category:magento_bridge.map_category_form
+#: view:magento.category:magento_bridge.map_category_tree
+msgid "Category Mapping"
+msgstr " categoría cartografía"
+
+#. module: magento_bridge
+#: field:magento.category,cat_name:0
+msgid "Category Name"
+msgstr " nombre de  categoría "
+
+#. module: magento_bridge
+#: model:ir.actions.server,name:magento_bridge.action_change_category_update_status
+#: model:ir.actions.server,name:magento_bridge.action_change_product_update_status
+#: model:ir.actions.server,name:magento_bridge.action_change_template_update_status
+msgid "Change Update Status"
+msgstr "Cambiar  Estado de actualización"
+
+#. module: magento_bridge
+#: field:sale.order,channel:0
+msgid "Channel name"
+msgstr "nombre de la  vía"
+
+#. module: magento_bridge
+#: view:mapping.update:magento_bridge.mapping_update_wizard_form
+msgid "Choose An Option"
+msgstr "Elija una opción"
+
+#. module: magento_bridge
+#: view:region.wizard:magento_bridge.region_wizard_form
+msgid "Choose any country"
+msgstr " Elija un país"
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "Click here to configure your Magento Api."
+msgstr "hacer clic aqui a configurar sus magento Api"
+
+#. module: magento_bridge
+#: view:message.wizard:magento_bridge.message_wizard_form1
+msgid "Close"
+msgstr "cerrar"
+
+#. module: magento_bridge
+#: field:magento.store.view,code:0 field:magento.website,code:0
+msgid "Code"
+msgstr " código"
+
+#. module: magento_bridge
+#: selection:product.template,prod_type:0
+msgid "Configurable Product"
+msgstr " Producto configurable"
+
+#. module: magento_bridge
+#: model:ir.ui.menu,name:magento_bridge.menu_magento_id1
+msgid "Configuration"
+msgstr " Configuración"
+
+#. module: magento_bridge
+#: model:ir.actions.act_window,name:magento_bridge.action_mob_config
+#: view:mob.config.settings:magento_bridge.view_oob_config_settings
+msgid "Configure Magento Bridge"
+msgstr "Configurar Magento Bridge"
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "Configure Magento Connection"
+msgstr "Configurar Magento Connection"
+
+#. module: magento_bridge
+#: field:magento.configure,status:0
+msgid "Connection Status"
+msgstr " Estado de la conexión"
+
+#. module: magento_bridge
+#: field:region.wizard,country_ids:0
+msgid "Country"
+msgstr " país"
+
+#. module: magento_bridge
+#: field:magento.region,country_code:0
+msgid "Country Code"
+msgstr " Código de país"
+
+#. module: magento_bridge
+#: field:mob.config.settings,mob_coupon_product:0
+msgid "Coupon Product"
+msgstr " Producto cupón"
+
+#. module: magento_bridge
+#: field:magento.attribute.set,created_by:0
+#: field:magento.category,created_by:0 field:magento.customers,created_by:0
+#: field:magento.product,created_by:0
+#: field:magento.product.attribute,created_by:0
+#: field:magento.product.attribute.value,created_by:0
+#: field:magento.product.template,created_by:0
+#: field:magento.region,created_by:0
+msgid "Created By"
+msgstr " Creado por"
+
+#. module: magento_bridge
+#: field:magento.attribute.set,create_date:0
+#: field:magento.category,create_date:0 field:magento.configure,create_date:0
+#: field:magento.customers,create_date:0 field:magento.orders,create_date:0
+#: field:magento.product,create_date:0
+#: field:magento.product.attribute,create_date:0
+#: field:magento.product.attribute.value,create_date:0
+#: field:magento.product.template,create_date:0
+#: field:magento.region,create_date:0 field:magento.store,create_date:0
+#: field:magento.store.view,create_date:0
+#: field:magento.sync.history,create_date:0
+#: field:magento.website,create_date:0
+msgid "Created Date"
+msgstr " Creado  fecha"
+
+#. module: magento_bridge
+#: field:bridge.backbone,create_uid:0 field:magento.attribute.set,create_uid:0
+#: field:magento.category,create_uid:0 field:magento.configure,create_uid:0
+#: field:magento.customers,create_uid:0 field:magento.orders,create_uid:0
+#: field:magento.product,create_uid:0
+#: field:magento.product.attribute,create_uid:0
+#: field:magento.product.attribute.value,create_uid:0
+#: field:magento.product.template,create_uid:0
+#: field:magento.region,create_uid:0 field:magento.store,create_uid:0
+#: field:magento.store.view,create_uid:0
+#: field:magento.sync.history,create_uid:0
+#: field:magento.synchronization,create_uid:0
+#: field:magento.website,create_uid:0 field:mapping.update,create_uid:0
+#: field:message.wizard,create_uid:0 field:mob.config.settings,create_uid:0
+#: field:region.wizard,create_uid:0
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: magento_bridge
+#: field:bridge.backbone,create_date:0
+#: field:magento.synchronization,create_date:0
+#: field:mapping.update,create_date:0 field:message.wizard,create_date:0
+#: field:mob.config.settings,create_date:0 field:region.wizard,create_date:0
+msgid "Created on"
+msgstr " Creado  en"
+
+#. module: magento_bridge
+#: selection:magento.sync.history,action_on:0
+msgid "Customer"
+msgstr " cliente"
+
+#. module: magento_bridge
+#: model:ir.ui.menu,name:magento_bridge.mapping_id7
+msgid "Customer Mapping"
+msgstr " cliente cartografía"
+
+#. module: magento_bridge
+#: field:magento.customers,cus_name:0
+msgid "Customer Name"
+msgstr "nombre de cliente "
+
+#. module: magento_bridge
+#: view:magento.customers:magento_bridge.map_customer_form
+msgid "Customers Mapping"
+msgstr " cliente cartografía"
+
+#. module: magento_bridge
+#: help:magento.configure,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "fecha de ultimo mensaje  enviado  en registro"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/mob_synchronization.py:200
+#, python-format
+msgid ""
+"Default Attribute set not Found, please sync all Attribute set from "
+"Magento!!!"
+msgstr ""
+"   por defectoAtributo no  fundado conjuntos , porfavor sync todos  "
+"conjuntos de  attributo desde magento   set not Found"
+
+#. module: magento_bridge
+#: field:magento.configure,category:0
+msgid "Default Category"
+msgstr "por defacto categoría"
+
+#. module: magento_bridge
+#: field:magento.configure,language:0
+msgid "Default Language"
+msgstr " por defecto lengua "
+
+#. module: magento_bridge
+#: field:magento.configure,store_id:0
+msgid "Default Magento Store"
+msgstr "pordefecto magento tienda"
+
+#. module: magento_bridge
+#: field:magento.configure,website_id:0
+msgid "Default Magento Website"
+msgstr " por defecto  sitio web  de amgento"
+
+#. module: magento_bridge
+#: view:mob.config.settings:magento_bridge.view_oob_config_settings
+msgid "Default Products used by Magento Odoo Bridge"
+msgstr " por defecto productos usado por Magento Odoo Bridge"
+
+#. module: magento_bridge
+#: view:magento.configure:magento_bridge.magento_configure_form
+msgid "Default Settings"
+msgstr " por defecto  ajustes"
+
+#. module: magento_bridge
+#: field:magento.configure,group_id:0 field:magento.website,default_group_id:0
+msgid "Default Store"
+msgstr " por defecto tienda "
+
+#. module: magento_bridge
+#: field:magento.store,default_store_id:0
+msgid "Default Store Id"
+msgstr "por defecto tienda Id"
+
+#. module: magento_bridge
+#: field:mob.config.settings,mob_delivery_product:0
+msgid "Delivery Product"
+msgstr " entrega producto"
+
+#. module: magento_bridge
+#: view:product.template:magento_bridge.mob_product_template_form_view
+msgid "Description"
+msgstr " descripción"
+
+#. module: magento_bridge
+#: view:magento.product.attribute:magento_bridge.magento_product_attribute_form
+msgid "Dimension Type"
+msgstr " Tipo de dimensión"
+
+#. module: magento_bridge
+#: selection:magento.configure,inventory_sync:0
+#: selection:magento.configure,state:0
+msgid "Disable"
+msgstr "deshabilitar"
+
+#. module: magento_bridge
+#: field:mob.config.settings,mob_discount_product:0
+msgid "Discount Product"
+msgstr " Producto de descuento"
+
+#. module: magento_bridge
+#: view:mapping.update:magento_bridge.mapping_update_wizard_form
+msgid "Done"
+msgstr "hecho"
+
+#. module: magento_bridge
+#: selection:product.template,prod_type:0
+msgid "Downloadable Product"
+msgstr "Producto descargable  "
+
+#. module: magento_bridge
+#: selection:magento.configure,inventory_sync:0
+#: selection:magento.configure,state:0
+msgid "Enable"
+msgstr "permitir"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/mob.py:178 code:addons/magento_bridge/mob.py:253
+#: code:addons/magento_bridge/mob.py:300 code:addons/magento_bridge/mob.py:302
+#: code:addons/magento_bridge/mob.py:316 code:addons/magento_bridge/mob.py:318
+#: code:addons/magento_bridge/wizard/message_wizard.py:42
+#: code:addons/magento_bridge/wizard/message_wizard.py:64
+#: code:addons/magento_bridge/wizard/message_wizard.py:66
+#: code:addons/magento_bridge/wizard/message_wizard.py:78
+#: code:addons/magento_bridge/wizard/message_wizard.py:80
+#: code:addons/magento_bridge/wizard/message_wizard.py:88
+#, python-format
+msgid "Error"
+msgstr " Error"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/wizard/message_wizard.py:76
+#, python-format
+msgid "Error %s"
+msgstr " Error %s"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/mob.py:178
+#, python-format
+msgid "Error While Fetching Magento Stores!!!, %s"
+msgstr "Error mientras atractivo magento tienda !!!, %s"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/mob.py:314
+#, python-format
+msgid "Error, %s"
+msgstr " Error, %s"
+
+#. module: magento_bridge
+#: view:magento.configure:magento_bridge.magento_configure_form
+msgid "Example: apipassword"
+msgstr "Ejemplo: apicontraseña"
+
+#. module: magento_bridge
+#: view:magento.configure:magento_bridge.magento_configure_form
+msgid "Example: apiuser"
+msgstr "Ejemplo: apiusuraio"
+
+#. module: magento_bridge
+#: view:magento.configure:magento_bridge.magento_configure_form
+msgid "Example: http://mymagento.com"
+msgstr "Ejemplo : http://mymagento.com"
+
+#. module: magento_bridge
+#: selection:magento.sync.history,action:0
+msgid "Export"
+msgstr " exportar "
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "Export / Update Attribute and their Values to Magento"
+msgstr "Exportar /   actualizar  Attributoy sus valor a Magento"
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "Export All Attributes and their Values"
+msgstr "Exportar todos atributos y sus valor"
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "Export Attributes and Values"
+msgstr " Exportar /   actualizar  Attributoy   valor "
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "Export Categories"
+msgstr "Exportar  Categorías "
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "Export Products"
+msgstr "Exportar Productos"
+
+#. module: magento_bridge
+#: model:ir.actions.act_window,name:magento_bridge.action_synchronize_now
+msgid "Export Region"
+msgstr "Exportar región"
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "Export categories"
+msgstr " Exportar  Categorías "
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "Export products button will synch all unsynched products at magento"
+msgstr ""
+" Exportar productos botón a sincronizar Todos los productos no sincronizados "
+"en Magento"
+
+#. module: magento_bridge
+#: view:product.template:magento_bridge.mob_product_template_form_view
+msgid "Extra Categories"
+msgstr " Categorías adicionales"
+
+#. module: magento_bridge
+#: field:magento.configure,message_follower_ids:0
+msgid "Followers"
+msgstr "  seguidores"
+
+#. module: magento_bridge
+#: model:res.groups,comment:magento_bridge.group_magento_openerp
+msgid "Full Access on Magento Bridge"
+msgstr "completo accesso en  Magento Bridge"
+
+#. module: magento_bridge
+#: selection:product.template,prod_type:0
+msgid "Grouped Product"
+msgstr " agrupados productos"
+
+#. module: magento_bridge
+#: model:ir.ui.menu,name:magento_bridge.id_synchro
+msgid "History"
+msgstr "Historia"
+
+#. module: magento_bridge
+#: help:magento.configure,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+" guardar resumen del charlar  ( Número de mensajes, ...).  este resumen es "
+"directamente en html formato en orden Para ser insertado en kanban "
+"opiniones  s "
+
+#. module: magento_bridge
+#: field:bridge.backbone,id:0 field:magento.attribute.set,id:0
+#: field:magento.category,id:0 field:magento.configure,id:0
+#: field:magento.customers,id:0 field:magento.orders,id:0
+#: field:magento.product,id:0 field:magento.product.attribute,id:0
+#: field:magento.product.attribute.value,id:0
+#: field:magento.product.template,id:0 field:magento.region,id:0
+#: field:magento.store,id:0 field:magento.store.view,id:0
+#: field:magento.sync.history,id:0 field:magento.synchronization,id:0
+#: field:magento.website,id:0 field:mapping.update,id:0
+#: field:message.wizard,id:0 field:mob.config.settings,id:0
+#: field:region.wizard,id:0
+msgid "ID"
+msgstr " ID"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/bridge_backbone.py:400
+#, python-format
+msgid "INV: %s"
+msgstr " INV: %s"
+
+#. module: magento_bridge
+#: help:magento.configure,credential:0
+msgid ""
+"If Enable, Credentials tab will be displayed, And after filling the details "
+"you can hide the Tab."
+msgstr ""
+" si permitir ,credenciales tabulador será mostrado y despues de cumplir las "
+"detallas usted puede ocultar  tabulador "
+
+#. module: magento_bridge
+#: help:magento.configure,inventory_sync:0
+msgid ""
+"If Enable, Invetory will Forcely Update During Product Update Operation."
+msgstr ""
+"si permitir , inventario Se actualizará con fuerza , Durante la operación de "
+"actualización de producto."
+
+#. module: magento_bridge
+#: help:magento.configure,auto_invoice:0
+msgid ""
+"If Enabled, Order will automatically Invoiced on Magento  when Odoo order "
+"Get invoiced."
+msgstr ""
+"si permitir , el pedido automáticamente  factura en Magento , cuando el "
+"pedido de oddo Obtener factura."
+
+#. module: magento_bridge
+#: help:magento.configure,auto_ship:0
+msgid ""
+"If Enabled, Order will automatically shipped on Magento when Odoo order Get "
+"Delivered."
+msgstr ""
+" si permitir , el pedido automáticamente   enviado en Magento cuando el "
+"pedido de Odoo ser entregado"
+
+#. module: magento_bridge
+#: help:magento.configure,notify:0
+msgid ""
+"If True, customer will be notifyduring order shipment and invoice, else it "
+"won't."
+msgstr ""
+"si verdad . el cliente se notificará durante  envío y factura del pedido , "
+"otro que no."
+
+#. module: magento_bridge
+#: help:magento.configure,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "ai aprobar nueva mensaje  necesita su  atención"
+
+#. module: magento_bridge
+#: selection:magento.sync.history,action:0
+#: view:region.wizard:magento_bridge.region_wizard_form
+msgid "Import"
+msgstr "Importar"
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "Import Magento Regions"
+msgstr "Importar    región de   Magento  "
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "Import Regions"
+msgstr "Import  región"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/mob.py:282
+#: code:addons/magento_bridge/mob_synchronization.py:200
+#: code:addons/magento_bridge/mob_synchronization.py:224
+#: code:addons/magento_bridge/mob_synchronization.py:284
+#: code:addons/magento_bridge/mob_synchronization.py:300
+#: code:addons/magento_bridge/mob_synchronization.py:376
+#: code:addons/magento_bridge/mob_synchronization.py:384
+#: code:addons/magento_bridge/mob_synchronization.py:446
+#: code:addons/magento_bridge/mob_synchronization.py:746
+#: code:addons/magento_bridge/mob_synchronization.py:775
+#: code:addons/magento_bridge/mob_synchronization.py:792
+#: code:addons/magento_bridge/mob_synchronization.py:794
+#: code:addons/magento_bridge/mob_synchronization.py:997
+#: code:addons/magento_bridge/mob_synchronization.py:1011
+#: code:addons/magento_bridge/wizard/message_wizard.py:107
+#: code:addons/magento_bridge/wizard/status_wizard.py:55
+#, python-format
+msgid "Information"
+msgstr " información"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/wizard/message_wizard.py:76
+#, python-format
+msgid "Invalid Information"
+msgstr " Información inválida"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/mob.py:314
+#, python-format
+msgid "Invalid Login Credentials!!!"
+msgstr " Credenciales de inicio de sesión inválidas!"
+
+#. module: magento_bridge
+#: field:magento.configure,inventory_sync:0
+msgid "Inventory Update"
+msgstr " Actualización de inventario"
+
+#. module: magento_bridge
+#: model:ir.model,name:magento_bridge.model_account_invoice
+msgid "Invoice"
+msgstr " Factura"
+
+#. module: magento_bridge
+#: field:magento.website,is_default:0
+msgid "Is Default"
+msgstr "es por defecto"
+
+#. module: magento_bridge
+#: field:magento.product.template,is_variants:0
+msgid "Is Variants"
+msgstr " Es Variantes"
+
+#. module: magento_bridge
+#: field:magento.configure,message_is_follower:0
+msgid "Is a Follower"
+msgstr " Es un seguidor"
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid ""
+"It'll Assign Attribute Set to Existing Template on behalf of it's Attributes."
+msgstr ""
+" este asignará conjunto de attributo a  Plantilla Existente de parte son "
+"Atributos."
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "It'll Export All Odoo Category at Magento."
+msgstr "lo exportara todos Odoo categoría en Magento"
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid ""
+"It'll Only Update Category at Magento, when Need Sync value is set to Yes."
+msgstr ""
+"será solo actualizar  categoría en Magento , cuando necesita sync valor "
+"establecer a  sí"
+
+#. module: magento_bridge
+#: field:magento.configure,message_last_post:0
+msgid "Last Message Date"
+msgstr " Último feacha de mensaje"
+
+#. module: magento_bridge
+#: field:bridge.backbone,write_uid:0 field:magento.attribute.set,write_uid:0
+#: field:magento.category,write_uid:0 field:magento.configure,write_uid:0
+#: field:magento.customers,write_uid:0 field:magento.orders,write_uid:0
+#: field:magento.product,write_uid:0
+#: field:magento.product.attribute,write_uid:0
+#: field:magento.product.attribute.value,write_uid:0
+#: field:magento.product.template,write_uid:0 field:magento.region,write_uid:0
+#: field:magento.store,write_uid:0 field:magento.store.view,write_uid:0
+#: field:magento.sync.history,write_uid:0
+#: field:magento.synchronization,write_uid:0 field:magento.website,write_uid:0
+#: field:mapping.update,write_uid:0 field:message.wizard,write_uid:0
+#: field:mob.config.settings,write_uid:0 field:region.wizard,write_uid:0
+msgid "Last Updated by"
+msgstr "Último  actualizado por"
+
+#. module: magento_bridge
+#: field:bridge.backbone,write_date:0 field:magento.configure,write_date:0
+#: field:magento.orders,write_date:0 field:magento.store,write_date:0
+#: field:magento.store.view,write_date:0
+#: field:magento.sync.history,write_date:0
+#: field:magento.synchronization,write_date:0
+#: field:magento.website,write_date:0 field:mapping.update,write_date:0
+#: field:message.wizard,write_date:0 field:mob.config.settings,write_date:0
+#: field:region.wizard,write_date:0
+msgid "Last Updated on"
+msgstr " Último  actualizado  en "
+
+#. module: magento_bridge
+#: selection:sale.order,channel:0
+msgid "Magento"
+msgstr " Magento"
+
+#. module: magento_bridge
+#: view:magento.configure:magento_bridge.magento_configure_form
+msgid "Magento API Settings"
+msgstr "Magento API ajustes"
+
+#. module: magento_bridge
+#: field:magento.customers,mag_address_id:0
+msgid "Magento Address Id"
+msgstr "Magento   Id de dirección"
+
+#. module: magento_bridge
+#: model:ir.actions.act_window,name:magento_bridge.magento_attribute_set_action
+#: model:ir.model,name:magento_bridge.model_magento_attribute_set
+#: field:magento.attribute.set,name:0
+#: field:product.template,attribute_set_id:0
+msgid "Magento Attribute Set"
+msgstr "Magento Attributo establecer"
+
+#. module: magento_bridge
+#: help:product.template,attribute_set_id:0
+msgid ""
+"Magento Attribute Set, Used during configurable product generation at "
+"Magento."
+msgstr ""
+"Magento Attributo establecer . usado durante  productos configurable "
+"generación en magento"
+
+#. module: magento_bridge
+#: model:ir.ui.menu,name:magento_bridge.product_id3
+msgid "Magento Attribute Sets"
+msgstr "Magento Attributos conjuntos"
+
+#. module: magento_bridge
+#: model:ir.actions.act_window,name:magento_bridge.magento_product_attribute_value_action
+msgid "Magento Attribute Value"
+msgstr "Magento Attributo valor"
+
+#. module: magento_bridge
+#: field:magento.product.attribute.value,mage_id:0
+msgid "Magento Attribute Value Id"
+msgstr "Magento   Attributo valor ID"
+
+#. module: magento_bridge
+#: view:magento.attribute.set:magento_bridge.magento_attribute_set_form
+msgid "Magento Attributes"
+msgstr "Magento  Attributo "
+
+#. module: magento_bridge
+#: model:ir.ui.menu,name:magento_bridge.menu_mob_config
+msgid "Magento Bridge"
+msgstr " Magento Bridge"
+
+#. module: magento_bridge
+#: model:ir.module.category,description:magento_bridge.module_magento_bridge_category
+msgid "Magento Bridge Applilcation"
+msgstr "Magento Bridge aplicación"
+
+#. module: magento_bridge
+#: model:ir.model,name:magento_bridge.model_magento_category
+msgid "Magento Category"
+msgstr "Magento categoría"
+
+#. module: magento_bridge
+#: field:magento.category,mag_category_id:0
+msgid "Magento Category Id"
+msgstr "Magento categoría Id"
+
+#. module: magento_bridge
+#: model:ir.actions.act_window,name:magento_bridge.magento_category_tree_action
+msgid "Magento Category Mapping"
+msgstr "Magento  categoría cartografía"
+
+#. module: magento_bridge
+#: model:ir.model,name:magento_bridge.model_magento_configure
+msgid "Magento Configuration"
+msgstr "Magento configuración"
+
+#. module: magento_bridge
+#: model:ir.actions.act_window,name:magento_bridge.magento_configure_tree_action
+#: model:ir.ui.menu,name:magento_bridge.mag_id1
+#: view:magento.configure:magento_bridge.magento_configure_form
+#: view:magento.configure:magento_bridge.magento_configure_tree
+msgid "Magento Connection"
+msgstr "Magento conexión"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/wizard/message_wizard.py:80
+#, python-format
+msgid "Magento Connection  in connecting: %s"
+msgstr "Magento conexión   conectando en    : %s"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/mob.py:318
+#, python-format
+msgid "Magento Connection Error in connecting: %s"
+msgstr "Magento   conexión   Error conectando en : %s"
+
+#. module: magento_bridge
+#: field:magento.customers,mag_customer_id:0
+msgid "Magento Customer Id"
+msgstr "Magento  Id de cliente"
+
+#. module: magento_bridge
+#: model:ir.actions.act_window,name:magento_bridge.magento_customer_tree_action
+#: view:magento.customers:magento_bridge.map_customer_tree
+msgid "Magento Customer Mapping"
+msgstr "Magento  cartografía del cliente"
+
+#. module: magento_bridge
+#: model:ir.model,name:magento_bridge.model_magento_customers
+msgid "Magento Customers"
+msgstr "Magento Cliente"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/mob.py:253
+#, python-format
+msgid "Magento Default Website Not Found!!!"
+msgstr "Magento por defecto archivo no funda!!"
+
+#. module: magento_bridge
+#: view:product.template:magento_bridge.mob_product_template_form_view
+msgid "Magento Extra Categories"
+msgstr "Magento  Categorías adicionales"
+
+#. module: magento_bridge
+#: model:ir.module.category,name:magento_bridge.module_magento_bridge_category
+#: model:ir.ui.menu,name:magento_bridge.magento_parent_menu
+msgid "Magento Odoo Bridge"
+msgstr " Magento Odoo Bridge"
+
+#. module: magento_bridge
+#: view:magento.orders:magento_bridge.map_order_tree
+msgid "Magento Order Mapping"
+msgstr "Magento  cartografía  del producto"
+
+#. module: magento_bridge
+#: model:ir.model,name:magento_bridge.model_magento_orders
+msgid "Magento Orders"
+msgstr "Magento pedido "
+
+#. module: magento_bridge
+#: model:ir.actions.act_window,name:magento_bridge.magento_order_tree_action
+msgid "Magento Orders Mapping"
+msgstr " Magento  cartografía  del producto"
+
+#. module: magento_bridge
+#: model:ir.model,name:magento_bridge.model_magento_product
+msgid "Magento Product"
+msgstr "Magento Producto"
+
+#. module: magento_bridge
+#: model:ir.actions.act_window,name:magento_bridge.magento_product_attribute_action
+#: model:ir.model,name:magento_bridge.model_magento_product_attribute
+msgid "Magento Product Attribute"
+msgstr "Magento producto Atributo "
+
+#. module: magento_bridge
+#: model:ir.model,name:magento_bridge.model_magento_product_attribute_value
+msgid "Magento Product Attribute Value"
+msgstr "Magento Producto Atributo Valor"
+
+#. module: magento_bridge
+#: field:magento.product,mag_product_id:0
+msgid "Magento Product Id"
+msgstr "Magento Producto Id"
+
+#. module: magento_bridge
+#: model:ir.actions.act_window,name:magento_bridge.magento_product_template_action
+#: model:ir.model,name:magento_bridge.model_magento_product_template
+msgid "Magento Product Template"
+msgstr "Magento plantilla del producto"
+
+#. module: magento_bridge
+#: view:magento.product.template:magento_bridge.magento_product_template_tree
+msgid "Magento Product Templates"
+msgstr " Magento plantilla del producto"
+
+#. module: magento_bridge
+#: model:ir.model,name:magento_bridge.model_magento_region
+msgid "Magento Region"
+msgstr "Magento región"
+
+#. module: magento_bridge
+#: field:magento.region,mag_region_id:0
+msgid "Magento Region Id"
+msgstr "Magento  Id de  región "
+
+#. module: magento_bridge
+#: model:ir.actions.act_window,name:magento_bridge.magento_region_tree_action
+#: view:magento.region:magento_bridge.map_region_tree
+msgid "Magento Region Mapping"
+msgstr "Magento  cartografía  de región"
+
+#. module: magento_bridge
+#: field:magento.attribute.set,set_id:0
+msgid "Magento Set Id"
+msgstr "Magento  Id de establecer"
+
+#. module: magento_bridge
+#: help:magento.attribute.set,attribute_ids:0
+msgid "Magento Set attributes will be handle only at magento."
+msgstr "Magento establece  atributo  se dará  solo en Magento "
+
+#. module: magento_bridge
+#: model:ir.model,name:magento_bridge.model_magento_store
+msgid "Magento Store"
+msgstr "Magento tiend"
+
+#. module: magento_bridge
+#: field:magento.store,group_id:0
+msgid "Magento Store Id"
+msgstr "Magento   Id de tienda"
+
+#. module: magento_bridge
+#: model:ir.model,name:magento_bridge.model_magento_store_view
+msgid "Magento Store View"
+msgstr "Magento vista de tienda"
+
+#. module: magento_bridge
+#: field:magento.store.view,view_id:0
+msgid "Magento Store View Id"
+msgstr "Magentotienda  Id de vista  "
+
+#. module: magento_bridge
+#: model:ir.model,name:magento_bridge.model_magento_synchronization
+#: model:ir.ui.menu,name:magento_bridge.mag_id0
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "Magento Synchronization"
+msgstr "Magento  sincronización"
+
+#. module: magento_bridge
+#: model:ir.actions.act_window,name:magento_bridge.magento_sync_history_action
+#: model:ir.model,name:magento_bridge.model_magento_sync_history
+msgid "Magento Synchronization History"
+msgstr "Magento historia de sincronización"
+
+#. module: magento_bridge
+#: field:product.template,prod_type:0
+msgid "Magento Type"
+msgstr "Magento tipo"
+
+#. module: magento_bridge
+#: field:magento.website,website_id:0
+msgid "Magento Webiste Id"
+msgstr "Magento ID del  sitio web "
+
+#. module: magento_bridge
+#: model:ir.model,name:magento_bridge.model_magento_website
+msgid "Magento Website"
+msgstr "Magento  sitio web "
+
+#. module: magento_bridge
+#: field:magento.orders,mage_increment_id:0
+msgid "Magento order Id"
+msgstr "Magento  Id del pedido"
+
+#. module: magento_bridge
+#: model:ir.actions.act_window,name:magento_bridge.magento_product_tree_action
+msgid "Magento product Mapping"
+msgstr "Magento cartografía  de producto"
+
+#. module: magento_bridge
+#: view:magento.sync.history:magento_bridge.magento_sync_history_form
+#: view:magento.sync.history:magento_bridge.magento_sync_history_tree
+msgid "Magento synchronization History"
+msgstr " Magento historia de sincronización"
+
+#. module: magento_bridge
+#: field:magento.product.attribute,mage_id:0
+msgid "Magento`s Attribute Id"
+msgstr "Magento`s  Id de  Attributo "
+
+#. module: magento_bridge
+#: field:magento.product.template,mage_product_id:0
+msgid "Magento`s Product Id"
+msgstr "Magento`s  Id de producto "
+
+#. module: magento_bridge
+#: model:res.groups,name:magento_bridge.group_magento_openerp
+msgid "Manager"
+msgstr " gerente"
+
+#. module: magento_bridge
+#: model:ir.ui.menu,name:magento_bridge.menu_mapping_id
+msgid "Mapping"
+msgstr "  cartografía  "
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/mob_synchronization.py:117
+#: code:addons/magento_bridge/wizard/message_wizard.py:95
+#: view:mapping.update:magento_bridge.mapping_update_wizard_form
+#: view:message.wizard:magento_bridge.message_wizard_form1
+#: field:message.wizard,text:0
+#: view:region.wizard:magento_bridge.region_wizard_form
+#, python-format
+msgid "Message"
+msgstr "Mensaje"
+
+#. module: magento_bridge
+#: field:magento.configure,message_ids:0
+msgid "Messages"
+msgstr "Mensaje"
+
+#. module: magento_bridge
+#: help:magento.configure,message_ids:0
+msgid "Messages and communication history"
+msgstr "historia de mensaje y comunicación"
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "NOTE :"
+msgstr "NOTA:"
+
+#. module: magento_bridge
+#: selection:magento.category,need_sync:0
+#: selection:magento.customers,need_sync:0
+#: selection:magento.product,need_sync:0
+#: selection:magento.product.template,need_sync:0
+#: selection:mapping.update,need_sync:0
+msgid "No"
+msgstr "No"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/mob_synchronization.py:284
+#, python-format
+msgid "No category(s) has been found to be Update on Magento!!!"
+msgstr "NO category(s) ha sido fundar a ser actualizado en Magento"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/mob_synchronization.py:997
+#, python-format
+msgid "No new product(s) Template found to be Sync."
+msgstr "no hay nuevo pantilla de producto(S)  fundado para sincronización  "
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/mob_synchronization.py:775
+#, python-format
+msgid "No product(s) Template has been found to be Update on Magento!!!"
+msgstr "no producto (S) pantilla ha sido fundar para actualizar en Magento!!!"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/mob_synchronization.py:792
+#, python-format
+msgid "No product(s) has been found to be Update on Magento!!!"
+msgstr "No producto(s)  ha sido fundar para actualizar en Magento!!!"
+
+#. module: magento_bridge
+#: field:magento.configure,notify:0
+msgid "Notify Customer By Email"
+msgstr " Notificar al cliente por correo electrónico"
+
+#. module: magento_bridge
+#: view:magento.sync.history:magento_bridge.filter_magento_openerp_mapping
+msgid "Object"
+msgstr "Objecto"
+
+#. module: magento_bridge
+#: selection:sale.order,channel:0
+msgid "Odoo"
+msgstr " Odoo"
+
+#. module: magento_bridge
+#: field:magento.product.attribute.value,erp_id:0
+msgid "Odoo Attribute Value Id"
+msgstr "Odoo   Id de Atributo  Valor"
+
+#. module: magento_bridge
+#: field:magento.category,oe_category_id:0
+msgid "Odoo Category Id"
+msgstr "Odoo   Id de categoría"
+
+#. module: magento_bridge
+#: field:magento.customers,oe_customer_id:0
+msgid "Odoo Customer Id"
+msgstr "Odoo   Id de cilente"
+
+#. module: magento_bridge
+#: field:magento.product,oe_product_id:0
+msgid "Odoo Product Id"
+msgstr "Odoo  Id de  Producto"
+
+#. module: magento_bridge
+#: field:magento.orders,oe_order_id:0
+msgid "Odoo order Id"
+msgstr "Odoo   Id del pedido"
+
+#. module: magento_bridge
+#: field:magento.product.attribute,erp_id:0
+msgid "Odoo`s Attribute Id"
+msgstr "Odoo`s  Id de Attributo"
+
+#. module: magento_bridge
+#: field:magento.product.template,erp_template_id:0
+msgid "Odoo`s Template Id"
+msgstr "Odoo`s  Id de pantilla"
+
+#. module: magento_bridge
+#: model:ir.actions.client,name:magento_bridge.action_client_mob_menu
+msgid "Open Mob Menu"
+msgstr "Open Mob menú"
+
+#. module: magento_bridge
+#: selection:magento.sync.history,action_on:0
+msgid "Order"
+msgstr " el pedido"
+
+#. module: magento_bridge
+#: view:magento.orders:magento_bridge.map_order_form
+msgid "Order Mapping"
+msgstr " cartografía del pedido"
+
+#. module: magento_bridge
+#: field:magento.orders,order_ref:0
+msgid "Order Reference"
+msgstr "referencia del pedido"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/mob.py:302
+#, python-format
+msgid "Please create the configuration part for Magento connection!!!"
+msgstr "porfavor crear parte del configuración  para conexión de Magento !!!"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/wizard/message_wizard.py:66
+#, python-format
+msgid "Please create the configuration part for connection!!!"
+msgstr " porfavor crear parte del configuración  para conexión!!!"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/mob_synchronization.py:985
+#, python-format
+msgid "Please, first map all ERP Product attributes and it's all options"
+msgstr ""
+"porfavor , primero cartografía  todos ERP producto atributo y todaos opción"
+
+#. module: magento_bridge
+#: model:ir.model,name:magento_bridge.model_product_product
+#: view:magento.sync.history:magento_bridge.filter_magento_openerp_mapping
+#: selection:magento.sync.history,action_on:0
+msgid "Product"
+msgstr " Producto"
+
+#. module: magento_bridge
+#: model:ir.ui.menu,name:magento_bridge.mapping_id3
+#: view:magento.attribute.set:magento_bridge.magento_attribute_set_tree
+#: view:magento.product.attribute:magento_bridge.magento_product_attribute_tree
+#: field:magento.product.attribute,name:0
+msgid "Product Attribute"
+msgstr " Atributo del Producto"
+
+#. module: magento_bridge
+#: model:ir.ui.menu,name:magento_bridge.mapping_id4
+msgid "Product Attribute Value"
+msgstr "Producto Atributo valor"
+
+#. module: magento_bridge
+#: field:magento.attribute.set,attribute_ids:0
+msgid "Product Attributes"
+msgstr " Atributo del Producto"
+
+#. module: magento_bridge
+#: field:product.template,categ_ids:0
+msgid "Product Categories"
+msgstr " categorías  del producto "
+
+#. module: magento_bridge
+#: model:ir.model,name:magento_bridge.model_product_category
+msgid "Product Category"
+msgstr " Categoría de producto"
+
+#. module: magento_bridge
+#: model:ir.ui.menu,name:magento_bridge.mapping_id6
+#: view:magento.product:magento_bridge.map_product_form
+#: view:magento.product:magento_bridge.map_product_tree
+msgid "Product Mapping"
+msgstr " cartografía  del producto"
+
+#. module: magento_bridge
+#: field:magento.product,pro_name:0
+msgid "Product Name"
+msgstr "nombre del producto "
+
+#. module: magento_bridge
+#: model:ir.model,name:magento_bridge.model_product_template
+msgid "Product Template"
+msgstr " Plantilla de producto"
+
+#. module: magento_bridge
+#: model:ir.ui.menu,name:magento_bridge.mapping_id5
+msgid "Product Template Mapping"
+msgstr " cartografía  de producto pantilla "
+
+#. module: magento_bridge
+#: field:magento.region,region_code:0
+msgid "Region Code"
+msgstr " Código de región"
+
+#. module: magento_bridge
+#: model:ir.ui.menu,name:magento_bridge.mapping_id1
+#: view:magento.region:magento_bridge.map_region_form
+msgid "Region Mapping"
+msgstr "  cartografía   de   región"
+
+#. module: magento_bridge
+#: field:magento.region,name:0
+msgid "Region Name"
+msgstr " nombre de  región"
+
+#. module: magento_bridge
+#: field:magento.store,root_category_id:0
+msgid "Root Category Id"
+msgstr " ID de raíz Categoría "
+
+#. module: magento_bridge
+#: model:ir.model,name:magento_bridge.model_sale_order
+msgid "Sales Order"
+msgstr " el Pedido de venta"
+
+#. module: magento_bridge
+#: model:ir.ui.menu,name:magento_bridge.mapping_id8
+msgid "Sales Order Mapping"
+msgstr "    cartografía   del Pedido de  la venta"
+
+#. module: magento_bridge
+#: view:magento.configure:magento_bridge.magento_configure_form
+msgid "Sales Orders Related Settings"
+msgstr "Ajustes relacionados de  Pedido de venta  "
+
+#. module: magento_bridge
+#: view:magento.configure:magento_bridge.magento_configure_form
+msgid "Sales Settings"
+msgstr " Ajustes de venta  "
+
+#. module: magento_bridge
+#: view:mob.config.settings:magento_bridge.view_oob_config_settings
+msgid ""
+"Select Service Type Product to be used by MOB, when exporting Order from "
+"Magento to Odoo."
+msgstr ""
+"selecciona  Tipo de servicio Producto a utilizar por MOB , cuando  "
+"exportando el pedido desde Magento a Odoo"
+
+#. module: magento_bridge
+#: help:magento.configure,category:0
+msgid ""
+"Selected Category will be set default category for odoo's product, in case "
+"when magento product doesn't belongs to any catgeory."
+msgstr ""
+"seleccionado Categoría   se establecerá  por defecto Categoría  para Odoo's  "
+"en caso cuando el producto de Magento no pertenece en alguna  Categoría ."
+
+#. module: magento_bridge
+#: help:magento.configure,language:0
+msgid ""
+"Selected language is loaded in the system, all documents related to this "
+"contact will be synched in this language."
+msgstr ""
+" seleccionado lengua  es cargado en sistema , todos  documentos relacionados "
+"con este contacto se sincronizarán en este idioma."
+
+#. module: magento_bridge
+#: view:mob.config.settings:magento_bridge.view_oob_config_settings
+msgid "Service Products"
+msgstr " servicio productos"
+
+#. module: magento_bridge
+#: help:mob.config.settings,mob_delivery_product:0
+msgid "Service type product used for Delivery purposes."
+msgstr "servicio tipo producto usado para Propósitos de entrega."
+
+#. module: magento_bridge
+#: help:mob.config.settings,mob_discount_product:0
+msgid "Service type product used for Discount purposes."
+msgstr " servicio tipo producto usado para Propósitos de descuento."
+
+#. module: magento_bridge
+#: help:mob.config.settings,mob_coupon_product:0
+msgid "Service type product used in Coupon."
+msgstr "  servicio tipo producto usado  en cupón"
+
+#. module: magento_bridge
+#: field:magento.configure,credential:0
+msgid "Show/Hide Credentials Tab"
+msgstr "mostrar/ocultar tecla de credenciales"
+
+#. module: magento_bridge
+#: selection:product.template,prod_type:0
+msgid "Simple Product"
+msgstr "simple producto"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/mob.py:152 code:addons/magento_bridge/mob.py:239
+#, python-format
+msgid "Sorry, Only one active connection is allowed."
+msgstr "lo siento , solo un activo Conexión está permitido"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/mob.py:300
+#: code:addons/magento_bridge/wizard/message_wizard.py:64
+#, python-format
+msgid "Sorry, only one Active Configuration setting is allowed."
+msgstr " lo siento , solo un activo   ajustes de Configuración  se permitido"
+
+#. module: magento_bridge
+#: field:magento.store.view,sort_order:0 field:magento.website,sort_order:0
+msgid "Sort Order"
+msgstr " Orden de clasificación"
+
+#. module: magento_bridge
+#: field:magento.configure,state:0 field:magento.sync.history,status:0
+msgid "Status"
+msgstr " estado"
+
+#. module: magento_bridge
+#: field:magento.store.view,group_id:0
+msgid "Store Id"
+msgstr "  Id de tienda"
+
+#. module: magento_bridge
+#: field:magento.store,name:0
+msgid "Store Name"
+msgstr "nombre de tienda"
+
+#. module: magento_bridge
+#: field:magento.store.view,name:0
+msgid "Store View Name"
+msgstr "ver nombre de tienda"
+
+#. module: magento_bridge
+#: selection:magento.sync.history,status:0
+msgid "Successfull"
+msgstr " exitoso"
+
+#. module: magento_bridge
+#: field:magento.configure,message_summary:0
+#: field:magento.sync.history,error_message:0
+msgid "Summary"
+msgstr " resumen"
+
+#. module: magento_bridge
+#: model:ir.ui.menu,name:magento_bridge.sync_history
+msgid "Synchronisation History"
+msgstr " Historia de sincronización"
+
+#. module: magento_bridge
+#: model:ir.ui.menu,name:magento_bridge.menu_magento_id2
+msgid "Synchronization"
+msgstr "  sincronización"
+
+#. module: magento_bridge
+#: model:ir.actions.server,name:magento_bridge.action_sync_category_bulk
+#: model:ir.actions.server,name:magento_bridge.action_sync_product_template_bulk
+msgid "Synchronize To Magento"
+msgstr " sincronización a Magento"
+
+#. module: magento_bridge
+#: view:magento.product.template:magento_bridge.magento_product_template_form
+msgid "Template Mapping"
+msgstr "  cartografía de Plantilla"
+
+#. module: magento_bridge
+#: field:magento.product.template,template_name:0
+msgid "Template Name"
+msgstr "nombre de Plantilla"
+
+#. module: magento_bridge
+#: view:magento.configure:magento_bridge.magento_configure_form
+msgid "Test Connection"
+msgstr " Prueba de conexión"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/wizard/message_wizard.py:88
+#, python-format
+msgid "There is no any region exist for country %s."
+msgstr "no hay alguna región existir  para el país     %s."
+
+#. module: magento_bridge
+#: selection:magento.sync.history,status:0
+msgid "Un-Successfull"
+msgstr "  fallido"
+
+#. module: magento_bridge
+#: field:magento.configure,message_unread:0
+msgid "Unread Messages"
+msgstr " mensaje no leído"
+
+#. module: magento_bridge
+#: selection:magento.sync.history,action:0
+msgid "Update"
+msgstr "actualizar"
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "Update Categories"
+msgstr " Actualizar las Categorías"
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "Update Products"
+msgstr " Actualizar los productos"
+
+#. module: magento_bridge
+#: field:magento.category,need_sync:0 field:magento.customers,need_sync:0
+#: field:magento.product,need_sync:0
+#: field:magento.product.template,need_sync:0 field:mapping.update,need_sync:0
+msgid "Update Required"
+msgstr " actualización Requerida"
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid "Update categories"
+msgstr "  Actualizar las Categorías"
+
+#. module: magento_bridge
+#: view:magento.synchronization:magento_bridge.magento_synchronization_form
+msgid ""
+"Update products button will update all synced products at magento, which "
+"requires to be update at magento"
+msgstr ""
+" botón de  Actualizar los productos actualizará todos  productos son "
+"sincronizado en magento , que   requiere a actualizar en magento "
+
+#. module: magento_bridge
+#: field:magento.attribute.set,write_date:0
+#: field:magento.category,write_date:0 field:magento.customers,write_date:0
+#: field:magento.product,write_date:0
+#: field:magento.product.attribute,write_date:0
+#: field:magento.product.attribute.value,write_date:0
+#: field:magento.product.template,write_date:0
+#: field:magento.region,write_date:0
+msgid "Updated Date"
+msgstr " actualizado fecha"
+
+#. module: magento_bridge
+#: help:magento.configure,warehouse_id:0
+msgid "Used During Inventory Synchronization From Magento to Odoo."
+msgstr " usado durante La sincronización de inventario desde  Magento a Odoo"
+
+#. module: magento_bridge
+#: view:mob.config.settings:magento_bridge.view_oob_config_settings
+msgid "Used for Coupon purposes"
+msgstr " usado para    Propósitos de cupón               "
+
+#. module: magento_bridge
+#: model:res.groups,name:magento_bridge.group_bridge_user
+msgid "User"
+msgstr " Usuario"
+
+#. module: magento_bridge
+#: model:res.groups,comment:magento_bridge.group_bridge_user
+msgid "User will have an read access to the magento bridge."
+msgstr "usuario tendrá un acceso de lectura a Magento bridge"
+
+#. module: magento_bridge
+#: view:product.template:magento_bridge.product_template_form_view2
+msgid "Variants"
+msgstr " Variantes"
+
+#. module: magento_bridge
+#: selection:product.template,prod_type:0
+msgid "Virtual Product"
+msgstr "producto virtual"
+
+#. module: magento_bridge
+#: field:magento.configure,warehouse_id:0
+msgid "Warehouse"
+msgstr " almacén"
+
+#. module: magento_bridge
+#: code:addons/magento_bridge/mob.py:152 code:addons/magento_bridge/mob.py:239
+#, python-format
+msgid "Warning"
+msgstr " advertencia"
+
+#. module: magento_bridge
+#: field:magento.store,website_id:0
+msgid "Website Id"
+msgstr " Sitio Web Id"
+
+#. module: magento_bridge
+#: field:magento.configure,website_message_ids:0
+msgid "Website Messages"
+msgstr "mensaje de Sitio Web "
+
+#. module: magento_bridge
+#: field:magento.website,name:0
+msgid "Website Name"
+msgstr " nombre Sitio Web"
+
+#. module: magento_bridge
+#: help:magento.configure,website_message_ids:0
+msgid "Website communication history"
+msgstr " Historia de comunicación del sitio web"
+
+#. module: magento_bridge
+#: selection:magento.category,need_sync:0
+#: selection:magento.customers,need_sync:0
+#: selection:magento.product,need_sync:0
+#: selection:magento.product.template,need_sync:0
+#: selection:mapping.update,need_sync:0
+msgid "Yes"
+msgstr "sí"
+
+#. module: magento_bridge
+#: view:product.template:magento_bridge.mob_product_template_form_view
+msgid "describe the product characteristics..."
+msgstr " Describa aquí las características del producto..."
+
+#. module: magento_bridge
+#: model:ir.actions.act_window,name:magento_bridge.magento_synchronization_action
+msgid "magento Synchronization"
+msgstr "sincronización del Magento"
+
+#. module: magento_bridge
+#: view:mob.config.settings:magento_bridge.view_oob_config_settings
+#: view:region.wizard:magento_bridge.region_wizard_form
+msgid "or"
+msgstr "o"
+
+#. module: magento_bridge
+#: help:magento.configure,state:0
+msgid ""
+"status will be consider during order invoice, order delivery and order "
+"cancel, to stop asynchronous process at other end."
+msgstr ""
+"estado se considerará durante factura del pedido , envio del pedido y "
+"cancelear del pedido ,a parada  processo del asíncrono  en en el otro extremo"
+
+#. module: magento_bridge
+#: view:mob.config.settings:magento_bridge.view_oob_config_settings
+msgid "used for Delivery/Shipping purposes"
+msgstr "usado para envio/ entregaPropósitos "
+
+#. module: magento_bridge
+#: view:mob.config.settings:magento_bridge.view_oob_config_settings
+msgid "used for Discount purposes"
+msgstr "usado para descuento Propósitos "

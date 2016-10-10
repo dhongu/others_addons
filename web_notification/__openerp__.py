@@ -30,6 +30,8 @@
 Display Notification for user
 =============================
 
+Nu merge!
+
     """,
     'author': 'ANYBOX',
     'website': 'www.anybox.fr',
@@ -37,7 +39,7 @@ Display Notification for user
         'base',
         'web',
         'bus',
-        'bus_enhanced',
+
     ],
     'data': [
         'security/ir.model.access.csv',

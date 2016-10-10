@@ -1,4 +1,4 @@
-from openerp import models, fields, api, sql_db
+from odoo import models, fields, api, sql_db
 import thread
 from time import sleep
 

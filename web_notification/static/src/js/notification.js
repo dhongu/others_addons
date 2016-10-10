@@ -1,4 +1,9 @@
-(function() {
+odoo.define('web_notification', function (require) {
+    var bus = require('bus.bus');
+
+    var bus = require('web.notification');
+
+
     openerp.web.WebClient.include({
     	
     	// to do: move this to mail.utils
@@ -48,4 +53,4 @@
             this.add_bus_channel(channel);
         },
     });
-})();
+});

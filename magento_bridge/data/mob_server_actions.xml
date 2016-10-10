@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">	
+		<!-- ####################################  SERVER ACTIONS  ###################################### -->
+		
+					<!--~~~~~~~ Server action for update product mapping ~~~~~~~~~-->
+		
+		<record id="action_change_product_update_status" model="ir.actions.server">
+			<field name="name">Change Update Status</field>
+			<field name="model_id" ref="magento_bridge.model_magento_product"/>
+			<field name="state">code</field>
+			<field name="code">action = env["mapping.update"].open_update_wizard()</field>
+		</record>
+
+		<record id="ir_open_update_product_mapping" model="ir.values">
+			<field eval="'client_action_multi'" name="key2"/>
+			<field eval="'magento.product'" name="model"/>
+			<field name="name">Update product Mapping</field>
+			<field eval="'ir.actions.server,%d'%action_change_product_update_status" name="value"/>
+		</record>
+					<!--~~~~~~~ Server action for update product template mapping ~~~~~~~~~-->
+		
+		<record id="action_change_template_update_status" model="ir.actions.server">
+			<field name="name">Change Update Status</field>
+			<field name="model_id" ref="magento_bridge.model_magento_product_template"/>
+			<field name="state">code</field>
+			<field name="code">action = env["mapping.update"].open_update_wizard()</field>
+		</record>
+
+		<record id="ir_open_update_product_template_mapping" model="ir.values">
+			<field eval="'client_action_multi'" name="key2"/>
+			<field eval="'magento.product.template'" name="model"/>
+			<field name="name">Update product Template Mapping</field>
+			<field eval="'ir.actions.server,%d'%action_change_template_update_status" name="value"/>
+		</record>
+		
+				<!--~~~~~~~ Server action for update category mapping ~~~~~~~~~-->
+		
+		<record id="action_change_category_update_status" model="ir.actions.server">
+			<field name="name">Change Update Status</field>
+			<field name="model_id" ref="magento_bridge.model_magento_category"/>
+			<field name="state">code</field>
+			<field name="code">action = env["mapping.update"].open_update_wizard()</field>
+		</record>
+
+		<record id="ir_open_update_category_mapping" model="ir.values">
+			<field eval="'client_action_multi'" name="key2"/>
+			<field eval="'magento.category'" name="model"/>
+			<field name="name">Update category Mapping</field>
+			<field eval="'ir.actions.server,%d'%action_change_category_update_status" name="value"/>
+		</record>
+		
+				<!--~~~~~~~~~~~  Server action for bulk category export ~~~~~~~~~-->
+		
+		<record id="action_sync_category_bulk" model="ir.actions.server">
+			<field name="name">Synchronize To Magento</field>
+			<field name="model_id" ref="product.model_product_category"/>
+			<field name="state">code</field>
+			<field name="code">action = env["synchronization.wizard"].start_bulk_category_synchronization()</field>
+		</record>
+
+		<record id="ir_open_bulk_category" model="ir.values">
+			<field eval="'client_action_multi'" name="key2"/>
+			<field eval="'product.category'" name="model"/>
+			<field name="name">Synchronize Category</field>
+			<field eval="'ir.actions.server,%d'%action_sync_category_bulk" name="value"/>
+		</record>
+
+				<!--   Server action for bulk Product template export-->
+		
+		<record id="action_sync_product_template_bulk" model="ir.actions.server">
+			<field name="name">Synchronize To Magento</field>
+			<field name="model_id" ref="product.model_product_template"/>
+			<field name="state">code</field>
+			<field name="code">action = env["synchronization.wizard"].start_bulk_product_synchronization()</field>
+		</record>
+
+		<record id="ir_open_bulk_product_template" model="ir.values">
+			<field eval="'client_action_multi'" name="key2"/>
+			<field eval="'product.template'" name="model"/>
+			<field name="name">Synchronize Product Template</field>
+			<field eval="'ir.actions.server,%d'%action_sync_product_template_bulk" name="value"/>
+		</record>
+			
+		<!-- #################################### END OF SERVER ACTION ######################################  -->
+	
+    </data>
+</openerp>

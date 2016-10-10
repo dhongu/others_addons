@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<record id="webkul_view_inherit_sale_view_bridge_skeleton" model="ir.ui.view">
+            <field name="name">Sale View Inherited</field>
+            <field name="model">sale.order</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+                <field name="date_order" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </field>
+            	<xpath expr="//group[@name='technical']" position="replace">                
+                    <group string="Reporting" name="technical">  	
+	                	<label for="origin"/>
+	                    <div class="oe_inline">	
+	                    	<b><field name="ecommerce_channel"  attrs="{'invisible': [('ecommerce_channel', '=', False)]}" class="oe_inline"/></b>
+	                    	<label string="-" class="oe_inline" attrs="{'invisible': [('ecommerce_channel', '=', False)]}"/>
+	                        <field name="origin" class="oe_inline"/>
+	                    </div>
+	                    	<field name="payment_method" attrs="{'invisible': [('ecommerce_channel', '=', False)]}"/>
+                            <field name="is_shipped"/>
+                            <field name="is_invoiced"/>
+                    </group>    
+                </xpath>
+            </field>
+        </record>
+        <record id="form_view_partner_fix_1" model="ir.ui.view">
+            <field name="name">res.partner.form.view.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <page autofocus="autofocus" position="attributes">
+                    <attribute name="attrs">{'invisible': [('parent_id', '!=', False)]}</attribute>
+                </page>
+
+                <xpath expr="//notebook/page/field[@name='child_ids']/form/sheet/group/group/field[@name='comment']" position="after">
+                    <label for="wk_company"/>
+                    <div name="div_company">
+                        <field class="oe_inline" name="wk_company" />
+                    </div>
+                </xpath>
+
+                <field name="website" position="after">
+                    <field name="wk_company" placeholder="eg. webkul software"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>

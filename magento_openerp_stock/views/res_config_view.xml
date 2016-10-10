@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_mob_stock_config_settings" model="ir.ui.view">
+            <field name="name">MOB Stock Settings</field>
+            <field name="model">mob.config.settings</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="magento_bridge.view_mob_config_settings"/>
+            <field name="arch" type="xml">  
+                <group position="after">
+                    <separator string="Stock Synchroization"/>
+                    <p>
+                        Select preferred fields product quantity synchronization.
+                    </p>
+                    <group>
+                        <label for="id" string="MOB Stock Based On"/>
+                        <div>
+                            <div>
+                                <field name="mob_stock_action" class="oe_inline"/>
+                                <label string="Product Quantity will sync according to Forecast Quantity (Quantity On Hand + Incoming Quantity - Outgoing Quantity)." attrs="{'invisible':[('mob_stock_action','in',('qoh',False))]}"/>
+                                <label string="Product Quantity will sync According to Quantity on hand Field." attrs="{'invisible':[('mob_stock_action','in',('fq',False))]}"/>
+                            </div>
+                        </div>
+                    </group>                    
+                </group>
+            </field>
+        </record>
+
+    </data>
+</openerp>
