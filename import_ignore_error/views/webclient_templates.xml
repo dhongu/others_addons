@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="assets_backend" inherit_id="web.assets_backend" name="import_ignore_error assets">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/import_ignore_error/static/src/js/import_ignore_error.js"/>
+            </xpath>
+        </template>
+    </data>
+</openerp>

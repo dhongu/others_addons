@@ -1,0 +1,791 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Color / Meeting Text Definition -->
+        <!-- Project Tags -->
+        <record id="project_tag_scrum_1" model="project.tags">
+            <field name="name">Testing</field>
+            <field name="color">1</field>
+        </record>
+        <record id="project_tag_scrum_2" model="project.tags">
+            <field name="name">Feature Request</field>
+            <field name="color">4</field>
+        </record>
+        <record id="project_tag_scrum_3" model="project.tags">
+            <field name="name">Bug fixing</field>
+            <field name="color">5</field>
+        </record>
+        <record id="project_tag_scrum_4" model="project.tags">
+            <field name="name">Meetings</field>
+            <field name="color">8</field>
+        </record>
+
+        <!-- Color Definitions -->
+        <record id="scrum_color_def_1" model="project.scrum.color_def">
+            <field name="color">3</field>
+            <field name="color_txt">yellow</field>
+            <field name="def_type">color</field>
+            <field name="description">
+                Development tasks.
+            </field>
+            <field name="name">Development</field>
+            <field name="sequence">1</field>
+            <field name="tag_ids" eval="[(4, ref('project_tag_scrum_2'))]"/>
+            <field name="project_ids" eval="[(4, ref('project_data_scrum_1'))]"/>
+        </record>
+
+        <record id="scrum_color_def_2" model="project.scrum.color_def">
+            <field name="color">5</field>
+            <field name="color_txt">green</field>
+            <field name="def_type">color</field>
+            <field name="description">
+                Testing tasks.
+            </field>
+            <field name="name">Tests</field>
+            <field name="sequence">2</field>
+            <field name="tag_ids" eval="[(4, ref('project_tag_scrum_1'))]"/>
+            <field name="project_ids" eval="[(4, ref('project_data_scrum_1'))]"/>
+        </record>
+
+        <record id="scrum_color_def_3" model="project.scrum.color_def">
+            <field name="color">9</field>
+            <field name="color_txt">magenta </field>
+            <field name="def_type">color</field>
+            <field name="description">
+                Bug fix tasks.
+            </field>
+            <field name="name">Bug fix</field>
+            <field name="sequence">3</field>
+            <field name="tag_ids" eval="[(4, ref('project_tag_scrum_1'),ref('project_tag_scrum_3'))]"/>
+            <field name="project_ids" eval="[(4, ref('project_data_scrum_1'))]"/>
+        </record>
+
+        <record id="scrum_color_def_4" model="project.scrum.color_def">
+            <field name="color">8</field>
+            <field name="color_txt">magenta dark</field>
+            <field name="def_type">color</field>
+            <field name="description">
+                Technical debt (also known as design debt[1] or code debt) is a metaphor referring
+                to the eventual consequences of any system design, software architecture or software development within
+                a codebase. The debt can be thought of as work that needs to be done before a particular job can be considered
+                complete or proper. If the debt is not repaid, then it will keep on accumulating interest, making it hard
+                to implement changes later on. Unaddressed technical debt increases software entropy.
+            </field>
+            <field name="name">Technical debts</field>
+            <field name="sequence">4</field>
+            <field name="tag_ids" eval="[(4, ref('project_tag_scrum_3'))]"/>
+            <field name="project_ids" eval="[(4, ref('project_data_scrum_1'))]"/>
+        </record>
+
+        <record id="scrum_color_def_5" model="project.scrum.color_def">
+            <field name="color">4</field>
+            <field name="color_txt">green</field>
+            <field name="def_type">color</field>
+            <field name="description">
+                Default Color for User Stories.
+            </field>
+            <field name="name">User Stories</field>
+            <field name="sequence">5</field>
+            <field name="project_ids" eval="[(4, ref('project_data_scrum_1'))]"/>
+        </record>
+
+        <record id="scrum_color_def_6" model="project.scrum.color_def">
+            <field name="color">1</field>
+            <field name="color_txt">grey</field>
+            <field name="def_type">color</field>
+            <field name="description">
+                Other tasks.
+            </field>
+            <field name="name">Other tasks</field>
+            <field name="sequence">6</field>
+            <field name="project_ids" eval="[(4, ref('project_data_scrum_1'))]"/>
+        </record>
+
+        <!-- Color Meeting Text Definition -->
+        <record id="scrum_color_def_7" model="project.scrum.color_def">
+            <field name="name">Planning Meeting</field>
+            <field name="color">0</field>
+            <field name="def_type">meeting</field>
+            <field name="description">This record contains example texts (agenda and protocol) of default texts for the Sprint Planning Meeting.
+               Delete or adapt it according your needs.
+            </field>
+            <field name="agenda">
+                &lt;p&gt;  &lt;/p&gt;&lt;h3 style=&quot;color: blue;&quot;&gt;&lt;ul&gt;What is the goal of this sprint?
+                &lt;/ul&gt;&lt;/h3&gt;
+                &lt;ul&gt;&lt;li&gt;-&lt;/li&gt;&lt;li&gt;-&lt;/li&gt;&lt;/ul&gt;
+                &lt;h3 style=&quot;color: blue;&quot;&gt;&lt;ul&gt;Which tasks does it include?&lt;/ul&gt;
+                &lt;/h3&gt;
+                &lt;ul&gt;&lt;li&gt;-&lt;/li&gt;&lt;li&gt;-&lt;/li&gt;&lt;/ul&gt;
+                &lt;h3 style=&quot;color: blue;&quot;&gt;&lt;ul&gt;Which Def. of Done does it include?&lt;/ul&gt;&lt;/h3&gt;
+                &lt;ul&gt;&lt;li&gt;-&lt;/li&gt;&lt;li&gt;-&lt;/li&gt;&lt;/ul&gt;
+            </field>
+            <field name="protocol">
+                &lt;table border=&quot;1&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;
+                &lt;tbody&gt;
+                &lt;tr&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;
+                &lt;h3 style=&quot;width: 800px;&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;
+                1. Meeting Objective&lt;/font&gt;&lt;/h3&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;
+                &lt;h3&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;2. Attendance at Meeting&lt;/font&gt; &lt;/h3&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;8&quot;&gt;
+                &lt;h4&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;Name&lt;/font&gt;&lt;/h4&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;7&quot;&gt;
+                &lt;h4&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;Department/Division&lt;/font&gt;&lt;/h4&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;8&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;7&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;8&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;7&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;8&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;7&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;8&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;7&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;
+                &lt;h3&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;
+                3. Agenda and Notes, Decisions, Issues&lt;/font&gt; &lt;/h3&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;Topic&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;Owner&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;Time&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&amp;nbsp; &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;
+                &lt;h3&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;4. Action Items&amp;nbsp;&lt;/font&gt; &lt;/h3&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;Action&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;Owner&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;Due Date&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;
+                &lt;h3&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;
+                5. Next Meeting&amp;nbsp;&lt;/font&gt;&lt;span class=&quot;T1&quot;&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;(if applicable)&lt;/font&gt;&lt;/span&gt;&lt;/h3&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;5&quot;&gt;&lt;p&gt;Date: &amp;nbsp;(MM/DD/YYYY)&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;3&quot;&gt;&lt;p&gt;Time: &amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;1&quot;&gt;&lt;p&gt;Location: &amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;6&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;5&quot;&gt; &lt;br&gt;
+                &lt;p&gt;Objective: &amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;/tbody&gt;
+                &lt;/table&gt;
+            </field>
+            <field name="meeting_type">planning</field>
+            <field name="sequence">1</field>
+            <field name="tag_ids" eval="[(4, ref('project_tag_scrum_4'))]"/>
+            <field name="project_ids" eval="[(4, ref('project_data_scrum_1'))]"/>
+        </record>
+
+        <record id="scrum_color_def_8" model="project.scrum.color_def">
+            <field name="name">Review Meeting</field>
+            <field name="color">0</field>
+            <field name="def_type">meeting</field>
+            <field name="description">This record contains example texts (agenda and protocol) of default texts for the
+                Sprint Review Meeting.Delete or adapt it according your needs.
+            </field>
+            <field name="agenda">
+                &lt;p&gt;Attendees include the Scrum Team and key stakeholders invited by the Product Owner;&lt;/p&gt;
+                &lt;h3 style=&quot;color:blue&quot;&gt;The Product Owner explains what Product Backlog items have been
+                “Done” and what has not been  “Done”;?&lt;/h3&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;h3 style=&quot;
+                color:blue&quot;&gt;Development Team?&lt;/h3&gt;&lt;p&gt;The Development Team discusses what went well during
+                the Sprint, what problems it ran into, and how those problems were solved;&lt;/p&gt;&lt;p&gt;The Development
+                Team demonstrates the work that it has  “Done” and answers questions about the Increment;&lt;/p&gt;
+                &lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;h3 style=&quot;color:blue&quot;&gt;What next?&lt;/h3&gt;&lt;p&gt;
+                The Product Owner discusses the Product Backlog as it stands. He or she projects likely completion dates
+                based on progress to date (if needed);&lt;/p&gt;&lt;p&gt;The entire group collaborates on what to do next,
+                so that the Sprint Review provides valuable input to subsequent Sprint Planning;&lt;/p&gt;&lt;p&gt;Review
+                of how the marketplace or potential use of the product might have changed what is the most valuable thing to do next;
+                and,&lt;/p&gt;&lt;p&gt;Review of the timeline, budget, potential capabilities, and marketplace for the next
+                anticipated release of the product.&lt;/p&gt;
+            </field>
+            <field name="protocol">
+                &lt;table border=&quot;1&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;
+                &lt;tbody&gt;
+                &lt;tr&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;
+                &lt;h3 style=&quot;width: 800px;&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;
+                1. Meeting Objective&lt;/font&gt;&lt;/h3&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;
+                &lt;h3&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;2. Attendance at Meeting&lt;/font&gt; &lt;/h3&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;8&quot;&gt;
+                &lt;h4&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;Name&lt;/font&gt;&lt;/h4&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;7&quot;&gt;
+                &lt;h4&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;Department/Division&lt;/font&gt;&lt;/h4&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;8&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;7&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;8&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;7&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;8&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;7&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;8&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;7&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;
+                &lt;h3&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;
+                3. Agenda and Notes, Decisions, Issues&lt;/font&gt; &lt;/h3&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;Topic&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;Owner&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;Time&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&amp;nbsp; &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;
+                &lt;h3&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;4. Action Items&amp;nbsp;&lt;/font&gt; &lt;/h3&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;Action&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;Owner&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;Due Date&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;
+                &lt;h3&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;
+                5. Next Meeting&amp;nbsp;&lt;/font&gt;&lt;span class=&quot;T1&quot;&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;(if applicable)&lt;/font&gt;&lt;/span&gt;&lt;/h3&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;5&quot;&gt;&lt;p&gt;Date: &amp;nbsp;(MM/DD/YYYY)&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;3&quot;&gt;&lt;p&gt;Time: &amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;1&quot;&gt;&lt;p&gt;Location: &amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;6&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;5&quot;&gt; &lt;br&gt;
+                &lt;p&gt;Objective: &amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;/tbody&gt;
+                &lt;/table&gt;
+            </field>
+            <field name="meeting_type">review</field>
+            <field name="sequence">2</field>
+            <field name="tag_ids" eval="[(4, ref('project_tag_scrum_4'))]"/>
+            <field name="project_ids" eval="[(4, ref('project_data_scrum_1'))]"/>
+        </record>
+
+        <record id="scrum_color_def_9" model="project.scrum.color_def">
+            <field name="name">Retrospective Meeting</field>
+            <field name="color">0</field>
+            <field name="def_type">meeting</field>
+            <field name="description">This record contains example texts (agenda and protocol) of default texts for the Sprint Retrospective Meeting. Delete or adapt it according your needs.
+            </field>
+            <field name="agenda">
+                &lt;h3 style=&quot;color: blue;&quot;&gt;Inspect how the last Sprint went with regards to people,
+                relationships, process, and tools?&lt;/h3&gt;
+                &lt;p&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;-&lt;/li&gt;&lt;li&gt;-&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;/p&gt;
+                &lt;h3 style=&quot;color: blue;&quot;&gt;Identify and order the major items that went well and potential
+                improvements?&lt;/h3&gt;
+                &lt;p&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;-&lt;/li&gt;&lt;li&gt;-&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;/p&gt;
+                &lt;h3 style=&quot;color: blue;&quot;&gt;Create a plan for implementing improvements to the way the Scrum
+                Team does its work?&lt;/h3&gt;
+                &lt;p&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;-&lt;/li&gt;&lt;li&gt;-&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;/p&gt;
+            </field>
+            <field name="protocol">
+                &lt;table border=&quot;1&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;
+                &lt;tbody&gt;
+                &lt;tr&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;
+                &lt;h3 style=&quot;width: 800px;&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;
+                1. Meeting Objective&lt;/font&gt;&lt;/h3&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;
+                &lt;h3&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;2. Attendance at Meeting&lt;/font&gt; &lt;/h3&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;8&quot;&gt;
+                &lt;h4&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;Name&lt;/font&gt;&lt;/h4&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;7&quot;&gt;
+                &lt;h4&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;Department/Division&lt;/font&gt;&lt;/h4&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;8&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;7&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;8&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;7&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;8&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;7&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;8&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;7&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;
+                &lt;h3&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;
+                3. Agenda and Notes, Decisions, Issues&lt;/font&gt; &lt;/h3&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;Topic&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;Owner&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;Time&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&amp;nbsp; &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;
+                &lt;h3&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;4. Action Items&amp;nbsp;&lt;/font&gt; &lt;/h3&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;Action&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;Owner&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;Due Date&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;
+                &lt;h3&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;
+                5. Next Meeting&amp;nbsp;&lt;/font&gt;&lt;span class=&quot;T1&quot;&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;(if applicable)&lt;/font&gt;&lt;/span&gt;&lt;/h3&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;5&quot;&gt;&lt;p&gt;Date: &amp;nbsp;(MM/DD/YYYY)&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;3&quot;&gt;&lt;p&gt;Time: &amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;1&quot;&gt;&lt;p&gt;Location: &amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;6&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;5&quot;&gt; &lt;br&gt;
+                &lt;p&gt;Objective: &amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;/tbody&gt;
+                &lt;/table&gt;
+            </field>
+            <field name="meeting_type">retro</field>
+            <field name="sequence">3</field>
+            <field name="tag_ids" eval="[(4, ref('project_tag_scrum_4'))]"/>
+            <field name="project_ids" eval="[(4, ref('project_data_scrum_1'))]"/>
+        </record>
+
+        <record id="scrum_color_def_10" model="project.scrum.color_def">
+            <field name="name">Daily Meeting</field>
+            <field name="color">0</field>
+            <field name="color_txt"/>
+            <field name="def_type">meeting</field>
+            <field name="description">This record contains example texts (agenda and protocol) of default texts for the Sprint Daily Meeting. Delete or adapt it according your needs.
+            </field>
+            <field name="agenda">
+                &lt;h3 style=&quot;color: blue;&quot;&gt;What did I do yesterday that helped the Development Team meet the Sprint Goal?&lt;/h3&gt;
+                &lt;ul&gt;&lt;li&gt;&lt;/li&gt;&lt;li&gt;&lt;/li&gt;&lt;/ul&gt;
+                &lt;h3 style=&quot;color: blue;&quot;&gt;What will I do today to help the Development Team meet the Sprint Goal?&lt;/h3&gt;
+                &lt;ul&gt;&lt;li&gt;&lt;/li&gt;&lt;li&gt;&lt;/li&gt;&lt;/ul&gt;
+                &lt;h3 style=&quot;color: blue;&quot;&gt;Do I see any impediment that prevents me or the Development Team from meeting
+                the Sprint Goal?&lt;/h3&gt;
+                &lt;ul&gt;&lt;li&gt;&lt;/li&gt;&lt;li&gt;&lt;/li&gt;&lt;/ul&gt;
+            </field>
+            <field name="protocol">
+                &lt;table border=&quot;1&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;
+                &lt;tbody&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;
+                &lt;h3 style=&quot;width: 800px;&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;
+                1. Daily Meeting Notes, Impediments, Issues&lt;/font&gt; &lt;/h3&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;Topic&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;Owner&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;Time&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&amp;nbsp; &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;15&quot;&gt;
+                &lt;h3&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;
+                2. Action Items&amp;nbsp;&lt;/font&gt; &lt;/h3&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;Action&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;Owner&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;Due Date&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr &gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;10&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot; colspan=&quot;4&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align: left;&quot;&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+                &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;/tbody&gt;
+                &lt;/table&gt;
+            </field>
+            <field name="meeting_type">daily</field>
+            <field name="sequence">4</field>
+            <field name="tag_ids" eval="[(4, ref('project_tag_scrum_4'))]"/>
+            <field name="project_ids" eval="[(4, ref('project_data_scrum_1'))]"/>
+        </record>
+    </data>
+</odoo>

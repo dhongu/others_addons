@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-extend="ImportView">
+        <t t-jquery=".oe_import_error_report" t-operation="before">
+            <div>
+                <input type="checkbox" id="oe_import_ignore_error"/>
+                <label for="oe_import_ignore_error">
+                    Import data ignore error
+                </label>
+            </div>
+        </t>
+    </t>
+</templates>
