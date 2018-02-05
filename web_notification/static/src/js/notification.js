@@ -1,10 +1,16 @@
 odoo.define('web_notification', function (require) {
-    var bus = require('bus.bus');
+"use strict";
 
-    var bus = require('web.notification');
+var WebClient = require('web.WebClient');
+var base_bus = require('bus.bus');
+var _ = require('_');
 
 
-    openerp.web.WebClient.include({
+//   var bus = require('bus.bus');
+//  var bus = require('web.notification');
+
+
+WebClient.include({
     	
     	// to do: move this to mail.utils
     	send_native_notification: function(title, content) {
