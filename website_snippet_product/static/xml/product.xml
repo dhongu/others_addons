@@ -1,0 +1,26 @@
+<templates id="template" xml:space="preserve">
+
+    <t t-name="website.snippet.product_carrousel">
+        <div t-att-class="carrousel_active" t-att-id="carrousel_id">
+            <div class="oe_structure"/>
+            <div class="container oe_website_sale">
+                <div class="col-md-12" id="products_grid" >
+                    <table width="100%">
+                        <tbody>
+                            <tr>
+                                <t t-foreach="carrousel_nbr_prod" t-as="x">
+                                    <td t-att-data="carrousel_nbr_prod" t-att-width="(100/carrousel_nbr_prod)+'%'"/>
+                                </t>
+                            </tr>
+                            <tr t-att-class="carrousel_table" >
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    </templates>
+

@@ -1,0 +1,234 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* website_portal_sale
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-05-13 03:09+0000\n"
+"PO-Revision-Date: 2016-05-13 03:09+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.sale_orders
+msgid "Access the complete Sale application"
+msgstr "Accesate aplicație de vânzare"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.invoices
+msgid "Amount Due"
+msgstr "De plătit"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.invoices
+#: view:website:website_portal_sale.quotations
+msgid "Cancelled"
+msgstr "Anulat"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.orders_followup
+msgid "Contact"
+msgstr "Contact"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.orders_followup
+msgid "Date:"
+msgstr "Data:"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.sale_orders
+msgid "Done"
+msgstr "Efactutat"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.invoices
+msgid "Due Date"
+msgstr "Termen plată"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.orders_followup
+msgid "If you wish to access the complete application to manage your orders, you can follow"
+msgstr "În cazul în care doriți să accesați aplicația completă pentru a gestiona comenzile, puteți urmări"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.invoices
+msgid "Invoice #"
+msgstr "Nr Factură"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.invoices
+msgid "Invoice Date"
+msgstr "Dată factură"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.sale_orders
+msgid "Invoiced"
+msgstr "Facturat"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.orders_followup
+msgid "Invoices"
+msgstr "Facturi"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.orders_followup
+msgid "Invoicing Address"
+msgstr "Adresă facturare"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.orders_followup
+msgid "My Account"
+msgstr "Contul meu"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.orders_followup
+msgid "Order"
+msgstr "Comandă"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.sale_orders
+msgid "Order Date"
+msgstr "Dată comandă"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.invoices
+#: view:website:website_portal_sale.orders_followup
+msgid "Paid"
+msgstr "Plătit"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.sale_orders
+msgid "Problem"
+msgstr "Problemă"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.orders_followup
+msgid "Product"
+msgstr "Produs"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.orders_followup
+msgid "Quantity"
+msgstr "Cantitate"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.orders_followup
+msgid "Quotation"
+msgstr "Comandă nepreluată"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.quotations
+msgid "Quotation #"
+msgstr "Nr comandă"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.sale_orders
+msgid "Sale Order #"
+msgstr "Nr comandă"
+
+#. module: website_portal_sale
+#: model:ir.model,name:website_portal_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Comandă de vânzare"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.orders_followup
+msgid "Shipping Address"
+msgstr "Adresă de livrare"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.invoices
+#: view:website:website_portal_sale.quotations
+#: view:website:website_portal_sale.sale_orders
+msgid "Show less"
+msgstr "Mai puțin"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.invoices
+#: view:website:website_portal_sale.quotations
+#: view:website:website_portal_sale.sale_orders
+msgid "Show more"
+msgstr "Mai mult"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.orders_followup
+msgid "Subtotal"
+msgstr "Subtotal"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.orders_followup
+msgid "Taxes:"
+msgstr "TVA:"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.invoices
+msgid "There are currently no invoices for your account."
+msgstr "În prezent nu există facturi pentru contul dvs."
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.sale_orders
+msgid "There are currently no orders for your account."
+msgstr "În prezent nu există comenzi pentru contul dvs."
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.quotations
+msgid "There are currently no quotes for your account."
+msgstr "În prezent nu există comenzi nepreluate pentru contul dvs."
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.quotations
+#: view:website:website_portal_sale.sale_orders
+msgid "Total"
+msgstr "Total"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.orders_followup
+msgid "Total:"
+msgstr "Total:"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.orders_followup
+msgid "Unit Price"
+msgstr "Preț unitar"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.orders_followup
+msgid "Untaxed Amount:"
+msgstr "Total fără TAV:"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.orders_followup
+msgid "Waiting"
+msgstr "Așteptare"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.invoices
+msgid "Waiting for Payment"
+msgstr "Așteaptă plata"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.invoices
+msgid "Your Invoices and Payments"
+msgstr "Facturile și plățile dvs."
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.sale_orders
+msgid "Your Orders"
+msgstr "Comenzile dvs."
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.quotations
+msgid "Your Quotes"
+msgstr "Comenzile dvs. nepreluate"
+
+#. module: website_portal_sale
+#: view:website:website_portal_sale.orders_followup
+msgid "this link"
+msgstr "acest link"
+

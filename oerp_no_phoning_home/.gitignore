@@ -1,0 +1,11 @@
+.sass-cache
+.venv
+*.bat
+*.dot
+*.pyc
+*.swp
+*.swo
+_build
+.project
+.pydevproject
+.settings/

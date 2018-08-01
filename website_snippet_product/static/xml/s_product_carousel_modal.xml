@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_snippet_product.s_product_carousel_modal">
+  <div class="modal fade" id="carouselModal" contenteditable="False" backdrop="false" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:2001">
+    <div class="modal-dialog">
+      <div class="modal-content gard_modal">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+                  <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Customize your carousel</h4>
+        </div>
+
+        <div class="modal-body" contenteditable="false">
+
+
+            <div class="form-group ">
+                <label for="pin_mode text-right" class="col-sm-7 control-label text-right">Mode :</label>
+                <div class="input-group col-sm-7">
+                    <select id="pin_mode" name="pin_mode" class=" col-sm-5">
+                        <option value="top_sales">Top sales</option>
+                        <option value="only_sale">Only in promo</option>
+                        <option value="only_new">Only new products</option>
+                        <option value="last_sales">Last sales</option>
+                        <option value="default">Latest updated</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label for="pin_nbr_element text-right" class="col-sm-7 control-label text-right">Maximum number of element</label>
+                <div class="input-group col-sm-7">
+                    <input id="pin_nbr_element" name="pin_nbr_element" class=" col-sm-2"/>
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label for="pin_nbr_product text-right" class="col-sm-7 control-label text-right">Number of element in carousel</label>
+                <div class="input-group col-sm-7">
+                    <input id="pin_nbr_product" name="pin_nbr_product" class=" col-sm-2"/>
+                </div>
+            </div>
+
+        </div> <!-- modal-body -->
+
+        <div class="modal-footer">
+          <button id="cancel" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+          <button id="sub_carousel"  class="btn btn-danger">Save</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- / .modal -->
+</t>
+</templates>

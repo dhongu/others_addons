@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_analytic_account_form" model="ir.ui.view">
+            <field name="name">analytic.analytic.account.form</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field name="arch" type="xml">
+                <notebook>
+                    <page string="Distribution Information" name="distribution_page" attrs="{'invisible': [('type', '!=', 'distribution')]}">
+                        <field name="distribution_line_ids">
+                            <tree editable="bottom">
+                                <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id), ('type', 'not in', ['view', 'distribution'])]"/>
+                                <field name="percentage" sum="Total"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+    </data>
+</openerp>

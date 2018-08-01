@@ -1,0 +1,16 @@
+<openerp>
+    <data>
+
+        <template id="product" name="product">
+
+
+            <td t-att-class=" '%s' % (style_in_product) ">
+                <div class="oe_product_cart">
+                    <t t-call="website_sale.products_item"/>
+                </div>
+            </td>
+
+        </template>
+
+    </data>
+</openerp>

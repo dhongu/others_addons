@@ -1,0 +1,88 @@
+<openerp>
+    <data>
+
+
+        <!-- asset -->
+
+        <template id="assets_frontend_less" name="Carousel product Assets"
+                  inherit_id="website_less.option_bootstrap_less">
+            <xpath expr="//link[last()]" position="after">
+                <link href="/website_snippet_product/static/src/less/s_product_carousel.less" rel="stylesheet"
+                      type="text/less"/>
+            </xpath>
+        </template>
+
+        <template id="product_snippet" inherit_id="website.assets_frontend" name="product top Snippet">
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/website_snippet_product/static/src/js/snippet_frontend.js"/>
+            </xpath>
+        </template>
+
+        <template id="product_snippet_editor" inherit_id="website.assets_editor" name="product top Snippet">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_snippet_product/static/src/js/snippet_editor.js"/>
+            </xpath>
+        </template>
+
+        <!-- snippet -->
+
+        <!-- Add to the top bar -->
+        <template id="snippet_product_carrousel" inherit_id="website_less.snippets" name="Snippets product">
+            <xpath expr="//div[@id='snippet_feature']" position="inside">
+                <t t-snippet="website_snippet_product.s_product_carousel"
+                   t-thumbnail="/website_snippet_product/static/img/blocks/block_title.png"/>
+            </xpath>
+        </template>
+
+
+        <!-- Snippet's Body -->
+        <template name="Product carousel " id="s_product_carousel">
+            <section class="s_product_carousel" data-id-carousel="0" data-pin-nbr-element="40" data-pin-nbr-product="5"
+                     data-pin-mode="default">
+                <div class="container">
+                    <div class="row">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <h3>Product</h3>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- Controls -->
+                                <div class="controls pull-right hidden-sx">
+                                    <a class="left btn btn-success" href="#carousel-product" data-slide="prev">
+                                        <span class="fa fa-chevron-left"/>
+                                    </a>
+                                    <a class="right btn btn-success" href="#carousel-product" data-slide="next">
+                                        <span class="fa fa-chevron-right"/>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="carousel-product" class="carousel slide" data-ride="carousel" contenteditable="false">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner product_list_carrousel" >
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </template>
+
+        <!-- Snippet's Options -->
+        <template id="s_product_carousel_option" inherit_id="website_less.snippet_options">
+            <xpath expr="//div[@data-js='blog-style']" position="before">
+                <div data-js='s_product_carousel' data-selector="section.s_product_carousel">
+                    <li data-s_product_carousel="">
+                        <a><i class="fa fa-fw fa-cog"></i>carousel Options
+                        </a>
+                    </li>
+                </div>
+            </xpath>
+        </template>
+
+
+    </data>
+
+</openerp>
