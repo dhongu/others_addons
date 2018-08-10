@@ -64,18 +64,18 @@ class ScrumUserStories(models.Model):
         for p in self:
             p.def_done_count = len(p.def_done_ids)
 
-    def _resolve_project_id_from_context(self, cr, uid, context=None):
+    @api.model
+    def _resolve_project_id_from_context(self):
         """ Returns ID of project based on the value of 'default_project_id'
             context key, or None if it cannot be resolved to a single
             project.
         """
-        if context is None:
-            context = {}
-        if type(context.get('default_project_id')) in (int, long):
-            return context['default_project_id']
-        if isinstance(context.get('default_project_id'), basestring):
-            project_name = context['default_project_id']
-            project_ids = self.pool.get('project.project').name_search(cr, uid, name=project_name, context=context)
+
+        if type(self.env.context.get('default_project_id')) in (int):
+            return self.env.context['default_project_id']
+        if isinstance(self.env.context.get('default_project_id'), str):
+            project_name = self.env.context['default_project_id']
+            project_ids = self.env['project.project'].name_search( name=project_name)
             if len(project_ids) == 1:
                 return project_ids[0][0]
         return None
