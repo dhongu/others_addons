@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <template id="assets_backend" name="odoo_export_list assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/odoo_export_list/static/src/js/web_export_view.js"></script>
+        </xpath>
+    </template>
+</odoo>
