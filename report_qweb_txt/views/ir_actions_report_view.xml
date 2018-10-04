@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="act_report_xml_view" model="ir.ui.view">
+        <field name="name">ir.actions.report</field>
+        <field name="model">ir.actions.report</field>
+        <field name="inherit_id" ref="base.act_report_xml_view"/>
+        <field name="arch" type="xml">
+
+            <div name="button_box" position="inside">
+                <button name="associated_view" string="QWeb views" type="object"
+                        attrs="{'invisible':[('report_type', 'not in', ['qweb-txt', 'qweb-txt-csv','qweb-txt-prn','qweb-txt-zpl'])]}"
+                        icon="fa-code" class="oe_stat_button"/>
+
+            </div>
+
+        </field>
+    </record>
+</odoo>
