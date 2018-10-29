@@ -19,7 +19,13 @@ class ProjectProjectScrum(models.Model):
         #self._group_by_full['us_id'] = _read_group_us_id
         #super(project_task, self)._auto_init(cr, context)
 
-    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+    @api.model
+    def _read_group_stage_ids(self, stages, domain, order):
+        stage_ids = stages._search([], order=order, access_rights_uid=SUPERUSER_ID)
+        return stages.browse(stage_ids)
+
+
+    def _read_group_stage_ids_old(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         stage_obj = self.pool.get('project.task.type')
         order = stage_obj._order
         access_rights_uid = access_rights_uid or uid
