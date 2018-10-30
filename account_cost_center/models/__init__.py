@@ -7,3 +7,4 @@ from . import account_invoice
 from . import account_invoice_line
 from . import account_invoice_report
 from . import account_cost_center
+from . import account_analytic

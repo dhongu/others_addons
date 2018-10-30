@@ -15,6 +15,11 @@ class AccountInvoice(models.Model):
         help='Default Cost Center'
     )
 
+    @api.onchange('cost_center_id')
+    def onchange_cost_center_id(self):
+        for line in self.invoice_line:
+            line.cost_center_id = self.cost_center_id
+
     @api.model
     def line_get_convert(self, line, part, date):
         res = super(AccountInvoice, self).line_get_convert(line, part, date)
@@ -23,19 +28,16 @@ class AccountInvoice(models.Model):
         return res
 
     @api.model
-    def fields_view_get(
-            self, view_id=None, view_type='form',
-            toolbar=False, submenu=False):
-        res = super(AccountInvoice, self).fields_view_get(
-            view_id=view_id, view_type=view_type,
-            toolbar=toolbar, submenu=submenu)
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        res = super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar,
+                                                          submenu=submenu)
 
         if not self._context.get('cost_center_default', False):
             if view_type == 'form':
                 view_obj = etree.XML(res['arch'])
                 invoice_line = view_obj.xpath("//field[@name='invoice_line']")
                 extra_ctx = "'cost_center_default': 1, " \
-                    "'cost_center_id': cost_center_id"
+                            "'cost_center_id': cost_center_id"
                 for el in invoice_line:
                     ctx = el.get('context')
                     if ctx:

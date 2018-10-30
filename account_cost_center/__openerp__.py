@@ -20,6 +20,7 @@
         'views/account_move_line.xml',
         'views/account_invoice.xml',
         'views/account_invoice_report.xml',
+        'views/account_analytic_view.xml'
     ],
     'installable': True,
 }
