@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_invoice_add_is_mailed" model="ir.ui.view">
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="invoice_mailed"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_mailed_filter" model="ir.ui.view">
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <filter name="late" position="after">
+                <separator/>
+                <filter name="invoice_mailed" string="Mailed" domain="[('invoice_mailed', '=', True)]"/>
+                <filter name="not_invoice_mailed" string="Not Mailed" domain="[('invoice_mailed', '=', False)]"/>
+                <separator/>
+            </filter>
+        </field>
+    </record>
+</odoo>
