@@ -15,19 +15,16 @@ class SaleOrder(models.Model):
         self.ensure_one()
         partner = self.partner_id
         moveline_obj = self.env['account.move.line']
-        movelines = moveline_obj.search(
-            [('partner_id', '=', partner.id),
-             ('account_id.user_type_id.name', 'in', ['Receivable', 'Payable']),
-             ('full_reconcile_id', '=', False)]
-        )
+        # movelines = moveline_obj.search([('partner_id', '=', partner.id),('account_id.user_type_id.name', 'in', ['Receivable', 'Payable']),('full_reconcile_id', '=', False)])
+        movelines = moveline_obj.search([('partner_id', '=', partner.id),('full_reconcile_id', '=', False)])
         debit, credit = 0.0, 0.0
         today_dt = datetime.strftime(datetime.now().date(), DF)
         for line in movelines:
-            if line.date_maturity < today_dt:
+            if line.date_maturity < today_dt and line.user_type_id.type in ['receivable', 'payable']:
                 credit += line.debit
                 debit += line.credit
 
-        if (credit - debit + self.amount_total) > partner.credit_limit:
+        if partner.credit_limit and ((credit - debit + self.amount_total) > partner.credit_limit):
             if not partner.over_credit:
                 msg = 'Can not confirm Sale Order,Total mature due Amount ' \
                       '%s as on %s !\nCheck Partner Accounts or Credit ' \
