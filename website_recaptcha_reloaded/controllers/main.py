@@ -23,15 +23,15 @@ from openerp.addons.web.http import request
 from openerp.tools.translate import _
 from openerp.addons.web.controllers.main import Home 
 
-
 class CaptchaHome(Home):
     
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
         qcontext = self.get_auth_signup_qcontext()
         qcontext['error'] = _("Wrong Captcha !!!")
-        #if kw.has_key('g-recaptcha-response') and not request.website.is_captcha_valid(kw['g-recaptcha-response']):
-        #    return request.render('web.login', qcontext)
+        if kw.has_key('g-recaptcha-response') and not request.website.is_captcha_valid(kw['g-recaptcha-response']):
+            return request.render('web.login', qcontext)
+
         return super(CaptchaHome,self).web_login(redirect, **kw)
     
     

@@ -18,6 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import website
-import models
-import controllers
+from . import website
+from . import models
+from . import controllers
