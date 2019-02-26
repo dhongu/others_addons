@@ -10,6 +10,7 @@
             <group name="acc_sale" position="inside">
                 <field name="credit_limit"/>
                 <field name="over_credit"/>
+                <field name="clemency_days"/>
             </group>
         </field>
     </record>

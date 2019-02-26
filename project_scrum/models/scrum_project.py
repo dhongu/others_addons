@@ -25,26 +25,26 @@ class ProjectProjectScrum(models.Model):
         return stages.browse(stage_ids)
 
 
-    def _read_group_stage_ids_old(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
-        stage_obj = self.pool.get('project.task.type')
-        order = stage_obj._order
-        access_rights_uid = access_rights_uid or uid
-        if read_group_order == 'stage_id desc':
-            order = '%s desc' % order
-        search_domain = []
-        project_id = self._resolve_project_id_from_context(cr, uid, context=context)
-        if project_id:
-            search_domain += ['|', ('project_ids', '=', project_id)]
-        search_domain += [('id', 'in', ids)]
-        stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
-        result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
-        # restore order of the search
-        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
-
-        fold = {}
-        for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
-            fold[stage.id] = stage.fold or False
-        return result, fold
+    # def _read_group_stage_ids_old(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+    #     stage_obj = self.pool.get('project.task.type')
+    #     order = stage_obj._order
+    #     access_rights_uid = access_rights_uid or uid
+    #     if read_group_order == 'stage_id desc':
+    #         order = '%s desc' % order
+    #     search_domain = []
+    #     project_id = self._resolve_project_id_from_context(cr, uid, context=context)
+    #     if project_id:
+    #         search_domain += ['|', ('project_ids', '=', project_id)]
+    #     search_domain += [('id', 'in', ids)]
+    #     stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
+    #     result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
+    #     # restore order of the search
+    #     result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+    #
+    #     fold = {}
+    #     for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
+    #         fold[stage.id] = stage.fold or False
+    #     return result, fold
 
     scrum_master_id = fields.Many2one('res.users', 'Scrum Master', select=True, track_visibility='onchange')
     project_code = fields.Char(string="Project Code", size=6, index=True,
