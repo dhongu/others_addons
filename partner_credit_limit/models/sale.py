@@ -15,7 +15,6 @@ class SaleOrder(models.Model):
         self.ensure_one()
         partner = self.partner_id
         moveline_obj = self.env['account.move.line']
-        # movelines = moveline_obj.search([('partner_id', '=', partner.id),('account_id.user_type_id.name', 'in', ['Receivable', 'Payable']),('full_reconcile_id', '=', False)])
 
         movelines = moveline_obj.search([
             ('partner_id', '=', partner.id),
@@ -24,7 +23,7 @@ class SaleOrder(models.Model):
         ])
         debit, credit = 0.0, 0.0
         # today_dt = datetime.strftime(datetime.now().date(), DF)
-        today_dt = fields.Date.from_string(fields.Date.context_today())
+        today_dt = fields.Date.from_string(fields.Date.today())
         for line in movelines:
             date_maturity = fields.Date.from_string(line.date_maturity) + datetime.timedelta(days=partner.clemency_days)
             if date_maturity < today_dt: # and line.user_type_id.type in ['receivable', 'payable']:
