@@ -13,6 +13,7 @@
         'sale_management',
     ],
     'data': [
+        'security/security.xml',
         'views/partner_view.xml',
     ],
     'installable': True,
