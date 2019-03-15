@@ -1,0 +1,129 @@
+@function o-theme-color($name) {
+    $-tmp: theme-color($name);
+    @return if($-tmp, $-tmp, color($name));
+}
+
+@mixin fa-size-generator($base-size) {
+    .fa {
+        text-align: center;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .fa,
+    .fa.fa-1x {
+        width: ($base-size + 20px);
+        height: ($base-size + 20px);
+        line-height: ($base-size + 20px);
+    }
+    .fa.fa-2x {
+        width: ($base-size + 40px);
+        height: ($base-size + 40px);
+        line-height: ($base-size + 40px);
+    }
+    .fa.fa-3x {
+        width: ($base-size + 60px);
+        height: ($base-size + 60px);
+        line-height: ($base-size + 60px);
+    }
+    .fa.fa-4x {
+        width: ($base-size + 80px);
+        height: ($base-size + 80px);
+        line-height: ($base-size + 80px);
+    }
+    .fa.fa-5x {
+        width: ($base-size + 100px);
+        height: ($base-size + 100px);
+        line-height: ($base-size + 100px);
+    }
+}
+
+@mixin blockquote-layout($bg-color, $color) {
+    blockquote {
+        font-style: italic;
+        margin: 0 0 12px 0;
+        padding: 0;
+        border: 0;
+        > .fa,
+        > span .fa {
+            float: left;
+        }
+        @include fa-size-generator(20px);
+        img {
+            display: inline-block;
+            max-width: 40px;
+            max-height: 40px;
+        }
+        small {
+            display: inline-block;
+            color: $color;
+        }
+        .blockquote-text {
+            overflow: hidden;
+            font-size: $font-size-base;
+            text-align: left;
+            &:focus{
+                outline: none;
+            }
+        }
+        p {
+            background-color: $bg-color;
+            color: $color;
+            padding: 24px;
+        }
+    }
+}
+
+@mixin carousel-control($position, $fa-position, $fa-padding) {
+    opacity: 1;
+    text-shadow: none;
+    color: gray('900');
+    font-size: inherit;
+    width: 5%;
+    .fa {
+        top: 50%;
+        background-color: #fff;
+        &:hover {
+            color: theme-color('alpha');
+        }
+        @include media-breakpoint-down(sm) {
+            top: auto;
+            bottom: 0;
+        }
+    }
+    @include fa-size-generator(20px);
+    &.left {
+        background-image: none;
+        left: $position;
+        .fa {
+            left: $fa-position;
+            right: auto;
+            padding-right: $fa-padding;
+        }
+    }
+    &.right {
+        background-image: none;
+        right: $position;
+        .fa {
+            right: $fa-position;
+            left: auto;
+            padding-left: $fa-padding;
+        }
+    }
+}
+
+@mixin PlaceholderStyle($color) {
+    ::-webkit-input-placeholder { /* WebKit browsers */
+        color: $color;
+    }
+    :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+        color: $color;
+        opacity: 1;
+    }
+    ::-moz-placeholder { /* Mozilla Firefox 19+ */
+        color: $color;
+        opacity: 1;
+    }
+    :-ms-input-placeholder { /* Internet Explorer 10+ */
+        color: $color;
+    }
+}
