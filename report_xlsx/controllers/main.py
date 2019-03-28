@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnuorg/licenses/agpl.html).
 
 from odoo.addons.web.controllers import main as report
-from odoo.http import route, request
+from odoo.http import content_disposition, route, request
 
 import json
 
@@ -11,7 +11,8 @@ class ReportController(report.ReportController):
     @route()
     def report_routes(self, reportname, docids=None, converter=None, **data):
         if converter == 'xlsx':
-            report = request.env['ir.actions.report']._get_report_from_name(reportname)
+            report = request.env['ir.actions.report']._get_report_from_name(
+                reportname)
             context = dict(request.env.context)
             if docids:
                 docids = [int(i) for i in docids.split(',')]
@@ -25,14 +26,16 @@ class ReportController(report.ReportController):
                 if data['context'].get('lang'):
                     del data['context']['lang']
                 context.update(data['context'])
-            xlsx = report.with_context(context).render_xlsx(docids, data=data)[0]
+            xlsx = report.with_context(context).render_xlsx(
+                docids, data=data
+            )[0]
             xlsxhttpheaders = [
                 ('Content-Type', 'application/vnd.openxmlformats-'
                                  'officedocument.spreadsheetml.sheet'),
                 ('Content-Length', len(xlsx)),
                 (
                     'Content-Disposition',
-                    'attachment; filename=' + report.report_file + '.xlsx'
+                    content_disposition(report.report_file + '.xlsx')
                 )
             ]
             return request.make_response(xlsx, headers=xlsxhttpheaders)

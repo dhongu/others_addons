@@ -54,7 +54,7 @@ msgid "28x15"
 msgstr ""
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
 msgid "2D Barcode Arguments"
 msgstr ""
 
@@ -89,7 +89,7 @@ msgid "Active"
 msgstr ""
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
 msgid "Add in the 'Action' menu"
 msgstr ""
 
@@ -101,7 +101,7 @@ msgid ""
 msgstr ""
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_search
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_search
 msgid "Archived"
 msgstr ""
 
@@ -111,7 +111,7 @@ msgid "Bar Width Ratio"
 msgstr ""
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
 msgid "Barcode Format"
 msgstr ""
 
@@ -141,8 +141,8 @@ msgid "Block Width"
 msgstr ""
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_wizard_import_zpl2_form
-#: model:ir.ui.view,arch_db:printer_zpl2.view_wizard_print_product_label_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_wizard_import_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_wizard_print_product_label_form
 msgid "Cancel"
 msgstr ""
 
@@ -228,7 +228,7 @@ msgid "Columns Count"
 msgstr ""
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
 msgid "Components"
 msgstr ""
 
@@ -256,7 +256,7 @@ msgstr "Creato il"
 #. module: printer_zpl2
 #: model:ir.model.fields,field_description:printer_zpl2.field_printing_label_zpl2_component_data
 #: model:ir.model.fields,field_description:printer_zpl2.field_wizard_import_zpl2_data
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
 msgid "Data"
 msgstr ""
 
@@ -301,7 +301,7 @@ msgid "Display Name"
 msgstr "Nome da visualizzare"
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
 msgid "Display an option on related documents."
 msgstr ""
 
@@ -316,7 +316,7 @@ msgid "EAN-8"
 msgstr ""
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
 msgid "Emulation"
 msgstr ""
 
@@ -343,7 +343,7 @@ msgstr ""
 
 #. module: printer_zpl2
 #: model:ir.model.fields,field_description:printer_zpl2.field_printing_label_zpl2_extra
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
 msgid "Extra"
 msgstr ""
 
@@ -358,7 +358,7 @@ msgid "Font to use, for text only."
 msgstr ""
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
 msgid "Format"
 msgstr ""
 
@@ -425,7 +425,7 @@ msgid "Image from Labelary"
 msgstr ""
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_wizard_import_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_wizard_import_zpl2_form
 msgid "Import"
 msgstr ""
 
@@ -437,7 +437,7 @@ msgstr ""
 
 #. module: printer_zpl2
 #: model:ir.model,name:printer_zpl2.model_wizard_import_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
 msgid "Import ZPL2"
 msgstr ""
 
@@ -484,7 +484,7 @@ msgid "Label"
 msgstr ""
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
 msgid "Label Component"
 msgstr ""
 
@@ -635,7 +635,7 @@ msgid "Normal"
 msgstr ""
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
 msgid ""
 "Note : It is an emulation from http://labelary.com/, the result on printer "
 "can be different."
@@ -726,8 +726,8 @@ msgstr ""
 #. module: printer_zpl2
 #: code:addons/printer_zpl2/models/printing_label_zpl2.py:264
 #: model:ir.actions.act_window,name:printer_zpl2.action_wizard_print_record_label_view
-#: model:ir.ui.view,arch_db:printer_zpl2.view_wizard_import_zpl2_form
-#: model:ir.ui.view,arch_db:printer_zpl2.view_wizard_print_product_label_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_wizard_import_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_wizard_print_product_label_form
 #, python-format
 msgid "Print Label"
 msgstr ""
@@ -738,7 +738,7 @@ msgid "Print Record Label"
 msgstr ""
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
 #, fuzzy
 msgid "Print Test"
 msgstr "Stampante"
@@ -750,7 +750,7 @@ msgid "Print density"
 msgstr "Stampante"
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_wizard_print_product_label_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_wizard_print_product_label_form
 #, fuzzy
 msgid "Print label"
 msgstr "Stampante"
@@ -793,17 +793,17 @@ msgid "Rectangle / Line"
 msgstr ""
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
 msgid "Remove from the 'Action' menu"
 msgstr ""
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
 msgid "Remove the contextual action."
 msgstr ""
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
 msgid "Repeat"
 msgstr ""
 
@@ -910,7 +910,7 @@ msgid "Sublabel"
 msgstr ""
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
 msgid "Test Mode"
 msgstr ""
 
@@ -920,7 +920,7 @@ msgid "Text"
 msgstr ""
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
 msgid "Text Block Format"
 msgstr ""
 
@@ -1019,9 +1019,9 @@ msgstr ""
 
 #. module: printer_zpl2
 #: model:ir.model,name:printer_zpl2.model_printing_label_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_search
-#: model:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_tree
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_search
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_printing_label_zpl2_tree
 msgid "ZPL II Label"
 msgstr ""
 
@@ -1037,7 +1037,7 @@ msgid "ZPL II Labels"
 msgstr ""
 
 #. module: printer_zpl2
-#: model:ir.ui.view,arch_db:printer_zpl2.view_wizard_import_zpl2_form
+#: model_terms:ir.ui.view,arch_db:printer_zpl2.view_wizard_import_zpl2_form
 #: selection:printing.label.zpl2.component,component_type:0
 msgid "ZPL2"
 msgstr ""

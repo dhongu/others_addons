@@ -50,7 +50,7 @@ msgid "Address"
 msgstr ""
 
 #. module: base_report_to_printer
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
 msgid "Are you sure to want to cancel all jobs of this printer?"
 msgstr ""
 
@@ -75,13 +75,13 @@ msgid "Can be restarted"
 msgstr ""
 
 #. module: base_report_to_printer
-#: model:ir.ui.view,arch_db:base_report_to_printer.printer_update_wizard
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_job_view_form
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printer_update_wizard
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_job_view_form
 msgid "Cancel"
 msgstr "Annulla"
 
 #. module: base_report_to_printer
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
 msgid "Cancel all running jobs"
 msgstr ""
 
@@ -219,7 +219,7 @@ msgid "Default Printer Paper Source"
 msgstr ""
 
 #. module: base_report_to_printer
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
 msgid "Disable"
 msgstr ""
 
@@ -242,7 +242,7 @@ msgid "Document sent to the printer %s"
 msgstr ""
 
 #. module: base_report_to_printer
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
 msgid "Enable"
 msgstr ""
 
@@ -313,8 +313,8 @@ msgid "If checked, this server is useable."
 msgstr ""
 
 #. module: base_report_to_printer
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_job_view_form
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_job_view_tree
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_job_view_form
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_job_view_tree
 msgid "Job"
 msgstr ""
 
@@ -330,7 +330,7 @@ msgstr ""
 
 #. module: base_report_to_printer
 #: model:ir.model.fields,field_description:base_report_to_printer.field_printing_printer_job_ids
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
 msgid "Jobs"
 msgstr ""
 
@@ -423,7 +423,7 @@ msgid "No reason"
 msgstr ""
 
 #. module: base_report_to_printer
-#: model:ir.ui.view,arch_db:base_report_to_printer.printer_update_wizard
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printer_update_wizard
 msgid "Ok"
 msgstr "Ok"
 
@@ -464,7 +464,7 @@ msgid "Port of the server."
 msgstr ""
 
 #. module: base_report_to_printer
-#: model:ir.ui.view,arch_db:base_report_to_printer.act_report_xml_view
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.act_report_xml_view
 msgid "Print"
 msgstr ""
 
@@ -508,10 +508,10 @@ msgstr ""
 
 #. module: base_report_to_printer
 #: model:ir.ui.menu,name:base_report_to_printer.printing_printer_menu
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_search
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_tree
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_server_view_form
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_search
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_tree
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_server_view_form
 msgid "Printers"
 msgstr "Stampanti"
 
@@ -522,8 +522,8 @@ msgstr ""
 
 #. module: base_report_to_printer
 #: model:ir.ui.menu,name:base_report_to_printer.printing_menu
-#: model:ir.ui.view,arch_db:base_report_to_printer.view_users_form
-#: model:ir.ui.view,arch_db:base_report_to_printer.view_users_form_simple_modif
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.view_users_form
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.view_users_form_simple_modif
 #: selection:printing.printer,status:0
 msgid "Printing"
 msgstr "Stampa"
@@ -598,8 +598,8 @@ msgid "Report"
 msgstr "Report"
 
 #. module: base_report_to_printer
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_report_xml_action_view_form
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_report_xml_action_view_tree
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_report_xml_action_view_form
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_report_xml_action_view_tree
 msgid "Report Printing Actions"
 msgstr "Azioni di stampa report"
 
@@ -637,14 +637,14 @@ msgstr ""
 #. module: base_report_to_printer
 #: model:ir.actions.act_window,name:base_report_to_printer.printing_server_action
 #: model:ir.ui.menu,name:base_report_to_printer.printing_server_menu
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_server_view_form
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_server_view_search
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_server_view_tree
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_server_view_form
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_server_view_search
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_server_view_tree
 msgid "Servers"
 msgstr ""
 
 #. module: base_report_to_printer
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
 msgid "Set Default"
 msgstr "Imposta default"
 
@@ -654,7 +654,7 @@ msgid "Show Printers"
 msgstr ""
 
 #. module: base_report_to_printer
-#: model:ir.ui.view,arch_db:base_report_to_printer.act_report_xml_view
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.act_report_xml_view
 msgid "Specific actions per user"
 msgstr ""
 
@@ -702,7 +702,7 @@ msgstr ""
 "utenti"
 
 #. module: base_report_to_printer
-#: model:ir.ui.view,arch_db:base_report_to_printer.printer_update_wizard
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printer_update_wizard
 msgid ""
 "This process will create all missing printers from the current CUPS server."
 msgstr ""
@@ -724,7 +724,7 @@ msgid "Time At Processing"
 msgstr ""
 
 #. module: base_report_to_printer
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
 msgid "Trays"
 msgstr ""
 
@@ -754,7 +754,7 @@ msgid "Unknown"
 msgstr "Sconosciuto"
 
 #. module: base_report_to_printer
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
 msgid "Unset Default"
 msgstr ""
 
@@ -764,12 +764,12 @@ msgid "Unsupported format"
 msgstr ""
 
 #. module: base_report_to_printer
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_server_view_form
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_server_view_form
 msgid "Update Jobs"
 msgstr ""
 
 #. module: base_report_to_printer
-#: model:ir.ui.view,arch_db:base_report_to_printer.printing_server_view_form
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_server_view_form
 msgid "Update Printers"
 msgstr ""
 
@@ -783,7 +783,7 @@ msgstr ""
 #. module: base_report_to_printer
 #: model:ir.actions.act_window,name:base_report_to_printer.action_printer_update_wizard
 #: model:ir.ui.menu,name:base_report_to_printer.menu_printer_update_wizard
-#: model:ir.ui.view,arch_db:base_report_to_printer.printer_update_wizard
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printer_update_wizard
 msgid "Update Printers from CUPS"
 msgstr "Aggiorna stampanti da CUPS"
 
@@ -803,6 +803,6 @@ msgid "ir.actions.report"
 msgstr ""
 
 #. module: base_report_to_printer
-#: model:ir.ui.view,arch_db:base_report_to_printer.printer_update_wizard
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printer_update_wizard
 msgid "or"
 msgstr ""
