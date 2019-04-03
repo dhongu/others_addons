@@ -24,7 +24,7 @@ class SaleOrder(models.Model):
                 ('account_id.internal_type', 'in', ['receivable', 'payable'])
             ])
             debit, credit = 0.0, 0.0
-            today_dt = datetime.strftime(datetime.now().date(), DF)
+            today_dt = fields.Date.today()
             for line in movelines:
                 date_maturity = line.date_maturity + datetime.timedelta(days=partner.clemency_days)
                 if date_maturity < fields.Date.today(): # and line.user_type_id.type in ['receivable', 'payable']:
