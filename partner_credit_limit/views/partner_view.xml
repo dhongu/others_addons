@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_category_property_form" model="ir.ui.view">
+        <field name="name">partner.over.credit.limit.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <field name="property_account_position_id" position="after">
+                <field name="credit_limit" readonly="1"/>
+                <field name="over_credit" readonly="1"/>
+                  <field name="clemency_days" readonly="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_category_property_form_security" model="ir.ui.view">
+        <field name="name">partner.over.credit.limit.form.inherit.security</field>
+        <field name="model">res.partner</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="partner_credit_limit.view_category_property_form"/>
+        <field name="groups_id" eval="[(4,ref('partner_credit_limit.group_credit_limit'))]"/>
+        <field name="arch" type="xml">
+            <field name="credit_limit" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </field>
+            <field name="over_credit" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </field>
+            <field name="clemency_days" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </field>
+        </field>
+    </record>
+
+</odoo>
