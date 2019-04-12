@@ -1,8 +1,0 @@
-<odoo>
-    <data>
-        <record id="group_credit_limit" model="res.groups">
-            <field name="name">Manage credit limits</field>
-            <field name="category_id" ref="base.module_category_hidden"/>
-        </record>
-    </data>
-</odoo>
