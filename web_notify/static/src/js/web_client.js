@@ -24,17 +24,17 @@ odoo.define('web_notify.WebClient', function (require) {
             this.call('bus_service', 'addChannel', this.channel_warning);
             this.call('bus_service', 'addChannel', this.channel_info);
             this.call('bus_service', 'addChannel', this.channel_default);
-            this.call(
-                'bus_service', 'on', 'notification',
-                this, this.bus_notification);
+            this.call('bus_service', 'on', 'notification',   this, this.bus_notification);
             this.call('bus_service', 'startPolling');
         },
         bus_notification: function (notifications) {
             var self = this;
             _.each(notifications, function (notification) {
-                // Not used: var channel = notification[0];
-                var message = notification[1];
-                self.on_message(message);
+                var channel = notification[0];
+                if (channel[1] != 'bus.presence'){
+                    var message = notification[1];
+                    self.on_message(message);
+                }
             });
         },
         on_message: function (message) {
