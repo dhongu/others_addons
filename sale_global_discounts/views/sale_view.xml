@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- Sale View -->
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form.rounding</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                  <label for="global_discount"/>
+                  <div name='global_discount'>
+                      <div>
+                        <field name='global_discount' class="oe_inline" nolabel="1" attrs="{'invisible': [('state','!=', 'draft')]}"/>
+                        <field name='discount_type' class="oe_inline" nolabel="1" attrs="{'invisible': ['|',('global_discount','=', False), ('state','!=', 'draft')], 'required':[('global_discount','!=', False)]}"/>
+                        <field name='discount_amount' class="oe_inline" nolabel="1" attrs="{'invisible': ['|','|',('global_discount','=', False), ('state','!=', 'draft'),('discount_type','!=','fixed')]}"/>
+                        <field name='discount_percentage' class="oe_inline" nolabel="1" attrs="{'invisible': ['|','|',('global_discount','=', False), ('state','!=', 'draft'),('discount_type','!=','percentage')]}"/>
+                        <button name="create_discount" string="Add Line" type="object" class="oe_inline fa fa-arrow-right oe_link" attrs="{'invisible': ['|',('global_discount','=', False), ('state','!=', 'draft')]}"/>
+                      </div>
+                  </div>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+</odoo>
