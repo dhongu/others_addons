@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from odoo import fields, models, api
+from odoo import fields, models, api, _
 import werkzeug.urls
-
+from odoo.exceptions import AccessError
 
 class ResCompany(models.Model):
     _inherit = "res.company"
