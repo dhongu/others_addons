@@ -17,7 +17,7 @@ msgstr ""
 #: code:addons/web_notify/models/res_users.py:44
 #, python-format
 msgid "Danger"
-msgstr "Pericol"
+msgstr "Eroare"
 
 #. module: web_notify
 #: code:addons/web_notify/models/res_users.py:60

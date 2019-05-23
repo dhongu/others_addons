@@ -31,7 +31,7 @@ odoo.define('web_notify.WebClient', function (require) {
             var self = this;
             _.each(notifications, function (notification) {
                 var channel = notification[0];
-                if (channel[1] != 'bus.presence'){
+                if (channel && typeof channel === 'string' && channel.startsWith('notify_')){
                     var message = notification[1];
                     self.on_message(message);
                 }

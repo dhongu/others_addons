@@ -34,7 +34,7 @@ odoo.define('web_notify.Notification', function (require) {
                 src = "/web_notify/static/src/sounds/exclamation.wav";
             } else if (sound === 'success') {
                 src = "/point_of_sale/static/src/sounds/bell.wav";
-            } else {
+            } else if (sound != 'default')  {
                  src = "/web_notify/static/src/sounds/notify.wav";
             }
             $('body').append('<audio src="'+src+'" autoplay="true"></audio>');
