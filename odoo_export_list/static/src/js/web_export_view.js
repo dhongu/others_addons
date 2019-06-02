@@ -24,6 +24,13 @@ odoo.define('web_export_view', function (require) {
 							 filter_button && filter_button.click(this.proxy('export_list_view')) ;
 					 }
 			 },
+
+			 extractContent: function (s) {
+              var span = document.createElement('span');
+              span.innerHTML = s;
+              return span.textContent || span.innerText;
+            },
+
 			 export_list_view: function () {
 
 					 var self = this,
@@ -56,12 +63,19 @@ odoo.define('web_export_view', function (require) {
 							 var ihtml = el.innerHTML + '';
 							 var extractedData = ihtml.split("</td>")
 							 extractedData.forEach(function(elt){
-								 var val = elt.substring(elt.indexOf(">") + 1) // get the td content
+							        var val = self.extractContent(elt);
+                                    if(val != undefined){
+                                        rows_tab.push(val);
+                                    }
+
+                                /*
+                                var val = elt.substring(elt.indexOf(">") + 1) // get the td content
 								 if(val != undefined){
 									 if(val.indexOf(">") < 0 ){ // if the content of the td is not html content
 										 rows_tab.push(val)
 									 }
 								 }
+								 */
 							 });
 							 export_rows.push(rows_tab)
 					 });
@@ -72,12 +86,17 @@ odoo.define('web_export_view', function (require) {
 								 var ihtml = el.innerHTML + '';
 								 var extractedData = ihtml.split("</td>")
 								 extractedData.forEach(function(elt){
-									 var val = elt.substring(elt.indexOf(">") + 1)
+								    var val = self.extractContent(elt);
+                                    if(val != undefined){
+                                        rows_tab.push(val);
+                                    }
+
+/*									 var val = elt.substring(elt.indexOf(">") + 1)
 									 if(val != undefined){
 										 if(val.indexOf(">") <0 ){
 											 rows_tab.push(val)
 										 }
-									 }
+									 }*/
 								 });
 								 export_rows.push(rows_tab)
 						 });
