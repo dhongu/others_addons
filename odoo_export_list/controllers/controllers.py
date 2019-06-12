@@ -23,8 +23,7 @@ class ExcelExportView(ExcelExport):
         return request.make_response(
             self.from_data(columns_headers, rows),
             headers=[
-                ('Content-Disposition', 'attachment; filename="%s"'
-                 % self.filename(model)),
+                ('Content-Disposition', 'attachment; filename="%s"' % self.filename(model)),
                 ('Content-Type', self.content_type)
             ],
             cookies={'fileToken': token}
