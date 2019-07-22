@@ -31,4 +31,3 @@ class ResConfigSettings(models.TransientModel):
 
         self.env.user.company_id.sale_discount_product_id = self.sale_discount_product_id.id
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

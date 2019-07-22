@@ -1,19 +1,22 @@
 ###################################################################################
-# 
-#    Copyright (C) 2017 MuK IT GmbH
+#
+#    Copyright (c) 2017-2019 MuK IT GmbH.
+#
+#    This file is part of MuK Utils 
+#    (see https://mukit.at).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#    it under the terms of the GNU Lesser General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#    GNU Lesser General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Lesser General Public License
+#    along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 ###################################################################################
 
@@ -33,6 +36,8 @@ class Hierarchy(models.AbstractModel):
     _parent_store = True
     _parent_path_sudo = False
     _parent_path_store = False
+    
+    _name_path_context = "show_path"
     
     #----------------------------------------------------------
     # Database
@@ -104,7 +109,9 @@ class Hierarchy(models.AbstractModel):
         records = self.filtered(lambda record: record.parent_path)
         paths = [list(map(int, rec.parent_path.split('/')[:-1])) for rec in records]
         ids = paths and set(functools.reduce(operator.concat, paths)) or []
-        data = dict(self.browse(ids)._filter_access('read').name_get())
+        model_without_path = self.with_context(**{self._name_path_context: False})
+        filtered_records = model_without_path.browse(ids)._filter_access('read')
+        data = dict(filtered_records.name_get())
         for record in records:
             path_names = [""]
             path_json = []
@@ -123,7 +130,33 @@ class Hierarchy(models.AbstractModel):
                 'parent_path_names': '/'.join(path_names),
                 'parent_path_json': json.dumps(path_json),
             })
-            
+    
+    @api.model
+    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+        domain = list(args or [])
+        if not (name == '' and operator == 'ilike') :
+            if '/' in name:
+                domain += [('parent_path_names', operator, name)]  
+            else:
+                domain += [(self._rec_name, operator, name)]
+        records = self.browse(self._search(domain, limit=limit, access_rights_uid=name_get_uid))
+        return models.lazy_name_get(records.sudo(name_get_uid or self.env.uid)) 
+    
+    @api.multi
+    def name_get(self):
+        if self.env.context.get(self._name_path_context):
+            res = []
+            for record in self:
+                names = record.parent_path_names
+                if not names:
+                    res.append(super(Hierarchy, record).name_get()[0])
+                elif not len(names) > 50:
+                    res.append((record.id, names))
+                else:
+                    res.append((record.id, ".." + names[-48:]))
+            return res
+        return super(Hierarchy, self).name_get()
+    
     #----------------------------------------------------------
     # Create, Update, Delete
     #----------------------------------------------------------

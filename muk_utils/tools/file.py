@@ -1,19 +1,22 @@
 ###################################################################################
-# 
-#    Copyright (C) 2018 MuK IT GmbH
+#
+#    Copyright (c) 2017-2019 MuK IT GmbH.
+#
+#    This file is part of MuK Utils 
+#    (see https://mukit.at).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#    it under the terms of the GNU Lesser General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#    GNU Lesser General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Lesser General Public License
+#    along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 ###################################################################################
 
@@ -40,13 +43,13 @@ _logger = logging.getLogger(__name__)
 # File Helper
 #----------------------------------------------------------
 
-def slugify(value):
-    value = str(unicodedata.normalize('NFKD', value))
-    if sys.version_info < (3,):
-        value = str(value.encode('ascii', 'ignore'))
-    value = str(re.sub('[^\w\s-]', '', value).strip().lower())
-    value = str(re.sub('[-\s]+', '-', value))
-    return value
+def slugify(value, lower=True):
+    value = unicodedata.normalize('NFKD', value)
+    value = value.encode('ascii', 'ignore').decode('ascii')
+    value = value.lower() if lower else value
+    value = re.sub('[^\w\s-]', '', value)
+    value = re.sub('[-\s]+', '-', value)
+    return value.strip()
 
 def check_name(name):
     tmp_dir = tempfile.mkdtemp()

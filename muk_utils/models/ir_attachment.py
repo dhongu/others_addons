@@ -1,29 +1,34 @@
 ###################################################################################
 #
-#    Copyright (C) 2018 MuK IT GmbH
+#    Copyright (c) 2017-2019 MuK IT GmbH.
+#
+#    This file is part of MuK Utils 
+#    (see https://mukit.at).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#    it under the terms of the GNU Lesser General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#    GNU Lesser General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Lesser General Public License
+#    along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 ###################################################################################
 
+import math
 import base64
 import logging
 import mimetypes
 
-from odoo import api, models, _
-from odoo.exceptions import AccessError
+from odoo import registry, api, models, _
 from odoo.tools.mimetypes import guess_mimetype
+from odoo.tools.misc import split_every
+from odoo.exceptions import AccessError
 
 _logger = logging.getLogger(__name__)
 
@@ -92,17 +97,25 @@ class IrAttachment(models.Model):
             '&', storage_domain[self._storage()], 
             '|', ('res_field', '=', False), ('res_field', '!=', False)
         ]
-        self.search(record_domain).migrate()
+        self.search(record_domain).migrate(batch_size=100)
         return True
     
     @api.multi
-    def migrate(self):
-        record_count = len(self)
-        storage = self._storage().upper()
-        for index, attach in enumerate(self):
-            _logger.info(_("Migrate Attachment %s of %s to %s") % (index + 1, record_count, storage))
-            attach.with_context(migration=True).write({'datas': attach.datas})
-            
+    def migrate(self, batch_size=None):
+        batch_size = batch_size or 5
+        storage_location = self._storage().upper()
+        batches = math.ceil(len(self) / batch_size)
+        for index, attachment in enumerate(self, start=1):
+            _logger.info("Migrate Attachment %s of %s to %s [Batch %s of %s]",
+                index % batch_size or batch_size, batch_size, storage_location, 
+                math.ceil(index / batch_size), batches
+            )
+            attachment.with_context(migration=True).write({
+                'datas': attachment.datas
+            })
+            if batch_size and not index % batch_size:
+                self.env.cr.commit()     
+        
     #----------------------------------------------------------
     # Read
     #----------------------------------------------------------
@@ -131,6 +144,6 @@ class IrAttachment(models.Model):
             else:
                 vals['db_datas'] = value
             clean_vals = self._get_datas_clean_vals(attach)
-            super(IrAttachment, attach.sudo()).write(vals)
+            models.Model.write(attach.sudo(), vals)
             self._clean_datas_after_write(clean_vals)
         

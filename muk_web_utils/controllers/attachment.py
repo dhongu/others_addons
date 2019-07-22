@@ -1,19 +1,22 @@
 ###################################################################################
-# 
-#    Copyright (C) 2017 MuK IT GmbH
+#
+#    Copyright (c) 2017-2019 MuK IT GmbH.
+#
+#    This file is part of MuK Web Utils 
+#    (see https://mukit.at).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#    it under the terms of the GNU Lesser General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#    GNU Lesser General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Lesser General Public License
+#    along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 ###################################################################################
 
@@ -42,6 +45,10 @@ class AttachmentController(http.Controller):
             'temporary': tmp,
         })
         attachment.generate_access_token()
+        if ufile.mimetype and ufile.mimetype != 'application/octet-stream': 
+            attachment.sudo().write({
+                'mimetype': ufile.mimetype,
+            })
         base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
         result = attachment.read(['name', 'datas_fname', 'mimetype', 'checksum', 'access_token'])[0]
         result['url'] = '%s/web/content/%s?access_token=%s' % (base_url, attachment.id, attachment.access_token)
