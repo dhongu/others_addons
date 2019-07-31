@@ -64,18 +64,15 @@ odoo.define('web_export_view', function (require) {
 							 var extractedData = ihtml.split("</td>")
 							 extractedData.forEach(function(elt){
 							        var val = self.extractContent(elt);
-                                    if(val != undefined){
+
+                                    if (val != undefined){
+                                        if (elt.includes('o_list_number')){
+                                            val = parseFloat(val) ;
+                                        }
                                         rows_tab.push(val);
                                     }
 
-                                /*
-                                var val = elt.substring(elt.indexOf(">") + 1) // get the td content
-								 if(val != undefined){
-									 if(val.indexOf(">") < 0 ){ // if the content of the td is not html content
-										 rows_tab.push(val)
-									 }
-								 }
-								 */
+
 							 });
 							 export_rows.push(rows_tab)
 					 });
@@ -87,16 +84,15 @@ odoo.define('web_export_view', function (require) {
 								 var extractedData = ihtml.split("</td>")
 								 extractedData.forEach(function(elt){
 								    var val = self.extractContent(elt);
+								    // de verificat daca contine o_list_number
                                     if(val != undefined){
+                                        if (elt.includes('o_list_number')){
+                                            val = parseFloat(val) ;
+                                        }
                                         rows_tab.push(val);
                                     }
 
-/*									 var val = elt.substring(elt.indexOf(">") + 1)
-									 if(val != undefined){
-										 if(val.indexOf(">") <0 ){
-											 rows_tab.push(val)
-										 }
-									 }*/
+
 								 });
 								 export_rows.push(rows_tab)
 						 });
