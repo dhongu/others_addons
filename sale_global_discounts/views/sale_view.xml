@@ -13,7 +13,7 @@
                   <div name='global_discount'>
                       <div>
                         <field name='global_discount' class="oe_inline" nolabel="1" attrs="{'invisible': [('state','!=', 'draft')]}"/>
-                        <field name='discount_type' class="oe_inline" nolabel="1" attrs="{'invisible': ['|',('global_discount','=', False), ('state','!=', 'draft')], 'required':[('global_discount','!=', False)]}"/>
+                        <field name='discount_type' class="oe_inline" nolabel="1"  attrs="{'invisible': ['|',('global_discount','=', False), ('state','!=', 'draft')], 'required':[('global_discount','!=', False)]}"/>-->
                         <field name='discount_amount' class="oe_inline" nolabel="1" attrs="{'invisible': ['|','|',('global_discount','=', False), ('state','!=', 'draft'),('discount_type','!=','fixed')]}"/>
                         <field name='discount_percentage' class="oe_inline" nolabel="1" attrs="{'invisible': ['|','|',('global_discount','=', False), ('state','!=', 'draft'),('discount_type','!=','percentage')]}"/>
                         <button name="create_discount" string="Add Line" type="object" class="oe_inline fa fa-arrow-right oe_link" attrs="{'invisible': ['|',('global_discount','=', False), ('state','!=', 'draft')]}"/>

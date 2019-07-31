@@ -21,6 +21,15 @@
                                         <field name="sale_discount_product_id" class="oe_inline"/>
                                     </div>
                                 </div>
+                                <div class="text-muted">
+                                    Max Discount Percentage
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="discount_percentage_max" class="col-xs-3 col-md-3 o_light_label"/>
+                                        <field name="discount_percentage_max" class="oe_inline"/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
