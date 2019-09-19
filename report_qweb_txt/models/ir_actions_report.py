@@ -15,6 +15,7 @@ class IrActionsReport(models.Model):
         ('qweb-txt-csv', 'CSV'),
         ('qweb-txt-zpl', 'zpl'),
         ('qweb-txt-prn', 'prn'),
+        ('qweb-txt-inp', 'inp'),
         ])
 
     @api.model
@@ -35,7 +36,7 @@ class IrActionsReport(models.Model):
         if res:
             return res
         report_obj = self.env['ir.actions.report']
-        qwebtypes = ['qweb-txt','qweb-txt-csv','qweb-txt-zpl','qweb-txt-prn']
+        qwebtypes = ['qweb-txt','qweb-txt-csv','qweb-txt-zpl','qweb-txt-prn','qweb-txt-inp']
         conditions = [('report_type', 'in', qwebtypes),
                       ('report_name', '=', report_name)]
         context = self.env['res.users'].context_get()
@@ -65,3 +66,8 @@ class IrActionsReport(models.Model):
         report = html2plaintext(report)
         return report, 'prn'
 
+    @api.model
+    def render_txt_inp(self, docids, data):
+        report, exthtml = self.render_qweb_html(docids, data=data)
+        report = html2plaintext(report)
+        return report, 'inp'

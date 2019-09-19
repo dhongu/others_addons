@@ -13,6 +13,7 @@ var make_report_url = function (action) {
         'qweb-txt-csv': '/report/csv/' + action.report_name,
         'qweb-txt-zpl': '/report/zpl/' + action.report_name,
         'qweb-txt-prn': '/report/prn/' + action.report_name,
+        'qweb-txt-inp': '/report/inp/' + action.report_name,
     };
     // We may have to build a query string with `action.data`. It's the place
     // were report's using a wizard to customize the output traditionally put
@@ -52,41 +53,7 @@ ActionManager.include({
             }
             this.dialog_stop();
             framework.unblockUI();
-/*
-            var client_action_options = _.extend({}, options, {
-                report_url: report_urls['qweb-txt'],
-                report_name: action.report_name,
-                report_file: action.report_file,
-                data: action.data,
-                context: action.context,
-                name: action.name,
-                display_name: action.display_name,
-            });
-            return this.do_action('report.client_action', client_action_options);
-*/
 
-/*            framework.blockUI();
-            var report_txt_url = 'report/txt/' + cloned_action.report_name;
-            if(cloned_action.context.active_ids){
-                report_txt_url += '/' + cloned_action.context.active_ids.join(',');
-            }else{
-                report_txt_url += '?options=' + encodeURIComponent(JSON.stringify(cloned_action.data));
-                report_txt_url += '&context=' + encodeURIComponent(JSON.stringify(cloned_action.context));
-            }
-            self.getSession().get_file({
-                url: report_txt_url,
-                data: {data: JSON.stringify([
-                    report_txt_url,
-                    cloned_action.report_type
-                ])},
-                error: crash_manager.rpc_error.bind(crash_manager),
-                success: function (){
-                    if(cloned_action && options && !cloned_action.dialog){
-                        options.on_close();
-                    }
-                }
-            });
-            framework.unblockUI();*/
             return;
         }
         return self._super(action, options);

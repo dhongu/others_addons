@@ -10,7 +10,7 @@ import json
 class ReportController(report.ReportController):
     @route()
     def report_routes(self, reportname, docids=None, converter=None, **data):
-        if converter in ['txt','csv','zpl','prn']:
+        if converter in ['txt','csv','zpl','prn','inp']:
             report = request.env['ir.actions.report']._get_report_from_name(reportname)
             context = dict(request.env.context)
             if docids:
