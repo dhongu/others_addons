@@ -29,5 +29,4 @@
         <t t-call="website_cookie_notice.message"/>
     </xpath>
 </template>
-
 </odoo>
