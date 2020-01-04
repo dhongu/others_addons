@@ -11,8 +11,7 @@ class ReportController(report.ReportController):
     @route()
     def report_routes(self, reportname, docids=None, converter=None, **data):
         if converter == 'xlsx':
-            report = request.env['ir.actions.report']._get_report_from_name(
-                reportname)
+            report = request.env['ir.actions.report']._get_report_from_name(reportname)
             context = dict(request.env.context)
             if docids:
                 docids = [int(i) for i in docids.split(',')]
@@ -26,9 +25,7 @@ class ReportController(report.ReportController):
                 if data['context'].get('lang'):
                     del data['context']['lang']
                 context.update(data['context'])
-            xlsx = report.with_context(context).render_xlsx(
-                docids, data=data
-            )[0]
+            xlsx = report.with_context(context).render_xlsx(docids, data=data)[0]
             xlsxhttpheaders = [
                 ('Content-Type', 'application/vnd.openxmlformats-'
                                  'officedocument.spreadsheetml.sheet'),
@@ -39,6 +36,4 @@ class ReportController(report.ReportController):
                 )
             ]
             return request.make_response(xlsx, headers=xlsxhttpheaders)
-        return super(ReportController, self).report_routes(
-            reportname, docids, converter, **data
-        )
+        return super(ReportController, self).report_routes(reportname, docids, converter, **data)

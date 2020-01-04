@@ -12,9 +12,9 @@
     <div t-if="request and  not request.session.get('accepted_cookies')" id="website_cookie_notice" class="container-fluid cc-cookies alert alert-warning" role="alert">
         <div class="container">
             <div class="row">
-                <div class="col-sm-10">Acest website foloseste cookie-uri. Va rugam consultati <a href="/legal/cookies">politica de cookies</a> pentru detalii. Navigând în continuare vă exprimați acordul asupra folosirii cookie-urilor.</div>
+                <small class="col-sm-10">Acest website foloseste cookie-uri. Vă rugăm consultați <a href="/legal/cookies">politica de cookies</a> pentru detalii. Navigând în continuare vă exprimați acordul asupra folosirii cookie-urilor.</small>
                 <div class="col-sm-2 text-center">
-                    <a class="btn btn-primary" href="#">Da, sunt de acord</a>
+                    <a class="btn btn-primary btn-sm" href="#">Da, sunt de acord</a>
                 </div>
             </div>
         </div>
