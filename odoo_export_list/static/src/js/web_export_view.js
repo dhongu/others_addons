@@ -41,17 +41,16 @@ odoo.define('web_export_view', function (require) {
 					 var export_columns_names = [];
 					 var columns_tab = [];
 					 var rows_tab = [];
-           // find the first tr of table for the columns labels
+                     // find the first tr of table for the columns labels
 					 view.$el.find('th.o_list_record_selector ').closest('tr').each(function (i, el) {
 							 var ihtml = el.innerHTML + ''; // get html content of the tr
 							 var extractedTdArray = ihtml.split("</th>") // split tr in array of th
+                             extractedTdArray.forEach(function(elt){
+							        var val = self.extractContent(elt);
+                                    if(val != undefined){
+                                        columns_tab.push(val);
+                                    }
 
-               // get the text content of each th
-							 extractedTdArray.forEach(function(elt){
-								 var val = elt.substring(elt.indexOf(">") + 1)
-								 if(val){
-									 columns_tab.push(val)
-								 }
 							 });
 
 					 });
@@ -76,7 +75,7 @@ odoo.define('web_export_view', function (require) {
 							 });
 							 export_rows.push(rows_tab)
 					 });
-           //  if there is no checked row export all rows in the view
+                     //  if there is no checked row export all rows in the view
 					 if(export_rows.length == 0){
 						 view.$el.find('td.o_list_record_selector').closest('tr').each(function (i, el) {
 								 rows_tab = []
@@ -97,7 +96,7 @@ odoo.define('web_export_view', function (require) {
 								 export_rows.push(rows_tab)
 						 });
 					 }
-					 columns_tab.shift()
+					 //columns_tab.shift()
 					 export_columns_names = columns_tab
 
 					 $.blockUI();

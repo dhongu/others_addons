@@ -1,6 +1,6 @@
 # odoo_export_list_view
 
-This project is an Odoo 11 module to export the current list view in xls
+This project is an Odoo module to export the current list view in xls
 
 ## Getting Started
 
