@@ -1,19 +1,22 @@
 /**********************************************************************************
-* 
-*    Copyright (C) 2017 MuK IT GmbH
+*
+*    Copyright (c) 2017-2019 MuK IT GmbH.
+*
+*    This file is part of MuK Backend Theme 
+*    (see https://mukit.at).
 *
 *    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
+*    it under the terms of the GNU Lesser General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
 *
 *    This program is distributed in the hope that it will be useful,
 *    but WITHOUT ANY WARRANTY; without even the implied warranty of
 *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
+*    GNU Lesser General Public License for more details.
 *
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*    You should have received a copy of the GNU Lesser General Public License
+*    along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 **********************************************************************************/
 
@@ -28,13 +31,35 @@
             box-shadow: 0 5px 20px -15px black;
             max-width: calc(100% - #{$o-horizontal-padding*2});
         }
-       	.oe_button_box {
+        .o_form_statusbar {
+            position: sticky;
+            z-index: 1;
+            top: 0;
+        }
+        .oe_button_box {
         	.btn.oe_stat_button > .o_button_icon {
         		color: $o-brand-odoo; 
         	}
         	.btn.oe_stat_button > .o_stat_info {
         		padding-right: 3px; 
         	}
+		    &, & + .oe_avatar {
+		        + .oe_title {
+		            max-width: calc(100% - 420px);
+		            width: initial !important;
+		        }
+		    }
+       	}
+        .oe_title {
+            max-width: 100%;
+            width: initial;
+            span.o_field_widget {
+                max-width: 100%;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                width: initial;
+            }
         }
         .o_notebook {
             .nav-tabs {
@@ -95,6 +120,12 @@
                 display: none;
             }
         }
+        .o_cp_buttons {
+            width: 100%;
+            div, .o-kanban-button-new {
+                width: 100%;
+            }
+        }
 	}
 	@include media-breakpoint-down(xs) {
 	    .oe_button_box {
@@ -129,6 +160,10 @@
 	            }
 	        }
 	    }
+    	.oe_title {
+           	width: 100% !important;
+            max-width: 100% !important;
+        }
 	}
 }
 
