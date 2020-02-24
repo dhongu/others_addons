@@ -44,6 +44,7 @@ class LoginUserDetail(models.Model):
 
 class LoginUpdate(models.Model):
     _name = 'login.detail'
+    _description = 'Login Detail'
 
     name = fields.Char(string="User Name")
     date_time = fields.Datetime(string="Login Date And Time", default=lambda self: fields.datetime.now())

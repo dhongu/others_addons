@@ -37,5 +37,5 @@ ActionManager.include({
 
         return def;
             },
-    })
+    });
 });
