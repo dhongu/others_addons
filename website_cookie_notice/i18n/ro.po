@@ -1,0 +1,35 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* website_cookie_notice
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: website_cookie_notice
+#: model_terms:ir.ui.view,arch_db:website_cookie_notice.message
+msgid ". To disable them, configure your browser properly. If you keep using this website, you are accepting those."
+msgstr " pentru detalii. Navigând în continuare vă exprimați acordul asupra folosirii cookie-urilor."
+
+#. module: website_cookie_notice
+#: model_terms:ir.ui.view,arch_db:website_cookie_notice.message
+msgid "OK"
+msgstr "Da, sunt de acord"
+
+#. module: website_cookie_notice
+#: model_terms:ir.ui.view,arch_db:website_cookie_notice.message
+msgid "We use cookies in this website. Read about them in our"
+msgstr "Acest website foloseste cookie-uri. Vă rugăm consultați"
+
+#. module: website_cookie_notice
+#: model_terms:ir.ui.view,arch_db:website_cookie_notice.message
+msgid "privacy policy"
+msgstr "politica de cookies"
+
