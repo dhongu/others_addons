@@ -1,6 +1,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
+*.pyc[cod]
 
 # C extensions
 *.so
@@ -13,7 +13,7 @@ develop-eggs/
 dist/
 downloads/
 eggs/
-
+lib/
 lib64/
 parts/
 sdist/
@@ -53,3 +53,5 @@ docs/_build/
 target/
 
 .*
+# ANAF Data
+/l10n_ro_fiscal_validation/data

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend" inherit_id="web.assets_backend" name="document_sidebar assets">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/document_sidebar/static/src/js/document_sidebar.js"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>
