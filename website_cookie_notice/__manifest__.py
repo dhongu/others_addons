@@ -4,9 +4,10 @@
 {
     'name': 'Cookie notice',
     'summary': 'Show cookie notice according to cookie law',
-    'version': '12.0.1.0.0',
+    'version': '12.0.2.0.0',
     'category': 'Website',
-    'author': "Agile Business Group, "
+    'author': "Terrabit,"
+              "Agile Business Group, "
               "Tecnativa, "
               "Nicolas JEUDY, "
               "Odoo Community Association (OCA)",
@@ -17,5 +18,6 @@
     ],
     'data': [
         'templates/website.xml',
+        'templates/website_cookie.xml',
     ],
 }
