@@ -47,7 +47,7 @@ odoo.define('web_notify.WebClient', function (require) {
                     className: message.className,
                 }
             );
-        },
+        }
     });
 
 });

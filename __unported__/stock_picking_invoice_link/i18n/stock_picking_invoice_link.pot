@@ -4,10 +4,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-10 14:26+0000\n"
-"PO-Revision-Date: 2015-07-10 14:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,50 +15,63 @@ msgstr ""
 
 #. module: stock_picking_invoice_link
 #: model:ir.model,name:stock_picking_invoice_link.model_account_invoice
-#: view:stock.picking:stock_picking_invoice_link.view_picking_form
-#: field:stock.picking,invoice_id:0
+#: model_terms:ir.ui.view,arch_db:stock_picking_invoice_link.view_picking_form
 msgid "Invoice"
 msgstr ""
 
 #. module: stock_picking_invoice_link
 #: model:ir.model,name:stock_picking_invoice_link.model_account_invoice_line
-#: field:stock.move,invoice_line_id:0
+#: model:ir.model.fields,field_description:stock_picking_invoice_link.field_stock_move__invoice_line_id
 msgid "Invoice Line"
 msgstr ""
 
 #. module: stock_picking_invoice_link
-#: model:ir.model,name:stock_picking_invoice_link.model_stock_picking
-msgid "Picking List"
+#: model:ir.model.fields,field_description:stock_picking_invoice_link.field_stock_picking__invoice_ids
+msgid "Invoices"
 msgstr ""
 
 #. module: stock_picking_invoice_link
-#: view:account.invoice:stock_picking_invoice_link.invoice_form
-#: view:account.invoice:stock_picking_invoice_link.invoice_supplier_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_invoice_link.invoice_form
 msgid "Pickings"
 msgstr ""
 
 #. module: stock_picking_invoice_link
-#: field:account.invoice,picking_ids:0
+#: model:ir.model.fields,field_description:stock_picking_invoice_link.field_account_invoice__picking_ids
 msgid "Related Pickings"
 msgstr ""
 
 #. module: stock_picking_invoice_link
-#: field:account.invoice.line,move_line_ids:0
+#: model:ir.model.fields,field_description:stock_picking_invoice_link.field_account_invoice_line__move_line_ids
 msgid "Related Stock Moves"
 msgstr ""
 
 #. module: stock_picking_invoice_link
-#: help:account.invoice,picking_ids:0
-msgid "Related pickings (only when the invoice has been generated from the picking)."
+#: model:ir.model.fields,help:stock_picking_invoice_link.field_account_invoice__picking_ids
+msgid "Related pickings (only when the invoice has been generated from a sale order)."
 msgstr ""
 
 #. module: stock_picking_invoice_link
-#: help:account.invoice.line,move_line_ids:0
-msgid "Related stock moves (only when the invoice has been generated from the picking)."
+#: model:ir.model.fields,help:stock_picking_invoice_link.field_account_invoice_line__move_line_ids
+msgid "Related stock moves (only when the invoice has been generated from a sale order)."
+msgstr ""
+
+#. module: stock_picking_invoice_link
+#: model:ir.model,name:stock_picking_invoice_link.model_sale_order_line
+msgid "Sales Order Line"
 msgstr ""
 
 #. module: stock_picking_invoice_link
 #: model:ir.model,name:stock_picking_invoice_link.model_stock_move
 msgid "Stock Move"
+msgstr ""
+
+#. module: stock_picking_invoice_link
+#: model:ir.model,name:stock_picking_invoice_link.model_stock_picking
+msgid "Transfer"
+msgstr ""
+
+#. module: stock_picking_invoice_link
+#: model_terms:ir.ui.view,arch_db:stock_picking_invoice_link.view_picking_form
+msgid "View Invoice"
 msgstr ""
 

@@ -1,3 +1,13 @@
+`2.3.0`
+-------
+
+- Sidebar Preview
+
+`2.2.0`
+-------
+
+- Refactoring and Preview Registry
+
 `2.1.0`
 -------
 

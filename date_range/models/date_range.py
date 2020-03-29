@@ -41,7 +41,7 @@ class DateRange(models.Model):
             self._cache.update(
                 self._convert_to_cache({'type_id': False}, update=True))
 
-    @api.multi
+
     @api.constrains('company_id', 'type_id')
     def _check_company_id_type_id(self):
         for rec in self.sudo():
@@ -86,7 +86,7 @@ class DateRange(models.Model):
                 raise ValidationError(
                     _("%s overlaps %s") % (this.name, dt.name))
 
-    @api.multi
+
     def get_domain(self, field_name):
         self.ensure_one()
         return [(field_name, '>=', self.date_start),

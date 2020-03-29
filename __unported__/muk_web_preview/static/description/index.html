@@ -4,7 +4,8 @@
 		<h3 class="oe_slogan">Preview your files directly in Odoo.</h3>
 		<h4 class="oe_slogan" style="font-size: 23px;">MuK IT GmbH -
 			www.mukit.at</h4>
-		<div class="oe_demo oe_screenshot" style="max-width: 84%; margin: 16px 8%;">
+		<div class="oe_demo oe_screenshot"
+			style="max-width: 84%; margin: 16px 8%;">
 			<img src="screenshot.png">
 		</div>
 	</div>
@@ -12,54 +13,18 @@
 
 <section class="oe_container">
 	<div class="oe_row oe_spaced">
-		<div style="max-width: 84%; margin: 16px 8%;">
+		<div class="text-justify" style="max-width: 84%; margin: 16px 8%;">
 			<h3 class="oe_slogan">Overview</h3>
-			<p class="oe_mt32 text-justify">MuK Preview enables support to
-				preview binary files directly in Odoo. It adds a button to the
-				binary field, which opens a file preview dialog. The preview can be
-				easily extended by adding new Handlers to the Preview Generator.</p>
-		</div>
-	</div>
-</section>
-
-<section class="oe_container oe_dark">
-	<div class="oe_row oe_spaced">
-		<h3 class="oe_slogan">PDF &amp; Open Document Preview</h3>
-		<div class="oe_span6">
-			<p class="oe_mt32 text-justify">A preview for Open Documents and
-				PDFs is already included in the MuK Preview module. The following
-				extensions are supported:</p>
-			<p>
-				<span style="color: green;"> &#9745; </span> Portable Document
-				Format (.pdf) <br /> <span style="color: green;"> &#9745; </span>
-				Open Document (.odt, .odp, .ods, .otp)
-			</p>
-		</div>
-		<div class="oe_span6">
-			<img class="oe_picture oe_screenshot" src="screenshot_pdf.png">
-		</div>
-	</div>
-</section>
-
-<section class="oe_container">
-	<div class="oe_row oe_spaced">
-		<h3 class="oe_slogan">MS Office Preview</h3>
-		<div class="oe_span6">
-			<img class="oe_picture oe_screenshot" src="screenshot_excel.png">
-		</div>
-		<div class="oe_span6">
-			<p class="oe_mt32 text-justify">
-				<a
-					href="https://apps.odoo.com/apps/modules/11.0/muk_web_preview_msoffice">MuK
-					Preview MS Office </a> extends the preview to enable support for
-				Microsoft Office documents.
-			</p>
-			<p>
-				<span style="color: green;"> &#9745; </span> Word (*.doc | *.docx,
-				application/msword) <br> <span style="color: green;">
-					&#9745; </span> Excel (*.xls | *.xlsx, application/msexcel) <br> <span
-					style="color: green;"> &#9745; </span> PowerPoint (*.ppt | *.pptx,
-				application/mspowerpoint)
+			<p class="oe_mt32">
+				MuK Preview enables support to preview binary files directly in
+				Odoo. It adds a button to the binary field, which opens a file
+				preview dialog. The preview can be easily extended by adding new
+				Preview to the registry. Besides adding the preview button to
+				existing binary fields, there is a new widget
+				<code>binary_preview</code>
+				which can be used to display the preview directly in the form view.
+				Furthermore it is possible to preview PDF and text reports directly
+				from the sidebar.
 			</p>
 		</div>
 	</div>
@@ -67,193 +32,85 @@
 
 <section class="oe_container oe_dark">
 	<div class="oe_row oe_spaced">
-		<h3 class="oe_slogan">Image Preview</h3>
-		<div class="oe_span6">
-			<p class="oe_mt32 text-justify">
-				<a
-					href="https://apps.odoo.com/apps/modules/11.0/muk_web_preview_image/">MuK
-					Preview Image</a> extends the preview to enable support for a variety
-				of images types.
-			</p>
-			<p>
-				<span style="color: green;"> &#9745; </span> CIS-Cod-Dateien (*.cod,
-				image/cis-cod) <br /> <span style="color: green;"> &#9745; </span>
-				CMU-Raster-Dateien (*.ras, image/cmu-raster) <br /> <span
-					style="color: green;"> &#9745; </span> FIF-Dateien (*.fif,
-				image/fif) <br /> <span style="color: green;"> &#9745; </span>
-				GIF-Dateien (*.gif, image/gif)<br /> and many more...
-			</p>
-		</div>
-		<div class="oe_span6">
-			<img class="oe_picture oe_screenshot" src="screenshot_image.png">
-		</div>
-	</div>
-</section>
-
-<section class="oe_container">
-	<div class="oe_row oe_spaced">
-		<h3 class="oe_slogan">Markdown Preview</h3>
-		<div class="oe_span6">
-			<img class="oe_picture oe_screenshot" src="screenshot_markdown.png">
-		</div>
-		<div class="oe_span6">
-			<p class="oe_mt32 text-justify">
-				<a
-					href="https://apps.odoo.com/apps/modules/11.0/muk_web_preview_markdown/">MuK
-					Preview Markdown </a> extends the preview to enable support for
-				Markdown files.
-			</p>
-			<p>
-				<span style="color: green;"> &#9745; </span> Markdown (*.md,
-				text/markdown)
-			</p>
-		</div>
-	</div>
-</section>
-
-<section class="oe_container oe_dark">
-	<div class="oe_row oe_spaced">
-		<h3 class="oe_slogan">Video Preview</h3>
-		<div class="oe_span6">
-			<p class="oe_mt32 text-justify">
-				<a
-					href="https://apps.odoo.com/apps/modules/11.0/muk_web_preview_video/">MuK
-					Preview Video</a> extends the preview to enable support for video
-				files.
-			</p>
-			<p>
-				<span style="color: green;"> &#9745; </span> WebM (*.webm,
-				video/webm) <br /> <span style="color: green;"> &#9745; </span> Ogg
-				Theora Vorbis (*.ogg, video/ogg) <br /> <span style="color: green;">
-					&#9745; </span> MP4 (*.mp4, video/mp4) <br />
-			</p>
-		</div>
-		<div class="oe_span6">
-			<img class="oe_picture oe_screenshot" src="screenshot_video.png">
-		</div>
-	</div>
-</section>
-
-<section class="oe_container">
-	<div class="oe_row oe_spaced">
-		<h3 class="oe_slogan">CSV Preview</h3>
-		<div class="oe_span6">
-			<img class="oe_picture oe_screenshot" src="screenshot_csv.png">
-		</div>
-		<div class="oe_span6">
-			<p class="oe_mt32 text-justify">
-				<a
-					href="https://apps.odoo.com/apps/modules/11.0/muk_web_preview_csv/">MuK
-					Preview CSV </a> extends the preview to enable support for CSV files.
-			</p>
-			<p>
-				<span style="color: green;"> &#9745; </span> CSV (*.csv, text/csv)
-			</p>
+		<h3 class="oe_slogan">Our Services</h3>
+		<div
+			style="display: flex; padding-top: 20px; justify-content: space-between;">
+			<div style="flex-basis: 18%;">
+				<a href="https://mukit.at/r/MQ5" target="_blank">
+					<div
+						style="width: 75px; height: 75px; border-radius: 100%; margin: auto;">
+						<img src="service_implementation.png"
+							style="width: 100%; border-radius: 100%;">
+					</div>
+					<h3 class="oe_slogan"
+						style="text-align: center; font-size: 14px; width: 100%; margin: 0; margin-top: 14px; color: #000 !important; margin-top: 5px; opacity: 1 !important; line-height: 17px;">
+						Odoo <br>Implementation
+					</h3>
+				</a>
+			</div>
+			<div style="flex-basis: 18%;">
+				<a href="https://mukit.at/r/u7c" target="_blank">
+					<div
+						style="width: 75px; height: 75px; border-radius: 100%; margin: auto;">
+						<img src="service_integration.png"
+							style="width: 100%; border-radius: 100%;">
+					</div>
+					<h3 class="oe_slogan"
+						style="text-align: center; font-size: 14px; width: 100%; margin: 0; margin-top: 14px; color: #000 !important; margin-top: 5px; opacity: 1 !important; line-height: 17px;">
+						Odoo <br>Integration
+					</h3>
+				</a>
+			</div>
+			<div style="flex-basis: 18%;">
+				<a href="https://mukit.at/r/xDJ" target="_blank">
+					<div
+						style="width: 75px; height: 75px; border-radius: 100%; margin: auto;">
+						<img src="service_customization.png"
+							style="width: 100%; border-radius: 100%;">
+					</div>
+					<h3 class="oe_slogan"
+						style="text-align: center; font-size: 14px; width: 100%; margin: 0; margin-top: 14px; color: #000 !important; margin-top: 5px; opacity: 1 !important; line-height: 17px;">
+						Odoo <br>Customization
+					</h3>
+				</a>
+			</div>
+			<div style="flex-basis: 18%;">
+				<a href="	https://mukit.at/r/J3A" target="_blank">
+					<div
+						style="width: 75px; height: 75px; border-radius: 100%; margin: auto;">
+						<img src="service_development.png"
+							style="width: 100%; border-radius: 100%;">
+					</div>
+					<h3 class="oe_slogan"
+						style="text-align: center; font-size: 14px; width: 100%; margin: 0; margin-top: 14px; color: #000 !important; margin-top: 5px; opacity: 1 !important; line-height: 17px;">
+						Odoo <br>Development
+					</h3>
+				</a>
+			</div>
+			<div style="flex-basis: 18%;">
+				<a href="	https://mukit.at/r/R1v" target="_blank">
+					<div
+						style="width: 75px; height: 75px; border-radius: 100%; margin: auto;">
+						<img src="service_support.png"
+							style="width: 100%; border-radius: 100%;">
+					</div>
+					<h3 class="oe_slogan"
+						style="text-align: center; font-size: 14px; width: 100%; margin: 0; margin-top: 14px; color: #000 !important; margin-top: 5px; opacity: 1 !important; line-height: 17px;">
+						Odoo <br>Support
+					</h3>
+				</a>
+			</div>
 		</div>
 	</div>
 </section>
 
-<section class="oe_container oe_dark">
-	<div class="oe_row oe_spaced">
-		<h3 class="oe_slogan">Mail Preview</h3>
-		<div class="oe_span6">
-			<p class="oe_mt32 text-justify">
-				<a
-					href="https://apps.odoo.com/apps/modules/11.0/muk_web_preview_mail/">MuK
-					Preview Mail</a> extends the preview to enable support for mails.
-			</p>
-			<p>
-				<span style="color: green;"> &#9745; </span> Microsoft Outlook
-				Express Mail Message (*.eml, message/rfc822)
-			</p>
+<section class="oe_container" style="padding: 32px 0;">
+	<div class="oe_row oe_spaced" style="margin: auto;">
+		<div class="oe_demo oe_picture oe_screenshot">
+			<a href="https://mukit.at/r/SgN" target="_blank"> <img
+				src="preview.png">
+			</a>
 		</div>
-		<div class="oe_span6">
-			<img class="oe_picture oe_screenshot" src="screenshot_mail.png">
-		</div>
-	</div>
-</section>
-
-<section class="oe_container">
-	<div class="oe_row oe_spaced">
-		<h3 class="oe_slogan">Text Preview</h3>
-		<div class="oe_span6">
-			<img class="oe_picture oe_screenshot" src="screenshot_text.png">
-		</div>
-		<div class="oe_span6">
-			<p class="oe_mt32 text-justify">
-				<a
-					href="https://apps.odoo.com/apps/modules/11.0/muk_web_preview_text/">MuK
-					Preview Text </a> extends the preview to enable support for a variety
-				of text file types.
-			</p>
-		</div>
-	</div>
-</section>
-
-<section class="oe_container oe_dark">
-	<div class="oe_row oe_spaced">
-		<h3 class="oe_slogan">Audio Preview</h3>
-		<div class="oe_span6">
-			<p class="oe_mt32 text-justify">
-				<a
-					href="https://apps.odoo.com/apps/modules/11.0/muk_web_preview_audio/">MuK
-					Preview Audio</a> extends the preview to enable support for audio files.
-			</p>
-			<p>
-				<span style="color: green;"> &#9745; </span> Wav (*.wav, audio/wav) <br />
-				<span style="color: green;"> &#9745; </span> Ogg Theora Vorbis (*.ogg, audio/ogg) <br />
-				<span style="color: green;"> &#9745; </span> MP3 (*.mp3, audio/mpeg) <br />
-			</p>
-		</div>
-		<div class="oe_span6">
-			<img class="oe_picture oe_screenshot" src="screenshot_audio.png">
-		</div>
-	</div>
-</section>
-
-<section class="oe_container">
-	<div class="oe_row oe_spaced">
-		<h3 class="oe_slogan">Vector Preview</h3>
-		<div class="oe_span6">
-			<img class="oe_picture oe_screenshot" src="screenshot_svg.png">
-		</div>
-		<div class="oe_span6">
-			<p class="oe_mt32 text-justify">
-				<a
-					href="https://apps.odoo.com/apps/modules/11.0/muk_web_preview_vector/">MuK
-					Preview Vector </a> extends the preview to enable support for Scalable Vector Graphics.
-			</p>
-			<p>
-				<span style="color: green;"> &#9745; </span> Scalable Vector Graphics (*.svg, image/svg+xml) 
-			</p>
-		</div>
-	</div>
-</section>
-
-<section class="oe_container oe_dark"
-	style="margin-bottom: 20px; border-top: 5px solid #797979; border-bottom: 5px solid #797979;">
-	<h3 class="oe_slogan" style="margin-bottom: 10px;">Demo</h3>
-	<div class="row" style="margin: auto; max-width: 200px;">
-		<div class="col-xs-6">
-			<h5 class="oe_slogan" style="font-size: 20px; margin: 2px;">User:</h5>
-		</div>
-		<div class="col-xs-6">
-			<h5 class="oe_slogan" style="font-size: 20px; margin: 2px;">apps</h5>
-		</div>
-		<div class="col-xs-6">
-			<h5 class="oe_slogan" style="font-size: 20px; margin: 2px;">Password:</h5>
-		</div>
-		<div class="col-xs-6">
-			<h5 class="oe_slogan" style="font-size: 20px; margin: 2px;">demo</h5>
-		</div>
-	</div>
-	<div class="oe_slogan" style="margin-top: 5px;">
-		<a class="btn btn-primary btn-lg mt8"
-			href="https://demo.mukit.at/web/login"
-			style="position: relative; overflow: hidden;"><span
-			class="o_ripple"
-			style="height: 138px; width: 138px; top: -35.2969px; left: -8.17188px;"></span>
-			<i class="fa fa-video-camera"></i> Live Preview </a>
 	</div>
 </section>
 
@@ -263,15 +120,16 @@
 		contact us, if you need any help with your Odoo integration or
 		addiontal features.</h5>
 	<div class="oe_slogan">
-		<a class="btn btn-primary btn-lg mt8" href="mailto:sale@mukit.at">
-			<i class="fa fa-envelope"></i> Email
+		<a class="btn btn-primary btn-lg mt8" href="https://mukit.at"
+			target="_blank"> <i class="fa fa-globe"></i> Website
+		</a> <a class="btn btn-primary btn-lg mt8" href="mailto:sale@mukit.at">
+			<i class="fa fa-envelope"></i> Contact Us
 		</a> <a class="btn btn-primary btn-lg mt8"
-			href="https://mukit.at/page/contactus"> <i class="fa fa-phone"></i>
-			Contact
-		</a> <a class="btn btn-primary btn-lg mt8" href="mailto:support@mukit.at">
-			<i class="fa fa-life-ring"></i> Support
+			href="https://github.com/muk-it" target="_blank"> <i
+			class="fa fa-github"></i> Issues
 		</a>
 	</div>
-	<img src="logo.png" style="width: 200px; margin-bottom: 20px;"
-		class="center-block">
+	<img src="logo.png"
+		style="width: 200px; margin-bottom: 20px; display: block;"
+		class="mx-auto center-block">
 </section>
