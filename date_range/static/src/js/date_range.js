@@ -3,8 +3,6 @@
 odoo.define('date_range.search_filters', function (require) {
     "use strict";
 
-    var core = require('web.core');
-    var data = require('web.data');
     var filters = require('web.search_filters');
     var rpc = require('web.rpc');
     var framework = require('web.framework');
@@ -14,19 +12,27 @@ odoo.define('date_range.search_filters', function (require) {
             this._super.apply(this, arguments);
             this.is_date_range_selected = false;
             this.is_date = field.type === 'date' || field.type === 'datetime';
-            this.$value = this.$el.find('.searchview_extended_prop_value, .o_searchview_extended_prop_value');
+            this.$value = this.$el.find(
+                '.searchview_extended_prop_value, .o_searchview_extended_prop_value');
             if (this.is_date) {
-                var ds = new data.DataSetSearch(this, 'date.range.type', this.context, [[1, '=', 1]]);
-                ds.read_slice(['name'], {}).done(this.proxy('add_date_range_types_operator'));
+                this._rpc({
+                    model: 'date.range.type',
+                    method: 'search_read',
+                    fields: ['name'],
+                    context: this.context,
+                }).then(this.proxy('add_date_range_types_operator'));
             }
         },
 
         add_date_range_types_operator: function (date_range_types) {
             var self = this;
             _.each(date_range_types, function (drt) {
+                var el = self.$el.find(
+                    '.searchview_extended_prop_op, .o_searchview_extended_prop_op');
                 $('<option>', {value: 'drt_' + drt.id})
                     .text(_('in ') + drt.name)
-                    .appendTo(self.$el.find('.searchview_extended_prop_op, .o_searchview_extended_prop_op'));
+                    .appendTo(el);
+
             });
         },
 
@@ -43,18 +49,28 @@ odoo.define('date_range.search_filters', function (require) {
 
         date_range_type_operator_selected: function (type_id) {
             this.$value.empty().show();
-            var ds = new data.DataSetSearch(this, 'date.range', this.context, [['type_id', '=', parseInt(type_id, 10)]]);
-            ds.read_slice(['name', 'date_start', 'date_end'], {}).done(this.proxy('on_range_type_selected'));
-
+            this._rpc({
+                model: 'date.range',
+                method: 'search_read',
+                fields: ['name', 'date_start', 'date_end'],
+                context: this.context,
+                domain: [
+                    ['type_id', '=', parseInt(type_id, 10)],
+                ],
+            }).then(this.proxy('on_range_type_selected'));
         },
 
         on_range_type_selected: function (date_range_values) {
-            this.value = new filters.ExtendedSearchProposition.DateRange(this, this.value.field, date_range_values);
-            this.value.appendTo(this.$value);
-            if (!this.$el.hasClass('o_filter_condition')) {
-                this.$value.find('.date-range-select').addClass('form-control');
-            }
-            this.value.on_range_selected();
+            this.value = new filters.ExtendedSearchProposition.DateRange(
+                this, this.value.field, date_range_values
+            );
+            var self = this;
+            this.value.appendTo(this.$value).then(function () {
+                if (!self.$el.hasClass('o_filter_condition')) {
+                    self.$value.find('.date-range-select').addClass('form-control');
+                }
+                self.value.on_range_selected();
+            });
         },
 
         get_filter: function () {
@@ -69,14 +85,7 @@ odoo.define('date_range.search_filters', function (require) {
 
     });
 
-    /**
-Since Odoo 11, The Field class used as base class for all specialized filter
-widgets is no more exposed by 'web.search_filters'. To create our own class we
-extend the more simple class available into the search_filters_registry as base
-class
-*/
-
-    filters.ExtendedSearchProposition.DateRange = core.search_filters_registry.get('id').extend({
+    filters.ExtendedSearchProposition.DateRange = filters.Field.extend({
         template: 'SearchView.extended_search.dateRange.selection',
         events: {
             'change': 'on_range_selected',
@@ -97,7 +106,7 @@ class
             return parseInt(this.$el.val(), 10);
         },
 
-        on_range_selected: function (e) {
+        on_range_selected: function () {
             var self = this;
             self.domain = '';
             framework.blockUI();
@@ -115,7 +124,7 @@ class
                 });
         },
 
-        get_domain: function (field, operator) {
+        get_domain: function () {
             return this.domain;
         },
 
