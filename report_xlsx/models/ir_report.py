@@ -8,7 +8,7 @@ from odoo.exceptions import UserError
 class ReportAction(models.Model):
     _inherit = "ir.actions.report"
 
-    report_type = fields.Selection(selection_add=[("xlsx", "XLSX")])
+    report_type = fields.Selection(selection_add=[("xlsx", "XLSX")], ondelete={'xlsx': 'set default'})
 
     @api.model
     def render_xlsx(self, docids, data):
