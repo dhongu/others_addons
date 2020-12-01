@@ -42,7 +42,7 @@
         	}
        	}
         .oe_title {
-            max-width: 100%;
+            //max-width: 100%;
             width: initial;
             span.o_field_widget {
                 max-width: 100%;
@@ -50,6 +50,7 @@
                 white-space: nowrap;
                 overflow: hidden;
                 width: initial;
+				vertical-align: middle;
             }
         }
         .o_notebook {
