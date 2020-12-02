@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2018 Onestein
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <template id="snippet_options" inherit_id="website.snippet_options">
+        <xpath expr="//div" position="after">
+            <div data-selector="img, [style*='background-image']">
+                <we-button data-toggle-class="lazyload-disable" data-no-preview="true">
+                Disable Lazy loading
+            </we-button>
+            </div>
+        </xpath>
+    </template>
+</odoo>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates id="template" xml:space="preserve">
-
-<t t-extend="ListView.buttons">
-    <t t-jquery="button.o_list_button_add" t-operation="after">
-        <button class="btn btn-secondary export_treeview_xls" type="button">Export</button>
-    </t>
-</t>
-</templates>
