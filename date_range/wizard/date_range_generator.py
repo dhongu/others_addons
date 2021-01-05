@@ -17,7 +17,7 @@ class DateRangeGenerator(models.TransientModel):
         return self.env.company
 
     name_prefix = fields.Char("Range name prefix", required=True)
-    date_start = fields.Date(strint="Start date", required=True)
+    date_start = fields.Date(required=True)
     type_id = fields.Many2one(
         comodel_name="date.range.type",
         string="Type",
@@ -99,6 +99,6 @@ class DateRangeGenerator(models.TransientModel):
         if date_ranges:
             for dr in date_ranges:
                 self.env["date.range"].create(dr)
-        return self.env["ir.actions.act_window"].for_xml_id(
-            module="date_range", xml_id="date_range_action"
+        return self.env["ir.actions.actions"]._for_xml_id(
+            "date_range.date_range_action"
         )
