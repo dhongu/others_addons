@@ -223,6 +223,9 @@ Changelog
 Next
 ~~~~
 
+* [ADD] Run jobrunner as a worker process instead of a thread in the main
+  process (when running with --workers > 0)
+
 12.0.1.1.0 (2019-11-01)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -280,6 +283,7 @@ Contributors
 * Laurent Mignon <laurent.mignon@acsone.eu>
 * Laetitia Gangloff <laetitia.gangloff@acsone.eu>
 * Cédric Pigeon <cedric.pigeon@acsone.eu>
+* Souheil Bejaoui <souheil.bejaoui@acsone.eu>
 
 Maintainers
 ~~~~~~~~~~~
