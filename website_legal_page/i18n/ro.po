@@ -33,14 +33,14 @@ msgstr "(\"noi\")"
 msgid "(the \"Site\"). This page informs you of our policies regarding the\n"
 "                                                collection, use and disclosure\n"
 "                                                of Personal Information we receive from users of the Site."
-msgstr ""
+msgstr "Această pagină vă informează despre politicile noastre privind colectarea, utilizarea și dezvăluirea informațiilor personale pe care le primim de la utilizatorii site-ului."
 
 #. module: website_legal_page
 #: model_terms:ir.ui.view,arch_db:website_legal_page.terms-of-use
 #: model_terms:website.page,arch_db:website_legal_page.terms_page
 msgid ",\n"
 "                                                without regard to its conflict of law provisions."
-msgstr ""
+msgstr ",\n fără a ține cont de dispozițiile sale privind conflictul de legi."
 
 #. module: website_legal_page
 #: model_terms:ir.ui.view,arch_db:website_legal_page.acceptance_full
@@ -74,7 +74,7 @@ msgstr "Accesând sau utilizând Serviciul, sunteți de acord să fiți obligaț
 #: model_terms:ir.ui.view,arch_db:website_legal_page.terms-of-use
 #: model_terms:website.page,arch_db:website_legal_page.terms_page
 msgid "Changes"
-msgstr "Modificaări"
+msgstr "Modificări"
 
 #. module: website_legal_page
 #: model_terms:ir.ui.view,arch_db:website_legal_page.privacy-policy
