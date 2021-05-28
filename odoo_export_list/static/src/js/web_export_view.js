@@ -65,7 +65,9 @@ odoo.define('web_export_view', function (require) {
                     var val = self.extractContent(elt);
 
                     if (val != undefined) {
-                        if (elt.includes('o_list_number')) {
+
+
+                        if (elt.includes('o_list_number') && !elt.includes('o_float_time_cell')) {
                             val = parseFloat(val);
                         }
                         rows_tab.push(val);
