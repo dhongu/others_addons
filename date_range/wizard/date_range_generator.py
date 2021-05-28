@@ -1,8 +1,9 @@
-# -*- coding: utf-8 -*-
-# © 2016 ACSONE SA/NV (<http://acsone.eu>)
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# Copyright 2016 ACSONE SA/NV (<https://acsone.eu>)
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
+from odoo.tools.translate import _
+from odoo.exceptions import ValidationError
 from dateutil.rrule import (rrule,
                             YEARLY,
                             MONTHLY,
@@ -13,6 +14,7 @@ from dateutil.relativedelta import relativedelta
 
 class DateRangeGenerator(models.TransientModel):
     _name = 'date.range.generator'
+    _description = 'Date Range Generator'
 
     @api.model
     def _default_company(self):
@@ -22,7 +24,8 @@ class DateRangeGenerator(models.TransientModel):
     date_start = fields.Date(strint='Start date', required=True)
     type_id = fields.Many2one(
         comodel_name='date.range.type', string='Type', required=True,
-        ondelete='cascade')
+        domain="['|', ('company_id', '=', company_id), "
+               "('company_id', '=', False)]", ondelete='cascade')
     company_id = fields.Many2one(
         comodel_name='res.company', string='Company',
         default=_default_company)
@@ -34,6 +37,8 @@ class DateRangeGenerator(models.TransientModel):
     duration_count = fields.Integer('Duration', required=True)
     count = fields.Integer(
         string="Number of ranges to generate", required=True)
+    parent_id = fields.Many2one(
+        comodel_name='date.range', string="Parent", index=1)
 
     @api.multi
     def _compute_date_ranges(self):
@@ -56,8 +61,26 @@ class DateRangeGenerator(models.TransientModel):
                 'date_start': date_start,
                 'date_end': date_end,
                 'type_id': self.type_id.id,
-                'company_id': self.company_id.id})
+                'company_id': self.company_id.id,
+                'parent_id': self.parent_id.id})
         return date_ranges
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        if self.company_id and self.type_id.company_id and \
+                self.type_id.company_id != self.company_id:
+            self._cache.update(
+                self._convert_to_cache({'type_id': False}, update=True))
+
+    @api.multi
+    @api.constrains('company_id', 'type_id')
+    def _check_company_id_type_id(self):
+        for rec in self.sudo():
+            if rec.company_id and rec.type_id.company_id and\
+                    rec.company_id != rec.type_id.company_id:
+                raise ValidationError(
+                    _('The Company in the Date Range Generator and in '
+                      'Date Range Type must be the same.'))
 
     @api.multi
     def action_apply(self):
@@ -67,3 +90,24 @@ class DateRangeGenerator(models.TransientModel):
                 self.env['date.range'].create(dr)
         return self.env['ir.actions.act_window'].for_xml_id(
             module='date_range', xml_id='date_range_action')
+
+    @api.multi
+    @api.onchange('type_id', 'date_start')
+    def onchange_type_id(self):
+        self.ensure_one()
+        date_range = self.env['date.range']
+        domain = []
+        if self.type_id:
+            domain.append(('type_id', '=', self.type_id.parent_type_id.id))
+        if self.date_start:
+            domain.append('|')
+            domain.append(('date_start', '<=', self.date_start))
+            domain.append(('date_start', '=', False))
+        if domain:
+            # If user did not select a parent already, autoselect the last
+            # (ordered by date_start) or only parent that applies.
+            if self.type_id and self.date_start and not self.parent_id:
+                possible_parent = date_range.search(
+                    domain, limit=1, order='date_start desc')
+                self.parent_id = possible_parent  # can be empty!
+        return {'domain': {'parent_id': domain}}
