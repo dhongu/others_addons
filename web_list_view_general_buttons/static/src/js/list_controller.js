@@ -14,20 +14,25 @@ odoo.define("web_list_view_general_buttons.ListController", function(require) {
             if (this.context.general_buttons instanceof Array) {
                 this.headerGeneralButtons = this.context.general_buttons;
             }
-            this.getGeneralButtons();
+            // this.getGeneralButtons();
         },
 
         getGeneralButtons: async function() {
             var self = this;
             if (this.context.general_buttons === "get_general_buttons") {
-                this._rpc({
-                    model: this.modelName,
-                    method: "get_general_buttons",
-                    args: [this.context.active_id],
-                    context: this.context,
-                }).then(function(result) {
-                    self.headerGeneralButtons = result;
-                });
+                try {
+                    this._rpc({
+                        model: this.modelName,
+                        method: "get_general_buttons",
+                        args: [this.context.active_id],
+                        context: this.context,
+                    }).then(function (result) {
+                        self.headerGeneralButtons = result;
+                    });
+                }
+                catch {
+
+                };
             }
         },
 
