@@ -10,7 +10,7 @@ available Odoo workers
 How does it work?
 -----------------
 
-* It starts as a thread in the Odoo main process
+* It starts as a thread in the Odoo main process or as a new worker
 * It receives postgres NOTIFY messages each time jobs are
   added or updated in the queue_job table.
 * It maintains an in-memory priority queue of jobs that
@@ -157,9 +157,6 @@ ERROR_RECOVERY_DELAY = 5
 _logger = logging.getLogger(__name__)
 
 
-session = requests.Session()
-
-
 # Unfortunately, it is not possible to extend the Odoo
 # server command line arguments, so we resort to environment variables
 # to configure the runner (channels mostly).
@@ -201,20 +198,7 @@ def _connection_info_for(db_name):
     return connection_info
 
 
-session = requests.Session()
-
-
 def _async_http_get(scheme, host, port, user, password, db_name, job_uuid):
-    if not session.cookies:
-        # obtain an anonymous session
-        _logger.info("obtaining an anonymous session for the job runner")
-        url = "{}://{}:{}/queue_job/session".format(scheme, host, port)
-        auth = None
-        if user:
-            auth = (user, password)
-        response = session.get(url, timeout=30, auth=auth)
-        response.raise_for_status()
-
     # Method to set failed job (due to timeout, etc) as pending,
     # to avoid keeping it as enqueued.
     def set_job_pending():
@@ -250,7 +234,7 @@ def _async_http_get(scheme, host, port, user, password, db_name, job_uuid):
                 auth = (user, password)
             # we are not interested in the result, so we set a short timeout
             # but not too short so we trap and log hard configuration errors
-            response = session.get(url, timeout=1, auth=auth)
+            response = requests.get(url, timeout=1, auth=auth)
 
             # raise_for_status will result in either nothing, a Client Error
             # for HTTP Response codes between 400 and 500 or a Server Error
@@ -260,7 +244,6 @@ def _async_http_get(scheme, host, port, user, password, db_name, job_uuid):
             set_job_pending()
         except Exception:
             _logger.exception("exception in GET %s", url)
-            session.cookies.clear()
             set_job_pending()
 
     thread = threading.Thread(target=urlopen)
@@ -295,40 +278,31 @@ class Database(object):
                 "SELECT 1 FROM pg_tables WHERE tablename=%s", ("ir_module_module",)
             )
             if not cr.fetchone():
+                _logger.debug("%s doesn't seem to be an odoo db", self.db_name)
                 return False
             cr.execute(
                 "SELECT 1 FROM ir_module_module WHERE name=%s AND state=%s",
                 ("queue_job", "installed"),
             )
-            return cr.fetchone()
+            if not cr.fetchone():
+                _logger.debug("queue_job is not installed for db %s", self.db_name)
+                return False
+            cr.execute(
+                """SELECT COUNT(1)
+                FROM information_schema.triggers
+                WHERE event_object_table = %s
+                AND trigger_name = %s""",
+                ("queue_job", "queue_job_notify"),
+            )
+            if cr.fetchone()[0] != 3:  # INSERT, DELETE, UPDATE
+                _logger.error(
+                    "queue_job_notify trigger is missing in db %s", self.db_name
+                )
+                return False
+            return True
 
     def _initialize(self):
         with closing(self.conn.cursor()) as cr:
-            # this is the trigger that sends notifications when jobs change
-            cr.execute(
-                """
-                DROP TRIGGER IF EXISTS queue_job_notify ON queue_job;
-
-                CREATE OR REPLACE
-                    FUNCTION queue_job_notify() RETURNS trigger AS $$
-                BEGIN
-                    IF TG_OP = 'DELETE' THEN
-                        IF OLD.state != 'done' THEN
-                            PERFORM pg_notify('queue_job', OLD.uuid);
-                        END IF;
-                    ELSE
-                        PERFORM pg_notify('queue_job', NEW.uuid);
-                    END IF;
-                    RETURN NULL;
-                END;
-                $$ LANGUAGE plpgsql;
-
-                CREATE TRIGGER queue_job_notify
-                    AFTER INSERT OR UPDATE OR DELETE
-                    ON queue_job
-                    FOR EACH ROW EXECUTE PROCEDURE queue_job_notify();
-            """
-            )
             cr.execute("LISTEN queue_job")
 
     @contextmanager
@@ -345,6 +319,11 @@ class Database(object):
         with closing(self.conn.cursor("select_jobs", withhold=True)) as cr:
             cr.execute(query, args)
             yield cr
+
+    def keep_alive(self):
+        query = "SELECT 1"
+        with closing(self.conn.cursor()) as cr:
+            cr.execute(query)
 
     def set_job_enqueued(self, uuid):
         with closing(self.conn.cursor()) as cr:
@@ -380,6 +359,36 @@ class QueueJobRunner(object):
         self._stop = False
         self._stop_pipe = os.pipe()
 
+    @classmethod
+    def from_environ_or_config(cls):
+        scheme = os.environ.get("ODOO_QUEUE_JOB_SCHEME") or queue_job_config.get(
+            "scheme"
+        )
+        host = (
+            os.environ.get("ODOO_QUEUE_JOB_HOST")
+            or queue_job_config.get("host")
+            or config["http_interface"]
+        )
+        port = (
+            os.environ.get("ODOO_QUEUE_JOB_PORT")
+            or queue_job_config.get("port")
+            or config["http_port"]
+        )
+        user = os.environ.get("ODOO_QUEUE_JOB_HTTP_AUTH_USER") or queue_job_config.get(
+            "http_auth_user"
+        )
+        password = os.environ.get(
+            "ODOO_QUEUE_JOB_HTTP_AUTH_PASSWORD"
+        ) or queue_job_config.get("http_auth_password")
+        runner = cls(
+            scheme=scheme or "http",
+            host=host or "localhost",
+            port=port or 8069,
+            user=user,
+            password=password,
+        )
+        return runner
+
     def get_db_names(self):
         if config["db_name"]:
             db_names = config["db_name"].split(",")
@@ -400,9 +409,7 @@ class QueueJobRunner(object):
     def initialize_databases(self):
         for db_name in self.get_db_names():
             db = Database(db_name)
-            if not db.has_queue_job:
-                _logger.debug("queue_job is not installed for db %s", db_name)
-            else:
+            if db.has_queue_job:
                 self.db_by_name[db_name] = db
                 with db.select_jobs("state in %s", (NOT_DONE,)) as cr:
                     for job_data in cr:
@@ -428,6 +435,12 @@ class QueueJobRunner(object):
 
     def process_notifications(self):
         for db in self.db_by_name.values():
+            if not db.conn.notifies:
+                # If there are no activity in the queue_job table it seems that
+                # tcp keepalives are not sent (in that very specific scenario),
+                # causing some intermediaries (such as haproxy) to close the
+                # connection, making the jobrunner to restart on a socket error
+                db.keep_alive()
             while db.conn.notifies:
                 if self._stop:
                     break
@@ -493,6 +506,9 @@ class QueueJobRunner(object):
                     self.run_jobs()
                     self.wait_notification()
             except KeyboardInterrupt:
+                self.stop()
+            except InterruptedError:
+                # Interrupted system call, i.e. KeyboardInterrupt during select
                 self.stop()
             except Exception:
                 _logger.exception(
