@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form view of Merge Sale order -->
+    <record id="view_merge_sale_line" model="ir.ui.view">
+        <field name="name">Merge Orders</field>
+        <field name="model">merge.sale.order</field>
+        <field name="arch" type="xml">
+             <form string="Sale Order Merge">
+                <group>
+                    <field name="merge_type" required="1"/>
+                    <field name="sale_order_id" attrs="{'invisible': [('merge_type','in',['new_cancel','new_delete'])],
+                        'required': [('merge_type','not in',['new_cancel','new_delete'])]}"/>
+                </group>
+                <footer>
+                    <button name="merge_orders" string="Merge Orders" type="object"
+                        class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action of Merge Sale Order -->
+    <record id="action_view_merge_sale_line" model="ir.actions.act_window">
+        <field name="name">Merge Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">merge.sale.order</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_merge_sale_line"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+    </record>
+</odoo>
