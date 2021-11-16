@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Order Note Configuration-->
+    <record id="res_config_settings_sale_order_note_form" model="ir.ui.view">
+        <field name="name">res.config.settings.sale.order.note.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website_sale.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='sale_checkout_settings']" position="inside">
+                <div class="col-12 col-lg-6 o_setting_box" id="sale_gorder_note_configuration" >
+                    <div class="o_setting_left_pane">
+                        <field name="enable_order_note" string="Enable Order Note"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="enable_order_note" string="Enable Order Note"/>
+                        <div class="text-muted">
+                            Enable Order note on website
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

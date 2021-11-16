@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add a website order comment  -->
+    <template id="customer_comment" inherit_id="website_sale.payment">
+        <xpath expr="//div[@id='payment_method']" position="before">
+            <div class="mb8 row" t-if="website.enable_order_note">
+                <div class="form-group col-lg-12">
+                    <h3 class="sub-heading">Order Note</h3>
+                    <textarea rows="3"  class="form-control website_order_note" id="website_order_note" placeholder="Write a note..."/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>
