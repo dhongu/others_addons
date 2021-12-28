@@ -51,6 +51,11 @@
                                 <field name="update_account" />
                                 <field name="update_fiscal_position" />
                             </group>
+                            <group string="Regenerate records?">
+                                <field name="update_vat_on_payment" />
+                                <field name="update_not_deductible" />
+                                <field name="update_vat_repartition" />
+                            </group>
                             <group
                                 string="Other options"
                                 attrs="{'invisible':[('state','!=','init')]}"

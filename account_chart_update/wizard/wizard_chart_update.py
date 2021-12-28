@@ -7,13 +7,14 @@
 # Copyright 2016 Jacques-Etienne Baudoux <je@bcim.be>
 # Copyright 2018 Tecnativa - Pedro M. Baeza
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
 import logging
 from contextlib import closing
 from io import StringIO
 
 from odoo import _, api, exceptions, fields, models, tools
-from odoo.tools import config
+from odoo.tools import config, convert
+
+from .ro_tax_match import ro_tax_match
 
 _logger = logging.getLogger(__name__)
 EXCEPTION_TEXT = "Traceback (most recent call last)"
@@ -76,6 +77,18 @@ class WizardUpdateChartsAccounts(models.TransientModel):
         default=True,
         help="Existing fiscal positions are updated. Fiscal positions are "
         "searched by name.",
+    )
+    update_vat_on_payment = fields.Boolean(
+        string="Update vat on payment moves",
+        default=True,
+    )
+    update_not_deductible = fields.Boolean(
+        string="Update not deductible moves",
+        default=True,
+    )
+    update_vat_repartition = fields.Boolean(
+        string="Update vat repartition on move lines moves",
+        default=True,
     )
     continue_on_errors = fields.Boolean(
         string="Continue on errors",
@@ -216,7 +229,8 @@ class WizardUpdateChartsAccounts(models.TransientModel):
 
     def _default_tax_matching_ids(self):
         ordered_opts = ["xml_id", "description", "name"]
-        return self._get_matching_ids("wizard.tax.matching", ordered_opts)
+        tax_match = self._get_matching_ids("wizard.tax.matching", ordered_opts)
+        return tax_match
 
     def _default_account_matching_ids(self):
         ordered_opts = ["xml_id", "code", "name"]
@@ -235,6 +249,7 @@ class WizardUpdateChartsAccounts(models.TransientModel):
 
     @api.depends("tax_ids")
     def _compute_new_taxes_count(self):
+
         self.new_taxes = len(self.tax_ids.filtered(lambda x: x.type == "new"))
 
     @api.depends("account_ids")
@@ -354,9 +369,25 @@ class WizardUpdateChartsAccounts(models.TransientModel):
             _logger.addHandler(handler)
             # Create or update the records.
             if self.update_tax:
+                convert.convert_file(
+                    self.env.cr,
+                    "l10n_ro",
+                    "data/account_data.xml",
+                    None,
+                    mode="init",
+                    kind="data",
+                )
                 self._update_taxes()
             perform_rest = True
             if self.update_account:
+                convert.convert_file(
+                    self.env.cr,
+                    "l10n_ro",
+                    "data/account.group.template.csv",
+                    None,
+                    mode="init",
+                    kind="data",
+                )
                 self._update_accounts()
                 if (
                     EXCEPTION_TEXT in log_output.getvalue()
@@ -370,6 +401,15 @@ class WizardUpdateChartsAccounts(models.TransientModel):
                 self._update_taxes_pending_for_accounts()
             if self.update_fiscal_position and perform_rest:
                 self._update_fiscal_positions()
+            self._update_company_journals(
+                self.company_id.chart_template_id, self.company_id
+            )
+            if self.update_vat_on_payment:
+                self._update_vat_on_payment_moves()
+            if self.update_not_deductible:
+                self._update_not_deductible_moves()
+            if self.update_vat_repartition:
+                self._update_tax_repartition_lines(self.company_id)
             # Store new chart in the company
             self.company_id.chart_template_id = self.chart_template_id
             _logger.removeHandler(handler)
@@ -424,6 +464,16 @@ class WizardUpdateChartsAccounts(models.TransientModel):
                 )
                 if result:
                     return result.id
+                if ro_tax_match.get(template.name):
+                    result = tax_model.search(
+                        [
+                            ("name", "=", ro_tax_match.get(template.name)),
+                            ("company_id", "=", self.company_id.id),
+                        ],
+                        limit=1,
+                    )
+                    if result:
+                        return result.id
 
         return False
 
@@ -436,37 +486,38 @@ class WizardUpdateChartsAccounts(models.TransientModel):
             tax_id = self.find_tax_by_templates(tpl[inverse_name])
             factor_percent = tpl.factor_percent
             repartition_type = tpl.repartition_type
-            account_id = self.find_account_by_templates(tpl.account_id)
+            account_ids = self.find_account_by_templates(tpl.account_id)
             rep_obj = self.env["account.tax.repartition.line"]
-            existing = rep_obj.search(
-                [
-                    (inverse_name, "=", tax_id),
-                    ("factor_percent", "=", factor_percent),
-                    ("repartition_type", "=", repartition_type),
-                    ("account_id", "=", account_id),
-                ]
-            )
-            if not existing:
-                # create a new mapping
-                result.append(
-                    (
-                        0,
-                        0,
-                        {
-                            inverse_name: tax_id,
-                            "factor_percent": factor_percent,
-                            "repartition_type": repartition_type,
-                            "account_id": account_id,
-                            "tag_ids": [(6, 0, tpl.tag_ids.ids)],
-                        },
-                    )
+            for account in account_ids:
+                existing = rep_obj.search(
+                    [
+                        (inverse_name, "=", tax_id),
+                        ("factor_percent", "=", factor_percent),
+                        ("repartition_type", "=", repartition_type),
+                        ("account_id", "=", account),
+                    ]
                 )
-            else:
-                current_repartition -= existing
+                if not existing:
+                    # create a new mapping
+                    result.append(
+                        (
+                            0,
+                            0,
+                            {
+                                inverse_name: tax_id,
+                                "factor_percent": factor_percent,
+                                "repartition_type": repartition_type,
+                                "account_id": account,
+                                "tag_ids": [(6, 0, tpl.tag_ids.ids)],
+                            },
+                        )
+                    )
+                else:
+                    current_repartition -= existing
         # Mark to be removed the lines not found
-        if current_repartition:
-            result += [(2, x.id) for x in current_repartition]
-        return result
+        # if current_repartition:
+        #     result += current_repartition
+        return current_repartition
 
     @api.model
     @tools.ormcache("code")
@@ -513,9 +564,9 @@ class WizardUpdateChartsAccounts(models.TransientModel):
                 [criteria, ("company_id", "=", self.company_id.id)]
             )
             if result:
-                return result.id
+                return result.ids
 
-        return False
+        return []
 
     @tools.ormcache("templates")
     def find_fp_by_templates(self, templates):
@@ -553,28 +604,30 @@ class WizardUpdateChartsAccounts(models.TransientModel):
         result = []
         for tpl in templates:
             pos_id = self.find_fp_by_templates(tpl.position_id)
-            src_id = self.find_account_by_templates(tpl.account_src_id)
-            dest_id = self.find_account_by_templates(tpl.account_dest_id)
+            src_ids = self.find_account_by_templates(tpl.account_src_id)
+            dest_ids = self.find_account_by_templates(tpl.account_dest_id)
             existing = self.env["account.fiscal.position.account"].search(
                 [
                     ("position_id", "=", pos_id),
-                    ("account_src_id", "=", src_id),
-                    ("account_dest_id", "=", dest_id),
+                    ("account_src_id", "in", src_ids),
+                    ("account_dest_id", "in", dest_ids),
                 ]
             )
             if not existing:
                 # create a new mapping
-                result.append(
-                    (
-                        0,
-                        0,
-                        {
-                            "position_id": pos_id,
-                            "account_src_id": src_id,
-                            "account_dest_id": dest_id,
-                        },
-                    )
-                )
+                for src_id in src_ids:
+                    for dest_id in dest_ids:
+                        result.append(
+                            (
+                                0,
+                                0,
+                                {
+                                    "position_id": pos_id,
+                                    "account_src_id": src_id,
+                                    "account_dest_id": dest_id,
+                                },
+                            )
+                        )
             else:
                 current_fp_accounts -= existing
         # Mark to be removed the lines not found
@@ -658,7 +711,7 @@ class WizardUpdateChartsAccounts(models.TransientModel):
         }
         to_include = template_field_mapping[template._name].mapped("name")
         for key, field in template._fields.items():
-            if key in ignore or key not in to_include or not hasattr(real, key):
+            if key in ignore or key not in to_include:
                 continue
             expected = None
             # Translate template records to reals for comparison
@@ -680,7 +733,7 @@ class WizardUpdateChartsAccounts(models.TransientModel):
                     )
             # Register detected differences
             if expected is not None:
-                if expected != [] and expected != real[key]:
+                if expected != [] and real[key] and expected != real[key]:
                     result[key] = expected
             else:
                 template_value = template[key]
@@ -801,39 +854,40 @@ class WizardUpdateChartsAccounts(models.TransientModel):
 
     def _find_accounts(self):
         """Load account templates to create/update."""
-        self.account_ids.unlink()
+        if self.account_ids:
+            self.account_ids.unlink()
         for template in self.chart_template_ids.mapped("account_ids"):
             # Search for a real account that matches the template
-            account_id = self.find_account_by_templates(template)
-            if not account_id:
-                # Account to be created
+            account_ids = self.find_account_by_templates(template)
+            if not account_ids:
+                # Tax to be created
                 self.account_ids.create(
                     {
                         "account_id": template.id,
                         "update_chart_wizard_id": self.id,
                         "type": "new",
-                        "notes": _("No account found with this code."),
+                        "notes": _("Name or description not found."),
                     }
                 )
             else:
                 # Check the account for changes
-                account = self.env["account.account"].browse(account_id)
-                notes = self.diff_notes(template, account)
+                accounts = self.env["account.account"].browse(account_ids)
+                for account in accounts:
+                    notes = self.diff_notes(template, account)
 
-                if self.recreate_xml_ids and self.missing_xml_id(template, account):
-                    notes += (notes and "\n" or "") + _("Missing XML-ID.")
-
-                if notes:
-                    # Account to be updated
-                    self.account_ids.create(
-                        {
-                            "account_id": template.id,
-                            "update_chart_wizard_id": self.id,
-                            "type": "updated",
-                            "update_account_id": account_id,
-                            "notes": notes,
-                        }
-                    )
+                    if self.recreate_xml_ids and self.missing_xml_id(template, account):
+                        notes += (notes and "\n" or "") + _("Missing XML-ID.")
+                    if notes:
+                        # Account to be updated
+                        self.account_ids.create(
+                            {
+                                "account_id": template.id,
+                                "update_chart_wizard_id": self.id,
+                                "type": "updated",
+                                "update_account_id": account.id,
+                                "notes": notes,
+                            }
+                        )
 
     def _find_fiscal_positions(self):
         """Load fiscal position templates to create/update."""
@@ -910,7 +964,9 @@ class WizardUpdateChartsAccounts(models.TransientModel):
                 _logger.info(_("Deactivated tax %s."), "'%s'" % tax.name)
                 continue
             else:
-                for key, value in self.diff_fields(template, tax).items():
+                # Generate taxes from templates.
+                generated_tax_res = template._get_tax_vals(tax.company_id, template)
+                for key, value in generated_tax_res.items():
                     # We defer update because account might not be created yet
                     if key in {
                         "invoice_repartition_line_ids",
@@ -918,12 +974,16 @@ class WizardUpdateChartsAccounts(models.TransientModel):
                     }:
                         continue
                     tax[key] = value
-                    _logger.info(_("Updated tax %s."), "'%s'" % template.name)
+                _logger.info(_("Updated tax %s."), "'%s'" % template.name)
                 if self.recreate_xml_ids and self.missing_xml_id(template, tax):
-                    self.recreate_xml_id(template, tax)
-                    _logger.info(
-                        _("Updated tax %s. (Recreated XML-IDs)"), "'%s'" % template.name
-                    )
+                    try:
+                        self.recreate_xml_id(template, tax)
+                        _logger.info(
+                            _("Updated tax %s. (Recreated XML-IDs)"),
+                            "'%s'" % template.name,
+                        )
+                    except Exception as e:
+                        _logger.info(e)
 
     def _update_accounts(self):
         """Process accounts to create/update."""
@@ -998,14 +1058,57 @@ class WizardUpdateChartsAccounts(models.TransientModel):
         the references to the accounts (the taxes where created/updated first,
         when the referenced accounts are still not available).
         """
+        _logger.info(_("_update_taxes_pending_for_accounts"))
         for wiz_tax in self.tax_ids:
             if wiz_tax.type == "deleted" or not wiz_tax.update_tax_id:
                 continue
             template = wiz_tax.tax_id
             tax = wiz_tax.update_tax_id
             done = False
+            generated_tax_res = template._get_tax_vals(tax.company_id, template)
             vals = {}
-            for key, value in self.diff_fields(template, tax).items():
+            if template.cash_basis_transition_account_id:
+                cash_basis_acc = self.find_account_by_templates(
+                    template.cash_basis_transition_account_id
+                )
+                if cash_basis_acc:
+                    accounts = self.env["account.account"].browse(cash_basis_acc)
+                    tax.cash_basis_transition_account_id = accounts[0]
+            inv_rep_vals = [(5, 0, 0)]
+            if template.invoice_repartition_line_ids:
+                for inv_rep_line in template.invoice_repartition_line_ids:
+                    new_rep_line_vals = inv_rep_line.get_repartition_line_create_vals(
+                        tax.company_id
+                    )[1][2]
+                    if inv_rep_line.account_id:
+                        new_rep_line_acc = self.find_account_by_templates(
+                            inv_rep_line.account_id
+                        )
+                        if new_rep_line_acc:
+                            accounts = self.env["account.account"].browse(
+                                new_rep_line_acc
+                            )
+                            new_rep_line_vals["account_id"] = accounts[0].id
+                    inv_rep_vals.append((0, 0, new_rep_line_vals))
+            generated_tax_res["invoice_repartition_line_ids"] = inv_rep_vals
+            ref_rep_vals = [(5, 0, 0)]
+            if template.refund_repartition_line_ids:
+                for ref_rep_line in template.refund_repartition_line_ids:
+                    new_rep_line_vals = ref_rep_line.get_repartition_line_create_vals(
+                        tax.company_id
+                    )[1][2]
+                    if ref_rep_line.account_id:
+                        new_rep_line_acc = self.find_account_by_templates(
+                            ref_rep_line.account_id
+                        )
+                        if new_rep_line_acc:
+                            accounts = self.env["account.account"].browse(
+                                new_rep_line_acc
+                            )
+                            new_rep_line_vals["account_id"] = accounts[0].id
+                    ref_rep_vals.append((0, 0, new_rep_line_vals))
+            generated_tax_res["refund_repartition_line_ids"] = ref_rep_vals
+            for key, value in generated_tax_res.items():
                 if key in {
                     "invoice_repartition_line_ids",
                     "refund_repartition_line_ids",
@@ -1016,6 +1119,228 @@ class WizardUpdateChartsAccounts(models.TransientModel):
                 tax.write(vals)
             if done:
                 _logger.info(_("Post-updated tax %s."), "'%s'" % tax.name)
+
+    def _update_company_journals(self, chart_template, company, journals_dict=None):
+        """ Generate currency and vat on payment journals."""
+        JournalObj = self.env["account.journal"]
+        for vals_journal in chart_template._prepare_all_journals(
+            {}, company, journals_dict=journals_dict
+        ):
+            if not company.currency_exchange_journal_id:
+                if vals_journal["type"] == "general" and vals_journal["code"] == _(
+                    "EXCH"
+                ):
+                    journal = JournalObj.create(vals_journal)
+                    company.write({"currency_exchange_journal_id": journal.id})
+            if not company.tax_cash_basis_journal_id:
+                if vals_journal["type"] == "general" and vals_journal["code"] == _(
+                    "CABA"
+                ):
+                    journal = JournalObj.create(vals_journal)
+                    company.write({"tax_cash_basis_journal_id": journal.id})
+
+    def _update_vat_on_payment_moves(self):
+        """Updates the VAt on payment lines with new taxes."""
+        _logger.info(_("_update_vat_on_payment_moves"))
+        tax_map = {
+            "0": "TVA la Incasare - deductibil 0%",
+            "5": "TVA la Incasare - deductibil 5%",
+            "9": "TVA la Incasare - deductibil 9%",
+            "19": "TVA la Incasare - deductibil 19%",
+        }
+        account = self.env["account.account"].search(
+            [("code", "=", "442820"), ("company_id", "=", self.company_id.id)]
+        )
+        if not account:
+            account = self.env["account.account"].search(
+                [("code", "=", "442800"), ("company_id", "=", self.company_id.id)]
+            )
+        acc_moves = (
+            self.env["account.move.line"]
+            .search([("account_id", "=", account.id)])
+            .mapped("move_id")
+        )
+        vatp = self.company_id.property_vat_on_payment_position_id
+        if not vatp:
+            vatp = self.env["account.fiscal.position"].search(
+                [
+                    ("name", "ilike", "Regim TVA la Incasare"),
+                    ("company_id", "=", self.company_id.id),
+                ],
+                limit=1,
+            )
+        for acc_move in acc_moves:
+            if acc_move.journal_id.type == "purchase":
+                if vatp and acc_move.fiscal_position_id != vatp:
+                    query = """
+                        UPDATE account_move
+                        SET fiscal_position_id = %s
+                        WHERE id = %s
+                    """
+                    self.env.cr.execute(
+                        query,
+                        (
+                            self.company_id.property_vat_on_payment_position_id.id,
+                            acc_move.id,
+                        ),
+                    )
+                for line in acc_move.line_ids.filtered(lambda l: l.tax_ids):
+                    if len(line.tax_ids) == 1:
+                        for tax in line.tax_ids:
+                            new_tax_name = tax_map.get(str(int(tax.amount)))
+                            if new_tax_name and tax.name != new_tax_name:
+                                new_tax = self.env["account.tax"].search(
+                                    [
+                                        ("company_id", "=", acc_move.company_id.id),
+                                        ("name", "=", new_tax_name),
+                                    ],
+                                    limit=1,
+                                )
+                                if new_tax:
+                                    query = """
+                                        UPDATE account_move_line_account_tax_rel
+                                        SET account_tax_id = %s
+                                        WHERE account_move_line_id = %s and account_tax_id = %s
+                                    """
+                                    self.env.cr.execute(
+                                        query, (new_tax.id, line.id, tax.id)
+                                    )
+            else:
+                # Try to add tax line also in paymnets / compensation
+                # Check how they are set in a new payment for vat on payment invoice
+                continue
+
+    def _update_not_deductible_moves(self):
+        """Updates the taxes (created or updated on previous steps) to set
+        the references to the accounts (the taxes where created/updated first,
+        when the referenced accounts are still not available).
+        """
+        _logger.info(_("_update_not_deductible_moves"))
+        return True
+
+    def _update_tax_repartition_lines(self, company):
+        _logger.info(_("_update_tax_repartition_lines"))
+        self.env.cr.execute(
+            """
+            delete from account_account_tag_account_move_line_rel
+        """
+        )
+        self.env.cr.execute(
+            """
+            update account_move_line set tax_repartition_line_id = Null where tax_repartition_line_id is not null
+        """
+        )
+        # Updates the tax repartition and tax tags in account move lines.
+        self.env.cr.execute(
+            """
+            UPDATE account_move_line aml
+            SET tax_repartition_line_id = atrl.id
+            FROM account_move_line aml2
+            JOIN account_move am ON aml2.move_id = am.id
+            JOIN account_move_line_account_tax_rel amtax ON aml2.id = amtax.account_move_line_id
+            JOIN account_tax at ON amtax.account_tax_id = at.id
+            JOIN account_tax_repartition_line atrl ON (
+                atrl.invoice_tax_id = at.id AND atrl.repartition_type = 'tax')
+            WHERE aml.company_id = %s AND aml.id = aml2.id AND aml2.account_id = atrl.account_id
+                AND am.move_type in ('out_invoice', 'in_invoice')"""
+            % company.id
+        )
+        self.env.cr.execute(
+            """
+            UPDATE account_move_line aml
+            SET tax_repartition_line_id = atrl.id
+            FROM account_move_line aml2
+            JOIN account_move am ON aml2.move_id = am.id
+            JOIN account_move_line_account_tax_rel amtax ON aml2.id = amtax.account_move_line_id
+            JOIN account_tax at ON amtax.account_tax_id = at.id
+            JOIN account_tax_repartition_line atrl ON (
+                COALESCE(atrl.refund_tax_id,atrl.invoice_tax_id) = at.id AND atrl.repartition_type = 'tax')
+            WHERE aml.company_id = %s AND aml.id = aml2.id AND aml2.account_id = atrl.account_id
+                AND am.move_type in ('out_refund', 'in_refund')"""
+            % company.id
+        )
+        # move lines with tax repartition lines
+        self.env.cr.execute(
+            """
+            INSERT INTO account_account_tag_account_move_line_rel (
+                account_move_line_id, account_account_tag_id)
+            SELECT aml.id, aat_atr_rel.account_account_tag_id
+            FROM account_move_line aml
+            JOIN account_tax_repartition_line atrl ON aml.tax_repartition_line_id = atrl.id
+            JOIN account_account_tag_account_tax_repartition_line_rel aat_atr_rel ON
+                aat_atr_rel.account_tax_repartition_line_id = atrl.id
+            WHERE aml.company_id = %s
+            ON CONFLICT DO NOTHING"""
+            % company.id
+        )
+        # move lines with taxes
+        self.env.cr.execute(
+            """
+            INSERT INTO account_account_tag_account_move_line_rel (
+                account_move_line_id, account_account_tag_id)
+            SELECT aml.id, aat_atr_rel.account_account_tag_id
+            FROM account_move_line aml
+            JOIN account_move am ON aml.move_id = am.id
+            JOIN account_move_line_account_tax_rel amlatr ON amlatr.account_move_line_id = aml.id
+            JOIN account_tax_repartition_line atrl ON (
+                atrl.invoice_tax_id = amlatr.account_tax_id AND atrl.repartition_type = 'base')
+            JOIN account_account_tag_account_tax_repartition_line_rel aat_atr_rel ON
+                aat_atr_rel.account_tax_repartition_line_id = atrl.id
+            WHERE aml.company_id = %s AND am.move_type in ('out_invoice', 'in_invoice')
+            ON CONFLICT DO NOTHING"""
+            % company.id
+        )
+        self.env.cr.execute(
+            """
+            INSERT INTO account_account_tag_account_move_line_rel (
+                account_move_line_id, account_account_tag_id)
+            SELECT aml.id, aat_atr_rel.account_account_tag_id
+            FROM account_move_line aml
+            JOIN account_move am ON aml.move_id = am.id
+            JOIN account_move_line_account_tax_rel amlatr ON amlatr.account_move_line_id = aml.id
+            JOIN account_tax_repartition_line atrl ON (
+                atrl.refund_tax_id = amlatr.account_tax_id AND atrl.repartition_type = 'base')
+            JOIN account_account_tag_account_tax_repartition_line_rel aat_atr_rel ON
+                aat_atr_rel.account_tax_repartition_line_id = atrl.id
+            WHERE aml.company_id = %s AND am.move_type in ('out_refund', 'in_refund')
+            ON CONFLICT DO NOTHING"""
+            % company.id
+        )
+        # move lines without tax
+        self.env.cr.execute(
+            """
+            INSERT INTO account_account_tag_account_move_line_rel (
+                account_move_line_id, account_account_tag_id)
+            SELECT aml.id, aat_atr_rel.account_account_tag_id
+            FROM account_move_line aml
+            JOIN account_move am ON aml.move_id = am.id
+            JOIN account_tax_repartition_line atrl ON (
+                atrl.invoice_tax_id = aml.tax_line_id and atrl.account_id = aml.account_id AND atrl.repartition_type = 'tax')
+            JOIN account_account_tag_account_tax_repartition_line_rel aat_atr_rel ON
+                aat_atr_rel.account_tax_repartition_line_id = atrl.id
+            WHERE aml.company_id = %s AND am.move_type in ('out_invoice', 'in_invoice')
+            ON CONFLICT DO NOTHING"""
+            % company.id
+        )
+        self.env.cr.execute(
+            """
+            INSERT INTO account_account_tag_account_move_line_rel (
+                account_move_line_id, account_account_tag_id)
+            SELECT aml.id, aat_atr_rel.account_account_tag_id
+            FROM account_move_line aml
+            JOIN account_move am ON aml.move_id = am.id
+            JOIN account_tax_repartition_line atrl ON (
+                atrl.refund_tax_id = aml.tax_line_id and atrl.account_id = aml.account_id AND atrl.repartition_type = 'tax')
+            JOIN account_account_tag_account_tax_repartition_line_rel aat_atr_rel ON
+                aat_atr_rel.account_tax_repartition_line_id = atrl.id
+            WHERE aml.company_id = %s AND am.move_type in ('out_refund', 'in_refund')
+            ON CONFLICT DO NOTHING"""
+            % company.id
+        )
+        tax_audit_lines = self.env["account.move.line"].search(
+            [("tax_tag_ids", "!=", False)]
+        )
+        tax_audit_lines._compute_tax_audit()
 
     def _prepare_fp_vals(self, fp_template):
         # Tax mappings
@@ -1032,16 +1357,16 @@ class WizardUpdateChartsAccounts(models.TransientModel):
         account_mapping = []
         for fp_account in fp_template.account_ids:
             # Create the fp account mapping
-            account_mapping.append(
-                {
-                    "account_src_id": (
-                        self.find_account_by_templates(fp_account.account_src_id)
-                    ),
-                    "account_dest_id": (
-                        self.find_account_by_templates(fp_account.account_dest_id)
-                    ),
-                }
-            )
+            src_ids = self.find_account_by_templates(fp_account.account_src_id)
+            dest_ids = self.find_account_by_templates(fp_account.account_dest_id)
+            for src_id in src_ids:
+                for dest_id in dest_ids:
+                    account_mapping.append(
+                        {
+                            "account_src_id": (src_id),
+                            "account_dest_id": (dest_id),
+                        }
+                    )
         return {
             "company_id": self.company_id.id,
             "name": fp_template.name,
@@ -1080,6 +1405,14 @@ class WizardUpdateChartsAccounts(models.TransientModel):
 class WizardUpdateChartsAccountsTax(models.TransientModel):
     _name = "wizard.update.charts.accounts.tax"
     _description = "Tax that needs to be updated (new or updated in the " "template)."
+
+    @api.onchange("tax_id", "update_tax_id")
+    def _onchange_update_tax_id(self):
+        if self.tax_id and self.update_tax_id:
+            self.type = "updated"
+            self.notes = self.update_chart_wizard_id.diff_notes(
+                self.tax_id, self.update_tax_id
+            )
 
     tax_id = fields.Many2one(
         comodel_name="account.tax.template", string="Tax template", ondelete="set null"
