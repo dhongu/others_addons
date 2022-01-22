@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo>
+   <record id="custom_customer_view_sale_order_inherit_form" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+          <field name="arch" type="xml">
+            <xpath expr="//notebook/page[last()]" position="after">                     
+                <page name="customer_order_comment" string="Customer Order Comment">
+                    <group>                         
+                        <field name="customer_comment" nolabel="1"/>                            
+                    </group>
+                </page>                                         
+        </xpath>                                                     
+       </field>
+  </record>                               
+</odoo>
