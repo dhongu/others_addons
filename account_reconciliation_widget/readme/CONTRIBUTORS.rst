@@ -1,1 +1,0 @@
-* Tecnativa - Pedro M. Baeza
