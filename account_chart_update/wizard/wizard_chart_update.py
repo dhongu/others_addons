@@ -7,6 +7,7 @@
 # Copyright 2016 Jacques-Etienne Baudoux <je@bcim.be>
 # Copyright 2018 Tecnativa - Pedro M. Baeza
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
 import logging
 from contextlib import closing
 from io import StringIO
@@ -58,8 +59,8 @@ class WizardUpdateChartsAccounts(models.TransientModel):
         "Language",
         required=True,
         help="For records searched by name (taxes, fiscal "
-        "positions), the template name will be matched against the "
-        "record name on this language.",
+             "positions), the template name will be matched against the "
+             "record name on this language.",
         default=lambda self: self.env.context.get("lang", self.env.user.lang),
     )
     update_tax = fields.Boolean(
@@ -76,7 +77,7 @@ class WizardUpdateChartsAccounts(models.TransientModel):
         string="Update fiscal positions",
         default=True,
         help="Existing fiscal positions are updated. Fiscal positions are "
-        "searched by name.",
+             "searched by name.",
     )
     update_vat_on_payment = fields.Boolean(
         string="Update vat on payment moves",
@@ -94,7 +95,7 @@ class WizardUpdateChartsAccounts(models.TransientModel):
         string="Continue on errors",
         default=False,
         help="If set, the wizard will continue to the next step even if "
-        "there are minor errors.",
+             "there are minor errors.",
     )
     recreate_xml_ids = fields.Boolean(string="Recreate missing XML-IDs")
     tax_ids = fields.One2many(
@@ -229,8 +230,7 @@ class WizardUpdateChartsAccounts(models.TransientModel):
 
     def _default_tax_matching_ids(self):
         ordered_opts = ["xml_id", "description", "name"]
-        tax_match = self._get_matching_ids("wizard.tax.matching", ordered_opts)
-        return tax_match
+        return self._get_matching_ids("wizard.tax.matching", ordered_opts)
 
     def _default_account_matching_ids(self):
         ordered_opts = ["xml_id", "code", "name"]
@@ -255,8 +255,8 @@ class WizardUpdateChartsAccounts(models.TransientModel):
     @api.depends("account_ids")
     def _compute_new_accounts_count(self):
         self.new_accounts = (
-            len(self.account_ids.filtered(lambda x: x.type == "new"))
-            - self.rejected_new_account_number
+                len(self.account_ids.filtered(lambda x: x.type == "new"))
+                - self.rejected_new_account_number
         )
 
     @api.depends("fiscal_position_ids")
@@ -270,8 +270,8 @@ class WizardUpdateChartsAccounts(models.TransientModel):
     @api.depends("account_ids")
     def _compute_updated_accounts_count(self):
         self.updated_accounts = (
-            len(self.account_ids.filtered(lambda x: x.type == "updated"))
-            - self.rejected_updated_account_number
+                len(self.account_ids.filtered(lambda x: x.type == "updated"))
+                - self.rejected_updated_account_number
         )
 
     @api.depends("fiscal_position_ids")
@@ -346,7 +346,7 @@ class WizardUpdateChartsAccounts(models.TransientModel):
         parents2create = taxes2create.filtered(lambda x: x.tax_id.children_tax_ids)
         for parent in parents2create:
             if bool(
-                parent.tax_id.children_tax_ids - taxes2create.mapped("tax_id")
+                    parent.tax_id.children_tax_ids - taxes2create.mapped("tax_id")
             ):  # some children taxes are not included to be added
                 raise exceptions.UserError(
                     _(
@@ -390,8 +390,8 @@ class WizardUpdateChartsAccounts(models.TransientModel):
                 )
                 self._update_accounts()
                 if (
-                    EXCEPTION_TEXT in log_output.getvalue()
-                    and not self.continue_on_errors
+                        EXCEPTION_TEXT in log_output.getvalue()
+                        and not self.continue_on_errors
                 ):  # Abort early
                     perform_rest = False
             # Clear this cache for avoiding incorrect account hits (as it was
@@ -479,7 +479,7 @@ class WizardUpdateChartsAccounts(models.TransientModel):
 
     @tools.ormcache("templates", "current_repartition")
     def find_repartition_by_templates(
-        self, templates, current_repartition, inverse_name
+            self, templates, current_repartition, inverse_name
     ):
         result = []
         for tpl in templates:
@@ -516,8 +516,8 @@ class WizardUpdateChartsAccounts(models.TransientModel):
                     current_repartition -= existing
         # Mark to be removed the lines not found
         # if current_repartition:
-        #     result += current_repartition
-        return current_repartition
+        #     result += [(2, x.id) for x in current_repartition]
+        return result
 
     @api.model
     @tools.ormcache("code")
@@ -674,7 +674,6 @@ class WizardUpdateChartsAccounts(models.TransientModel):
     def fields_to_ignore(self, name):
         """Get fields that will not be used when checking differences.
 
-        :param str template: A template record.
         :param str name: The name of the template model.
         :return set: Fields to ignore in diff.
         """
@@ -684,10 +683,10 @@ class WizardUpdateChartsAccounts(models.TransientModel):
             "account.fiscal.position.template": {"chart_template_id"},
         }
         specials = {
-            "display_name",
-            "__last_update",
-            "company_id",
-        } | specials_mapping.get(name, set())
+                       "display_name",
+                       "__last_update",
+                       "company_id",
+                   } | specials_mapping.get(name, set())
         return set(models.MAGIC_COLUMNS) | specials
 
     @api.model
@@ -711,7 +710,7 @@ class WizardUpdateChartsAccounts(models.TransientModel):
         }
         to_include = template_field_mapping[template._name].mapped("name")
         for key, field in template._fields.items():
-            if key in ignore or key not in to_include:
+            if key in ignore or key not in to_include or not hasattr(real, key):
                 continue
             expected = None
             # Translate template records to reals for comparison
@@ -733,7 +732,7 @@ class WizardUpdateChartsAccounts(models.TransientModel):
                     )
             # Register detected differences
             if expected is not None:
-                if expected != [] and real[key] and expected != real[key]:
+                if expected != [] and expected != real[key]:
                     result[key] = expected
             else:
                 template_value = template[key]
@@ -799,7 +798,7 @@ class WizardUpdateChartsAccounts(models.TransientModel):
         self.tax_ids.unlink()
         # Search for changes between template and real tax
         for template in self.chart_template_ids.with_context(active_test=False).mapped(
-            "tax_template_ids"
+                "tax_template_ids"
         ):
             # Check if the template matches a real tax
             tax_id = self.find_tax_by_templates(template)
@@ -854,19 +853,18 @@ class WizardUpdateChartsAccounts(models.TransientModel):
 
     def _find_accounts(self):
         """Load account templates to create/update."""
-        if self.account_ids:
-            self.account_ids.unlink()
+        self.account_ids.unlink()
         for template in self.chart_template_ids.mapped("account_ids"):
             # Search for a real account that matches the template
             account_ids = self.find_account_by_templates(template)
             if not account_ids:
-                # Tax to be created
+                # Account to be created
                 self.account_ids.create(
                     {
                         "account_id": template.id,
                         "update_chart_wizard_id": self.id,
                         "type": "new",
-                        "notes": _("Name or description not found."),
+                        "notes": _("No account found with this code."),
                     }
                 )
             else:
@@ -964,9 +962,7 @@ class WizardUpdateChartsAccounts(models.TransientModel):
                 _logger.info(_("Deactivated tax %s."), "'%s'" % tax.name)
                 continue
             else:
-                # Generate taxes from templates.
-                generated_tax_res = template._get_tax_vals(tax.company_id, template)
-                for key, value in generated_tax_res.items():
+                for key, value in self.diff_fields(template, tax).items():
                     # We defer update because account might not be created yet
                     if key in {
                         "invoice_repartition_line_ids",
@@ -974,16 +970,10 @@ class WizardUpdateChartsAccounts(models.TransientModel):
                     }:
                         continue
                     tax[key] = value
-                _logger.info(_("Updated tax %s."), "'%s'" % template.name)
+                    _logger.info(_("Updated tax %s field %s.") % (template.name, key))
                 if self.recreate_xml_ids and self.missing_xml_id(template, tax):
-                    try:
-                        self.recreate_xml_id(template, tax)
-                        _logger.info(
-                            _("Updated tax %s. (Recreated XML-IDs)"),
-                            "'%s'" % template.name,
-                        )
-                    except Exception as e:
-                        _logger.info(e)
+                    self.recreate_xml_id(template, tax)
+                    _logger.info(_("Updated tax %s. (Recreated XML-IDs)") % template.name)
 
     def _update_accounts(self):
         """Process accounts to create/update."""
@@ -1025,7 +1015,7 @@ class WizardUpdateChartsAccounts(models.TransientModel):
                 try:
                     with self.env.cr.savepoint():
                         for key, value in iter(
-                            self.diff_fields(template, account).items()
+                                self.diff_fields(template, account).items()
                         ):
                             account[key] = value
                             _logger.info(
@@ -1033,7 +1023,7 @@ class WizardUpdateChartsAccounts(models.TransientModel):
                                 "'{} - {}'".format(account.code, account.name),
                             )
                         if self.recreate_xml_ids and self.missing_xml_id(
-                            template, account
+                                template, account
                         ):
                             self.recreate_xml_id(template, account)
                             _logger.info(
@@ -1058,7 +1048,7 @@ class WizardUpdateChartsAccounts(models.TransientModel):
         the references to the accounts (the taxes where created/updated first,
         when the referenced accounts are still not available).
         """
-        _logger.info(_("_update_taxes_pending_for_accounts"))
+        _logger.info("_update_taxes_pending_for_accounts")
         for wiz_tax in self.tax_ids:
             if wiz_tax.type == "deleted" or not wiz_tax.update_tax_id:
                 continue
@@ -1124,17 +1114,17 @@ class WizardUpdateChartsAccounts(models.TransientModel):
         """ Generate currency and vat on payment journals."""
         JournalObj = self.env["account.journal"]
         for vals_journal in chart_template._prepare_all_journals(
-            {}, company, journals_dict=journals_dict
+                {}, company, journals_dict=journals_dict
         ):
             if not company.currency_exchange_journal_id:
                 if vals_journal["type"] == "general" and vals_journal["code"] == _(
-                    "EXCH"
+                        "EXCH"
                 ):
                     journal = JournalObj.create(vals_journal)
                     company.write({"currency_exchange_journal_id": journal.id})
             if not company.tax_cash_basis_journal_id:
                 if vals_journal["type"] == "general" and vals_journal["code"] == _(
-                    "CABA"
+                        "CABA"
                 ):
                     journal = JournalObj.create(vals_journal)
                     company.write({"tax_cash_basis_journal_id": journal.id})
@@ -1157,8 +1147,8 @@ class WizardUpdateChartsAccounts(models.TransientModel):
             )
         acc_moves = (
             self.env["account.move.line"]
-            .search([("account_id", "=", account.id)])
-            .mapped("move_id")
+                .search([("account_id", "=", account.id)])
+                .mapped("move_id")
         )
         vatp = self.company_id.property_vat_on_payment_position_id
         if not vatp:
