@@ -14,19 +14,22 @@ Date Range
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fserver--ux-lightgray.png?logo=github
-    :target: https://github.com/OCA/server-ux/tree/14.0/date_range
+    :target: https://github.com/OCA/server-ux/tree/15.0/date_range
     :alt: OCA/server-ux
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/server-ux-14-0/server-ux-14-0-date_range
+    :target: https://translation.odoo-community.org/projects/server-ux-15-0/server-ux-15-0-date_range
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runbot-Try%20me-875A7B.png
-    :target: https://runbot.odoo-community.org/runbot/250/14.0
+    :target: https://runbot.odoo-community.org/runbot/250/15.0
     :alt: Try me on Runbot
 
 |badge1| |badge2| |badge3| |badge4| |badge5| 
 
 This module lets you define global date ranges that can be used to filter
 your values in tree views.
+
+It also provides a mixin model for developers that extends the model's search
+view so that date ranges can be search as any relational field.
 
 **Table of contents**
 
@@ -38,6 +41,34 @@ Installation
 
 The addon use the daterange method from postgres. This method is supported as of postgresql 9.2
 
+Configuration
+=============
+
+For regular usage, see `Usage` below. This section is to clarify optional
+functionality to developers.
+
+To configure a model to use the Many2one style search field, make the model
+inherit from `date.range.search.mixin`:
+
+.. code-block::
+
+    class AccountMove(models.Model):
+        _name = "account.move"
+        _inherit = ["account.move", "date.range.search.mixin"]
+
+This will make a `Period` field show up in the search view:
+
+  .. figure:: https://raw.githubusercontent.com/OCA/server-tools/12.0/date_range/static/description/date_range_many2one_search_field.png
+     :scale: 80 %
+     :alt: Date range Many2one search field
+
+By default, the mixin works on the `date` field. If you want the mixin to work
+on a field with a different name, you can set a property on your model:
+
+.. code-block::
+
+   _date_range_search_field = "invoice_date"
+
 Usage
 =====
 
@@ -46,26 +77,26 @@ To configure this module, you need to:
 * Go to Settings > Technical > Date ranges > Date Range Types where
   you can create types of date ranges.
 
-  .. figure:: https://raw.githubusercontent.com/OCA/server-tools/10.0/date_range/static/description/date_range_type_create.png
+  .. figure:: https://raw.githubusercontent.com/OCA/server-tools/14.0/date_range/static/description/date_range_type_create.png
      :scale: 80 %
      :alt: Create a type of date range
 
 * Go to Settings > Technical > Date ranges >  Date Ranges where
   you can create date ranges.
 
-  .. figure:: https://raw.githubusercontent.com/OCA/server-tools/10.0/date_range/static/description/date_range_create.png
+  .. figure:: https://raw.githubusercontent.com/OCA/server-tools/14.0/date_range/static/description/date_range_create.png
      :scale: 80 %
      :alt: Date range creation
 
   It's also possible to launch a wizard from the 'Generate Date Ranges' menu.
 
-  .. figure:: https://raw.githubusercontent.com/OCA/server-tools/10.0/date_range/static/description/date_range_wizard.png
+  .. figure:: https://raw.githubusercontent.com/OCA/server-tools/14.0/date_range/static/description/date_range_wizard.png
      :scale: 80 %
      :alt: Date range wizard
 
-  The wizard is useful to generate recurring periods.
+  The wizard is useful to generate recurring periods. Set an end date or enter the number of ranges to create.
 
-  .. figure:: https://raw.githubusercontent.com/OCA/server-tools/10.0/date_range/static/description/date_range_wizard_result.png
+  .. figure:: https://raw.githubusercontent.com/OCA/server-tools/14.0/date_range/static/description/date_range_wizard_result.png
      :scale: 80 %
      :alt: Date range wizard result
 
@@ -73,21 +104,28 @@ To configure this module, you need to:
 
   Date range types are proposed as a filter operator
 
-  .. figure:: https://raw.githubusercontent.com/OCA/server-tools/10.0/date_range/static/description/date_range_type_as_filter.png
+  .. figure:: https://raw.githubusercontent.com/OCA/server-tools/14.0/date_range/static/description/date_range_type_as_filter.png
      :scale: 80 %
      :alt: Date range type available as filter operator
 
   Once a type is selected, date ranges of this type are porposed as a filter value
 
-  .. figure:: https://raw.githubusercontent.com/OCA/server-tools/10.0/date_range/static/description/date_range_as_filter.png
+  .. figure:: https://raw.githubusercontent.com/OCA/server-tools/14.0/date_range/static/description/date_range_as_filter.png
      :scale: 80 %
      :alt: Date range as filter value
 
   And the dates specified into the date range are used to filter your result.
 
-  .. figure:: https://raw.githubusercontent.com/OCA/server-tools/10.0/date_range/static/description/date_range_as_filter_result.png
+  .. figure:: https://raw.githubusercontent.com/OCA/server-tools/14.0/date_range/static/description/date_range_as_filter_result.png
      :scale: 80 %
      :alt: Date range as filter result
+
+* You can configure date range types with default values for the generation wizard on the `Generation` tab.
+  In the same tab you can also configure date range types for auto-generation. New ranges for types configured for this are generated by a scheduled task that runs daily.
+
+  .. figure:: https://raw.githubusercontent.com/OCA/server-tools/14.0/date_range/static/description/date_range_type_autogeneration.png
+     :scale: 80 %
+     :alt: Configure a date range for auto-generaton
 
 Bug Tracker
 ===========
@@ -95,7 +133,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/server-ux/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/server-ux/issues/new?body=module:%20date_range%0Aversion:%2014.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/server-ux/issues/new?body=module:%20date_range%0Aversion:%2015.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -114,6 +152,7 @@ Contributors
 * Alexis de Lattre <alexis.delattre@akretion.com>
 * Miquel Raïch <miquel.raich@forgeflow.com>
 * Andrea Stirpe <a.stirpe@onestein.nl>
+* Stefan Rijnhart <stefan@opener.amsterdam>
 
 Maintainers
 ~~~~~~~~~~~
@@ -136,6 +175,6 @@ Current `maintainer <https://odoo-community.org/page/maintainer-role>`__:
 
 |maintainer-lmignon| 
 
-This module is part of the `OCA/server-ux <https://github.com/OCA/server-ux/tree/14.0/date_range>`_ project on GitHub.
+This module is part of the `OCA/server-ux <https://github.com/OCA/server-ux/tree/15.0/date_range>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
