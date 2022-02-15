@@ -5,3 +5,5 @@
 * Graeme Gellatly <gdgellatly@gmail.com>
 * Cristian Salamea <cs@prisehub.com>
 * Rod Schouteden <rod.schouteden@dynapps.be>
+* Eugene Molotov <molotov@it-projects.info>
+* Christopher Ormaza <chris.ormaza@forgeflow.com>
