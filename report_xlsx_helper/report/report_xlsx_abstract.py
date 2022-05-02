@@ -38,19 +38,20 @@ class ReportXlsxAbstract(models.AbstractModel):
                 raise UserError(
                     _(
                         "Programming Error:\n\n"
-                        "Excel Sheet name '%s' should not exceed %s characters."
+                        "Excel Sheet name '%(name)s' should not exceed %(max_chars)s "
+                        "characters."
                     )
-                    % (name, max_chars)
+                    % {"name": name, "max_chars": max_chars}
                 )
             special_chars = pattern.findall(name)
             if special_chars:
                 raise UserError(
                     _(
                         "Programming Error:\n\n"
-                        "Excel Sheet name '%s' contains unsupported special "
-                        "characters: '%s'."
+                        "Excel Sheet name '%(name)s' contains unsupported special "
+                        "characters: '%(special_chars)s'."
                     )
-                    % (name, special_chars)
+                    % {"name": name, "special_chars": special_chars}
                 )
         return name
 
@@ -709,10 +710,14 @@ class ReportXlsxAbstract(models.AbstractModel):
                             cell_type = "blank"
                         else:
                             msg = _(
-                                "%s, _write_line : programming error "
+                                "%(__name__)s, _write_line : programming error "
                                 "detected while processing "
-                                "col_specs_section %s, column %s"
-                            ) % (__name__, col_specs_section, col)
+                                "col_specs_section %(col_specs_section)s, column %(col)s"
+                            ) % {
+                                "__name__": __name__,
+                                "col_specs_section": col_specs_section,
+                                "col": col,
+                            }
                             if cell_value:
                                 msg += _(", cellvalue %s") % cell_value
                             raise UserError(msg)
@@ -723,6 +728,7 @@ class ReportXlsxAbstract(models.AbstractModel):
                 if isinstance(cell_format, CodeType):
                     cell_format = self._eval(cell_format, render_space)
                 args_data.append(cell_format)
+            self._apply_formula_quirk(args_data, cell_type, cell_format)
             if colspan > 1:
                 args_pos += [row_pos, pos + colspan - 1]
                 args = args_pos + args_data
@@ -734,6 +740,15 @@ class ReportXlsxAbstract(models.AbstractModel):
             pos += colspan
 
         return row_pos + 1
+
+    @staticmethod
+    def _apply_formula_quirk(args_data, cell_type, cell_format):
+        """Insert empty value to force LibreOffice to recompute the value"""
+        if cell_type == "formula":
+            if not cell_format:
+                # Insert positional argument for missing format
+                args_data.append(None)
+            args_data.append("")
 
     @staticmethod
     def _render(code):
