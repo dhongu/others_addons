@@ -10,7 +10,12 @@
     "category": "Generic Modules",
     "depends": ["base", "web"],
     "license": "AGPL-3",
-    "data": ["views/assets.xml"],
+    # "data": ["views/assets.xml"],
+    "assets": {
+        "web.assets_backend": [
+              "web_list_view_general_buttons/static/src/js/list_controller.js",
+        ]
+    },
     "qweb": ["static/src/xml/*.xml"],
     "development_status": "Beta",
     "maintainers": ["dhongu"],
