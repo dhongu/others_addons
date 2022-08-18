@@ -21,7 +21,7 @@
     "depends": ["sale"],
     "data": [
         "security/ir.model.access.csv",
-        "views/product_brand_view.xml",
+        # "views/product_brand_view.xml",
         "reports/sale_report_view.xml",
         "reports/account_invoice_report_view.xml",
     ],
