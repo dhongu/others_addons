@@ -27,7 +27,8 @@ class QueueJobFunction(models.Model):
         "retry_pattern "
         "related_action_enable "
         "related_action_func_name "
-        "related_action_kwargs ",
+        "related_action_kwargs "
+        "job_function_id ",
     )
 
     def _default_channel(self):
@@ -60,8 +61,11 @@ class QueueJobFunction(models.Model):
         compute="_compute_edit_retry_pattern",
         inverse="_inverse_edit_retry_pattern",
         help="Pattern expressing from the count of retries on retryable errors,"
-        " the number of of seconds to postpone the next execution.\n"
+        " the number of of seconds to postpone the next execution. Setting the "
+        "number of seconds to a 2-element tuple or list will randomize the "
+        "retry interval between the 2 values.\n"
         "Example: {1: 10, 5: 20, 10: 30, 15: 300}.\n"
+        "Example: {1: (1, 10), 5: (11, 20), 10: (21, 30), 15: (100, 300)}.\n"
         "See the module description for details.",
     )
     related_action = JobSerialized(string="Related Action (serialized)", base_type=dict)
@@ -138,6 +142,7 @@ class QueueJobFunction(models.Model):
             related_action_enable=True,
             related_action_func_name=None,
             related_action_kwargs={},
+            job_function_id=None,
         )
 
     def _parse_retry_pattern(self):
@@ -170,6 +175,7 @@ class QueueJobFunction(models.Model):
             related_action_enable=config.related_action.get("enable", True),
             related_action_func_name=config.related_action.get("func_name"),
             related_action_kwargs=config.related_action.get("kwargs", {}),
+            job_function_id=config.id,
         )
 
     def _retry_pattern_format_error_message(self):
