@@ -9,7 +9,7 @@
 
 {
     "name": "Product Brand Manager",
-    "version": "14.0.1.0.1",
+    "version": "15.0.1.0.0",
     "development_status": "Mature",
     "category": "Product",
     "summary": "Product Brand Manager",
@@ -21,7 +21,7 @@
     "depends": ["sale"],
     "data": [
         "security/ir.model.access.csv",
-        # "views/product_brand_view.xml",
+        "views/product_brand_view.xml",
         "reports/sale_report_view.xml",
         "reports/account_invoice_report_view.xml",
     ],
