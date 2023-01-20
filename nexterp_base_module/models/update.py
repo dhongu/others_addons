@@ -6,7 +6,7 @@ import json
 import logging
 from datetime import timedelta
 
-import urllib3
+import requests
 
 from odoo import api, fields
 from odoo.models import AbstractModel
@@ -73,9 +73,10 @@ class PublisherWarrantyContract(AbstractModel):
                     auth_buy_mods = buy_mods.filtered(lambda m: m.website == author)
                     try:
                         modules = self.get_buy_mod_logs(auth_buy_mods)
-                        if modules:
+                        if modules and modules.get("modules"):
                             self.populate_paid_modules(modules.get("modules"))
-                    except Exception:
+                    except Exception as e:
+                        _logger.error(str(e))
                         if cron_mode:  # we don't want to see any stack trace in cron
                             return False
             except Exception:
@@ -108,12 +109,14 @@ class PublisherWarrantyContract(AbstractModel):
         )
         send_data["companies"] = companies
         url = auth_buy_mods[0].website + "/mods_update"
-        json1 = json.dumps(send_data)
-        http_post = urllib3.PoolManager()
-        resp = http_post.request(
-            "POST", url, body=json1, headers={"Content-Type": "application/json"}
-        )
-        response = json.loads(resp.data)
+        # json1 = json.dumps(send_data)
+        # http_post = urllib3.PoolManager()
+        # resp = http_post.request("POST", url, body=json1, headers={"Content-Type": "application/json"})
+
+        headers = {"User-Agent": "Custom", "Content-Type": "application/json"}
+
+        resp = requests.post(url, json=send_data, headers=headers)
+        response = json.loads(resp.text)
         return response.get("result")
 
     def update_notification(self, cron_mode=True):
