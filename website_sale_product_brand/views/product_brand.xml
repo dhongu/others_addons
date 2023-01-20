@@ -74,4 +74,25 @@
             >keep('/shop/category/' + slug(c), category=0, brand=brand)</attribute>
         </xpath>
     </template>
+
+    <template id="product" inherit_id="website_sale.product" name="Product Brand"  >
+        <xpath expr="//div[@id='product_details']/p[last()]" position="after">
+
+        <t t-if="product.product_brand_id.logo or product.product_brand_id.description">
+            <div class="row" >
+                <a t-att-href="'/shop/brands/0-%s' %(product.product_brand_id.id)">
+                    <div class="brand_img col-xl-3 col-lg-4" t-if="product.product_brand_id.logo"
+                         t-field="product.product_brand_id.logo"
+                         t-options="{'widget': 'image','class':'product_brand_img'}"/>
+                </a>
+                <div class="col-xl-9 col-lg-8 col-sm col">
+                    <p class="product_brand_desc" t-if="product.product_brand_id.description"
+                       t-field="product.product_brand_id.description"/>
+                </div>
+            </div>
+
+        </t>
+
+        </xpath>
+    </template>
 </odoo>
