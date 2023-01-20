@@ -80,7 +80,7 @@
 
         <t t-if="product.product_brand_id.logo or product.product_brand_id.description">
             <div class="row" >
-                <a t-att-href="'/shop/brands/0-%s' %(product.product_brand_id.id)">
+                <a t-att-href="'/shop/brands?brand=%s' %(product.product_brand_id.id)">
                     <div class="brand_img col-xl-3 col-lg-4" t-if="product.product_brand_id.logo"
                          t-field="product.product_brand_id.logo"
                          t-options="{'widget': 'image','class':'product_brand_img'}"/>
