@@ -411,6 +411,24 @@ class QueueJob(models.Model):
                     jobs.unlink()
                 else:
                     break
+
+        root_channel = self.env["queue.job.channel"].search([('name','=','root')])
+        deadline = datetime.now() - timedelta(days=int(root_channel.removal_interval))
+        while True:
+            jobs = self.search(
+                [
+                    "|",
+                    ("date_done", "<=", deadline),
+                    ("date_cancelled", "<=", deadline),
+                    ("channel", "=", False),
+                ],
+                limit=1000,
+            )
+            if jobs:
+                jobs.unlink()
+            else:
+                break
+
         return True
 
     def requeue_stuck_jobs(self, enqueued_delta=5, started_delta=0):
