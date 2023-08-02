@@ -12,7 +12,7 @@ class TestAccountCostCenter(AccountTestInvoicingCommon):
 
         self.expenses_account = self.env["account.account"].create(
             {
-                "user_type_id": self.env.ref("account.data_account_type_expenses").id,
+                "account_type": 'expense',
                 "code": "EXPTEST",
                 "name": "Test expense account",
             }
