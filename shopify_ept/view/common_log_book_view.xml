@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Action of common log book-->
+    <record id="action_common_log_book_ept_shopify" model="ir.actions.act_window">
+        <field name="name">Common Log Book</field>
+        <field name="res_model">common.log.book.ept</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('shopify_instance_id','=',active_id)]</field>
+    </record>
+
+    <!--Search view of common log book-->
+    <record id="common_log_book_shopify_search_view_ept" model="ir.ui.view">
+        <field name="name">Common Log Search View</field>
+        <field name="model">common.log.book.ept</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Common Logs">
+                <field name="name"/>
+                <field name="type"/>
+                <group expand="0" string="Group By...">
+                    <filter name="instance" string="Instance" icon="terp-personal"
+                            context="{'group_by': 'shopify_instance_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!--Inherit tree view of common log book-->
+    <record id="inherit_view_of_common_log_book_ept_tree" model="ir.ui.view">
+        <field name="name">Shopify Instance in Log book Tree</field>
+        <field name="model">common.log.book.ept</field>
+        <field name="inherit_id"
+               ref="common_connector_library.action_common_log_book_ept_tree"/>
+        <field name="arch" type="xml">
+            <field name="create_date" position="after">
+                <field name="shopify_instance_id"
+                       attrs="{'column_invisible':[('module','!=','shopify_ept')]}"/>
+            </field>
+        </field>
+    </record>
+
+    <!--Inherit form view of common log book-->
+    <record id="inherit_view_of_common_log_book_ept_from" model="ir.ui.view">
+        <field name="name">Shopify Instance in Log book Form</field>
+        <field name="model">common.log.book.ept</field>
+        <field name="inherit_id"
+               ref="common_connector_library.action_common_log_book_ept_form"/>
+        <field name="arch" type="xml">
+            <field name="active" position="after">
+                <field name="shopify_instance_id" readonly="1"/>
+            </field>
+            <field name="res_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="action_shopify_common_log_book_ept" model="ir.actions.act_window">
+        <field name="name">Common Log Book</field>
+        <field name="res_model">common.log.book.ept</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('module','=','shopify_ept')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No mismatch details are found.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_shopify_common_log_line_ept" model="ir.actions.act_window">
+        <field name="name">Log Lines</field>
+        <field name="res_model">common.log.lines.ept</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('log_book_id.module', '=', 'shopify_ept')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No mismatch log lines are there!
+            </p>
+            <p>If any import/export/update process has got issue, log lines will be shown here.</p>
+        </field>
+    </record>
+
+    <menuitem id="shopify_mismatch_ept" name="Log Book"
+              parent="shopify_ept.shopify_data_log_menu"
+              action="shopify_ept.action_shopify_common_log_book_ept"
+              sequence="6"/>
+
+    <menuitem id="shopify_log_line_ept" name="Log Lines"
+              parent="shopify_ept.shopify_data_log_menu"
+              action="shopify_ept.action_shopify_common_log_line_ept"
+              sequence="7"/>
+</odoo>
