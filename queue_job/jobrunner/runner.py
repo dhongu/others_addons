@@ -35,6 +35,10 @@ How to use it?
     or ``False`` if unset.
   - ``ODOO_QUEUE_JOB_JOBRUNNER_DB_PORT=5432``, default ``db_port``
     or ``False`` if unset.
+  - ``ODOO_QUEUE_JOB_JOBRUNNER_DB_USER=userdb``, default ``db_user``
+    or ``False`` if unset.
+  - ``ODOO_QUEUE_JOB_JOBRUNNER_DB_PASSWORD=passdb``, default ``db_password``
+    or ``False`` if unset.
 
 * Alternatively, configure the channels through the Odoo configuration
   file, like:
@@ -50,6 +54,8 @@ How to use it?
   http_auth_password = s3cr3t
   jobrunner_db_host = master-db
   jobrunner_db_port = 5432
+  jobrunner_db_user = userdb
+  jobrunner_db_password = passdb
 
 * Or, if using ``anybox.recipe.odoo``, add this to your buildout configuration:
 
@@ -136,7 +142,7 @@ Caveat
 import datetime
 import logging
 import os
-import select
+import selectors
 import threading
 import time
 from contextlib import closing, contextmanager
@@ -155,6 +161,8 @@ SELECT_TIMEOUT = 60
 ERROR_RECOVERY_DELAY = 5
 
 _logger = logging.getLogger(__name__)
+
+select = selectors.DefaultSelector
 
 
 # Unfortunately, it is not possible to extend the Odoo
@@ -187,7 +195,7 @@ def _odoo_now():
 def _connection_info_for(db_name):
     db_or_uri, connection_info = odoo.sql_db.connection_info_for(db_name)
 
-    for p in ("host", "port"):
+    for p in ("host", "port", "user", "password"):
         cfg = os.environ.get(
             "ODOO_QUEUE_JOB_JOBRUNNER_DB_%s" % p.upper()
         ) or queue_job_config.get("jobrunner_db_" + p)
@@ -479,10 +487,16 @@ class QueueJobRunner(object):
         # probably a bug
         _logger.debug("select() timeout: %.2f sec", timeout)
         if timeout > 0:
-            conns, _, _ = select.select(conns, [], [], timeout)
             if conns and not self._stop:
-                for conn in conns:
-                    conn.poll()
+                with select() as sel:
+                    for conn in conns:
+                        sel.register(conn, selectors.EVENT_READ)
+                    events = sel.select(timeout=timeout)
+                    for key, _mask in events:
+                        if key.fileobj == self._stop_pipe[0]:
+                            # stop-pipe is not a conn so doesn't need poll()
+                            continue
+                        key.fileobj.poll()
 
     def stop(self):
         _logger.info("graceful stop requested")
