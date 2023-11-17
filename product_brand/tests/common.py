@@ -3,14 +3,16 @@
 # @author: Simone Orsi <simone.orsi@camptocamp.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
+
+from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
 
 
-class CommonCase(SavepointCase):
+class CommonCase(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+        cls.env = cls.env(context=dict(cls.env.context, **DISABLED_MAIL_CONTEXT))
         cls.product = cls.env.ref("product.product_product_4")
         cls.supplier = cls.env.ref("base.res_partner_2")
         cls.product_brand_obj = cls.env["product.brand"]
