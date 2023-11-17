@@ -16,12 +16,12 @@ from odoo.http import (
 from odoo.tools import html_escape
 from odoo.tools.safe_eval import safe_eval, time
 
-from odoo.addons.web.controllers import main as report
+from odoo.addons.web.controllers.report import ReportController
 
 _logger = logging.getLogger(__name__)
 
 
-class ReportController(report.ReportController):
+class ReportController(ReportController):
     @route()
     def report_routes(self, reportname, docids=None, converter=None, **data):
         if converter == "xlsx":
@@ -34,7 +34,9 @@ class ReportController(report.ReportController):
             if data.get("context"):
                 data["context"] = json.loads(data["context"])
                 context.update(data["context"])
-            xlsx = report.with_context(**context)._render_xlsx(docids, data=data)[0]
+            xlsx = report.with_context(**context)._render_xlsx(
+                reportname, docids, data=data
+            )[0]
             xlsxhttpheaders = [
                 (
                     "Content-Type",
@@ -44,16 +46,14 @@ class ReportController(report.ReportController):
                 ("Content-Length", len(xlsx)),
             ]
             return request.make_response(xlsx, headers=xlsxhttpheaders)
-        return super(ReportController, self).report_routes(
-            reportname, docids, converter, **data
-        )
+        return super().report_routes(reportname, docids, converter, **data)
 
     @route()
-    def report_download(self, data, context=None):
+    def report_download(self, data, context=None, token=None):
         requestcontent = json.loads(data)
         url, report_type = requestcontent[0], requestcontent[1]
-        try:
-            if report_type == "xlsx":
+        if report_type == "xlsx":
+            try:
                 reportname = url.split("/report/xlsx/")[1].split("?")[0]
                 docids = None
                 if "/" in reportname:
@@ -90,14 +90,15 @@ class ReportController(report.ReportController):
                             report.print_report_name, {"object": obj, "time": time}
                         )
                         filename = "%s.%s" % (report_name, "xlsx")
-                response.headers.add(
-                    "Content-Disposition", content_disposition(filename)
-                )
+                if not response.headers.get("Content-Disposition"):
+                    response.headers.add(
+                        "Content-Disposition", content_disposition(filename)
+                    )
                 return response
-            else:
-                return super(ReportController, self).report_download(data, context)
-        except Exception as e:
-            _logger.exception("Error while generating report %s", reportname)
-            se = _serialize_exception(e)
-            error = {"code": 200, "message": "Odoo Server Error", "data": se}
-            return request.make_response(html_escape(json.dumps(error)))
+            except Exception as e:
+                _logger.exception("Error while generating report %s", reportname)
+                se = _serialize_exception(e)
+                error = {"code": 200, "message": "Odoo Server Error", "data": se}
+                return request.make_response(html_escape(json.dumps(error)))
+        else:
+            return super().report_download(data, context=context, token=token)
