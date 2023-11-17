@@ -246,7 +246,7 @@ msgstr "- si -"
 #. module: theme_prime
 #: model_terms:theme.ir.ui.view,arch:theme_prime.product
 msgid ". Updating this tab will update tab all product with"
-msgstr ". Actualizand acest tab va actualiza toate tab-urile cu"
+msgstr ". Actualizând acest tab va actualiza toate tab-urile cu"
 
 #. module: theme_prime
 #: model_terms:theme.ir.ui.view,arch:theme_prime.s_pricing_5
@@ -279,7 +279,7 @@ msgstr ""
 #: model_terms:theme.ir.ui.view,arch:theme_prime.s_cover_6
 #: model_terms:theme.ir.ui.view,arch:theme_prime.s_icon_block_11
 msgid "100% secure payment"
-msgstr "100% plata in siguranta"
+msgstr "100% plată în siguranță"
 
 #. module: theme_prime
 #: model_terms:theme.ir.ui.view,arch:theme_prime.tp_options
@@ -296,7 +296,7 @@ msgstr ""
 #: model_terms:theme.ir.ui.view,arch:theme_prime.s_cover_6
 #: model_terms:theme.ir.ui.view,arch:theme_prime.s_icon_block_11
 msgid "12k+ Customers"
-msgstr "12k+ Clienti"
+msgstr "12k+ Clienți"
 
 #. module: theme_prime
 #: model_terms:theme.ir.ui.view,arch:theme_prime.s_counters_4
@@ -467,13 +467,13 @@ msgid ""
 "<font style=\"font-size: 24px;\">Get 20% off on any purchase over "
 "200$</font>"
 msgstr ""
-"<font style=\"font-size: 24px;\">Obtine 20% reducere la comenzi peste "
+"<font style=\"font-size: 24px;\">Obține 20% reducere la comenzi peste "
 "200$</font>"
 
 #. module: theme_prime
 #: model_terms:theme.ir.ui.view,arch:theme_prime.s_banner_5
 msgid "<font style=\"font-size: 24px;\">Hurry up!</font>"
-msgstr "<font style=\"font-size: 24px;\">Grabeste-te!</font>"
+msgstr "<font style=\"font-size: 24px;\">Grăbește-te!</font>"
 
 #. module: theme_prime
 #: model_terms:theme.ir.ui.view,arch:theme_prime.s_cover_2
