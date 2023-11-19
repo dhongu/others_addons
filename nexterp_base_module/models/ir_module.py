@@ -33,37 +33,37 @@ class IrModule(models.Model):
             "extra_buy": terp.get("extra_buy", False),
         }
 
-    # def button_upgrade(self):
-    #     res = super().button_upgrade()
-    #     send_model = self.env["publisher_warranty.contract"].with_context(
-    #         send_data=True
-    #     )
-    #     buy_mods = self.filtered(lambda m: m.extra_buy)
-    #     if buy_mods:
-    #         send_model._get_publisher_logs(cron_mode=False)
-    #     return res
+    def button_upgrade(self):
+        res = super().button_upgrade()
+        send_model = self.env["publisher_warranty.contract"].with_context(
+            send_data=True
+        )
+        buy_mods = self.filtered(lambda m: m.extra_buy)
+        if buy_mods:
+            send_model._get_paid_modules_logs(cron_mode=False)
+        return res
 
-    # def button_install(self):
-    #     res = super().button_install()
-    #     send_model = self.env["publisher_warranty.contract"].with_context(
-    #         send_data=True
-    #     )
-    #
-    #     buy_mods = self.filtered(lambda m: m.extra_buy)
-    #     if buy_mods:
-    #         send_model._get_publisher_logs(cron_mode=False)
-    #     return res
-    #
-    # def button_uninstall(self):
-    #     res = super().button_uninstall()
-    #     send_model = self.env["publisher_warranty.contract"].with_context(
-    #         send_data=True
-    #     )
-    #
-    #     buy_mods = self.filtered(lambda m: m.extra_buy)
-    #     if buy_mods:
-    #         send_model._get_publisher_logs(cron_mode=False)
-    #     return res
+    def button_install(self):
+        res = super().button_install()
+        send_model = self.env["publisher_warranty.contract"].with_context(
+            send_data=True
+        )
+
+        buy_mods = self.filtered(lambda m: m.extra_buy)
+        if buy_mods:
+            send_model._get_paid_modules_logs(cron_mode=False)
+        return res
+
+    def button_uninstall(self):
+        res = super().button_uninstall()
+        send_model = self.env["publisher_warranty.contract"].with_context(
+            send_data=True
+        )
+
+        buy_mods = self.filtered(lambda m: m.extra_buy)
+        if buy_mods:
+            send_model._get_paid_modules_logs(cron_mode=False)
+        return res
 
 
 IrModule.get_values_from_terp = IrModule.get_updated_values_from_terp

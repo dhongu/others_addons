@@ -52,8 +52,11 @@ class PublisherWarrantyContract(AbstractModel):
                             )
 
     @api.model
-    def _get_publisher_logs(self, cron_mode=True):
+    def _get_paid_modules_logs(self, cron_mode=True):
         IrParamSudo = self.env["ir.config_parameter"].sudo()
+        is_neutralized = IrParamSudo.get_param("database.is_neutralized", default=False)
+        if is_neutralized:
+            return True
         buy_mods_send = IrParamSudo.get_param("buy_mods_send")
         start_date = fields.Date.from_string(fields.Datetime.now()) - timedelta(days=7)
         send_data = self.env.context.get("send_data")
@@ -73,10 +76,9 @@ class PublisherWarrantyContract(AbstractModel):
                     auth_buy_mods = buy_mods.filtered(lambda m: m.website == author)
                     try:
                         modules = self.get_buy_mod_logs(auth_buy_mods)
-                        if modules and modules.get("modules"):
+                        if modules:
                             self.populate_paid_modules(modules.get("modules"))
-                    except Exception as e:
-                        _logger.error(str(e))
+                    except Exception:
                         if cron_mode:  # we don't want to see any stack trace in cron
                             return False
             except Exception:
@@ -109,20 +111,19 @@ class PublisherWarrantyContract(AbstractModel):
         )
         send_data["companies"] = companies
         url = auth_buy_mods[0].website + "/mods_update"
-        # json1 = json.dumps(send_data)
-        # http_post = urllib3.PoolManager()
-        # resp = http_post.request("POST", url, body=json1, headers={"Content-Type": "application/json"})
-
-        headers = {"User-Agent": "Custom", "Content-Type": "application/json"}
-
-        resp = requests.post(url, json=send_data, headers=headers)
-        response = json.loads(resp.text)
+        r = requests.post(
+            url,
+            json=send_data,
+            timeout=30,
+            headers={"Content-Type": "application/json"},
+        )
+        r.raise_for_status()
+        response = json.loads(r.text)
         return response.get("result")
 
-    def update_notification(self, cron_mode=True):
+    def update_nexterp_paid_modules(self, cron_mode=True):
         """
-        Utility method to send a publisher warranty get logs messages.
+        Utility method to send a modules paid log messages.
         """
-        res = super().update_notification(cron_mode=cron_mode)
-        self._get_publisher_logs(cron_mode=True)
+        res = self._get_paid_modules_logs(cron_mode=True)
         return res

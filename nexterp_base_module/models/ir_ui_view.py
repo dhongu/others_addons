@@ -16,26 +16,29 @@ class IrUIView(models.Model):
     _inherit = "ir.ui.view"
 
     @api.model
-    def has_paid_module_installed(self):
-        external_id = self.get_external_id().get(self.id)
-        if external_id:
-            (module_name, _name) = external_id.split(".")
-            company = self.env.company.id
-            module = self.env["ir.module.module.paid"].search(
-                [("company_id", "=", company), ("module_name", "=", module_name)]
-            )
-            if module and module.paid_state in ("not_paid", "blocked"):
-                return module.paid_state
+    def has_paid_module_installed(self, view=False):
+        if view:
+            external_id = view.get_external_id().get(view.id)
+            if external_id:
+                (module_name, _name) = external_id.split(".")
+                company = self.env.company.id
+                module = self.env["ir.module.module.paid"].search(
+                    [("company_id", "=", company), ("module_name", "=", module_name)]
+                )
+                if module and module.paid_state in ("not_paid", "blocked"):
+                    return module.paid_state
         return False
 
     def get_paid_module_warning(self, arch=False):
         self.ensure_one()
         if not arch:
             arch = self.arch
-        if self.type not in ("tree", "form", "kanban"):
-            return arch
-        pay_state = self.has_paid_module_installed()
-        if pay_state:
+        IrParamSudo = self.env["ir.config_parameter"].sudo()
+        is_neutralized = IrParamSudo.get_param("database.is_neutralized", default=False)
+        if is_neutralized:
+            return True
+        pay_state = self.has_paid_module_installed(self)
+        if pay_state and self.type in ("tree", "form", "kanban"):
 
             notif_message = _(
                 "Your using a module that you didn't buy or subscribed.\n"

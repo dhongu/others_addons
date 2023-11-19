@@ -9,6 +9,7 @@ from odoo import fields, models
 _logger = logging.getLogger(__name__)
 
 PAID_STATES = [
+    ("checking", "Checking"),
     ("not_paid", "Not Paid"),
     ("subscribed", "Subscribed"),
     ("paid", "Paid"),
@@ -36,5 +37,5 @@ class IrModulePaid(models.Model):
         string="Odoo Paid Module", related="module_id.extra_buy", store=True
     )
     paid_state = fields.Selection(
-        PAID_STATES, string="Pay Status", default="not_paid", readonly=True, index=True
+        PAID_STATES, string="Pay Status", default="checking", readonly=True, index=True
     )

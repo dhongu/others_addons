@@ -17,7 +17,7 @@ class DatabaseController(http.Controller):
         methods=["GET", "POST"],
         type="json",
         auth="none",
-        csrf=False
+        csrf=False,
     )
     def DatabaseLog(self, **post):
         values = request.jsonrequest
