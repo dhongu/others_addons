@@ -19,5 +19,5 @@
     "category": "Web",
 
     "installable": True,
-    "assets": {"web.assets_backend": ["web_decimal_numpad_dot/static/src/js/numpad_dot.js"]},
+    # "assets": {"web.assets_backend": ["web_decimal_numpad_dot/static/src/js/numpad_dot.js"]},
 }
