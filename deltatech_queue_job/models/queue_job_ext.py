@@ -49,7 +49,7 @@ class QueueJob(models.Model):
 
     def _do_run_background(self):
         # time.sleep(10)  # sa apuce sistemul sa salveze datele
-        with api.Environment.manage():
+        with api.Environment:
             with self.pool.cursor() as new_cr:
                 job = self.with_env(self.env(cr=new_cr))
                 cron = job.env.ref("deltatech_queue_job.ir_cron_queue_job")
