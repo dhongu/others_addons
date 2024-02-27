@@ -1,0 +1,14 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+access_openai_completion_user,access_openai_completion user,openai_connector.model_openai_completion,base.group_user,1,0,0,0
+access_openai_completion_admin,access_openai_completion admin,openai_connector.model_openai_completion,base.group_erp_manager,1,1,1,1
+access_openai_completion_result_user,access_openai_completion_result user,openai_connector.model_openai_completion_result,base.group_user,1,1,1,1
+access_openai_image_user,access_openai_image user,openai_connector.model_openai_image,base.group_user,1,0,0,0
+access_openai_image_admin,access_openai_image admin,openai_connector.model_openai_image,base.group_erp_manager,1,1,1,1
+access_openai_image_result_user,access_openai_image_result user,openai_connector.model_openai_image_result,base.group_user,1,1,1,1
+access_openai_question_answer_user,access_openai_question_answer user,openai_connector.model_openai_question_answer,base.group_user,1,1,1,1
+access_openai_fine_tuning_user,access_openai_fine_tuning user,openai_connector.model_openai_fine_tuning,base.group_user,1,0,0,0
+access_openai_fine_tuning_admin,access_openai_fine_tuning admin,openai_connector.model_openai_fine_tuning,base.group_erp_manager,1,1,1,1
+access_openai_tool_user,access_openai_tool user,openai_connector.model_openai_tool,base.group_user,1,0,0,0
+access_openai_tool_admin,access_openai_tool admin,openai_connector.model_openai_tool,base.group_erp_manager,1,1,1,1
+access_openai_tool_property_user,access_openai_tool_property user,openai_connector.model_openai_tool_property,base.group_user,1,0,0,0
+access_openai_tool_property_admin,access_openai_tool_property admin,openai_connector.model_openai_tool_property,base.group_erp_manager,1,1,1,1
