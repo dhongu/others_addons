@@ -36,7 +36,7 @@ class IrUIView(models.Model):
         IrParamSudo = self.env["ir.config_parameter"].sudo()
         is_neutralized = IrParamSudo.get_param("database.is_neutralized", default=False)
         if is_neutralized:
-            return True
+            return arch
         pay_state = self.has_paid_module_installed(self)
         if pay_state and self.type in ("tree", "form", "kanban"):
 
