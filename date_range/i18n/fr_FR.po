@@ -21,16 +21,18 @@ msgstr ""
 "X-Generator: Weblate 4.3.2\n"
 
 #. module: date_range
+#. odoo-python
 #: code:addons/date_range/models/date_range.py:0
 #, python-format
-msgid "%s is not a valid range (%s > %s)"
-msgstr "%s n'est pas une plage valide (%s > %s)"
+msgid "%(name)s is not a valid range (%(date_start)s > %(date_end)s)"
+msgstr ""
 
 #. module: date_range
+#. odoo-python
 #: code:addons/date_range/models/date_range.py:0
 #, python-format
-msgid "%s overlaps %s"
-msgstr "%s chevauchements %s"
+msgid "%(thisname)s overlaps %(dtname)s"
+msgstr ""
 
 #. module: date_range
 #: model_terms:ir.ui.view,arch_db:date_range.date_range_generator_view_form
@@ -67,9 +69,14 @@ msgid "Allow Overlap"
 msgstr "Autoriser les chevauchements"
 
 #. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_form_view
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_search
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_type_search
+msgid "Archived"
+msgstr ""
+
+#. module: date_range
 #: model:ir.actions.server,name:date_range.ir_cron_autocreate_ir_actions_server
-#: model:ir.cron,cron_name:date_range.ir_cron_autocreate
-#: model:ir.cron,name:date_range.ir_cron_autocreate
 msgid "Auto-generate date ranges"
 msgstr ""
 
@@ -102,6 +109,7 @@ msgstr "Annuler"
 #: model:ir.model.fields,field_description:date_range.field_date_range__company_id
 #: model:ir.model.fields,field_description:date_range.field_date_range_generator__company_id
 #: model:ir.model.fields,field_description:date_range.field_date_range_type__company_id
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_search
 msgid "Company"
 msgstr "Société"
 
@@ -163,16 +171,6 @@ msgid "Date Ranges Exist"
 msgstr ""
 
 #. module: date_range
-#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_tree
-msgid "Date range"
-msgstr "Plage de dates"
-
-#. module: date_range
-#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_type_tree
-msgid "Date range type"
-msgstr "Type de plage de dates"
-
-#. module: date_range
 #: model:ir.ui.menu,name:date_range.menu_date_range
 msgid "Date ranges"
 msgstr "Plages de dates"
@@ -185,7 +183,6 @@ msgstr ""
 #. module: date_range
 #: model:ir.model.fields,field_description:date_range.field_date_range__display_name
 #: model:ir.model.fields,field_description:date_range.field_date_range_generator__display_name
-#: model:ir.model.fields,field_description:date_range.field_date_range_search_mixin__display_name
 #: model:ir.model.fields,field_description:date_range.field_date_range_type__display_name
 msgid "Display Name"
 msgstr "Nom d'affichage"
@@ -195,6 +192,11 @@ msgstr "Nom d'affichage"
 #: model:ir.model.fields,field_description:date_range.field_date_range_type__duration_count
 msgid "Duration"
 msgstr "Durée"
+
+#. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_search
+msgid "End Date"
+msgstr ""
 
 #. module: date_range
 #: model:ir.model.fields,field_description:date_range.field_date_range__date_end
@@ -217,6 +219,11 @@ msgid "Filter by period (technical field)"
 msgstr ""
 
 #. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.date_range_generator_view_form
+msgid "Generate"
+msgstr ""
+
+#. module: date_range
 #: model:ir.actions.act_window,name:date_range.date_range_generator_action
 #: model:ir.ui.menu,name:date_range.menu_date_range_generator_action
 #: model_terms:ir.ui.view,arch_db:date_range.date_range_generator_view_form
@@ -231,31 +238,21 @@ msgstr ""
 #. module: date_range
 #: model:ir.model.fields,field_description:date_range.field_date_range__id
 #: model:ir.model.fields,field_description:date_range.field_date_range_generator__id
-#: model:ir.model.fields,field_description:date_range.field_date_range_search_mixin__id
 #: model:ir.model.fields,field_description:date_range.field_date_range_type__id
 msgid "ID"
 msgstr "ID"
 
 #. module: date_range
 #: model:ir.model.fields,help:date_range.field_date_range_type__allow_overlap
-msgid "If sets date range of same type must not overlap."
+msgid "If set, date ranges of same type must not overlap."
 msgstr ""
-"Si elle est définie, les plages de dates de même type ne doivent pas se "
-"chevaucher."
 
 #. module: date_range
+#. odoo-python
 #: code:addons/date_range/wizard/date_range_generator.py:0
 #, python-format
 msgid "Invalid name expression: %s"
 msgstr ""
-
-#. module: date_range
-#: model:ir.model.fields,field_description:date_range.field_date_range____last_update
-#: model:ir.model.fields,field_description:date_range.field_date_range_generator____last_update
-#: model:ir.model.fields,field_description:date_range.field_date_range_search_mixin____last_update
-#: model:ir.model.fields,field_description:date_range.field_date_range_type____last_update
-msgid "Last Modified on"
-msgstr "Dernière modification le"
 
 #. module: date_range
 #: model:ir.model.fields,field_description:date_range.field_date_range__write_uid
@@ -283,6 +280,7 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: date_range
+#. odoo-python
 #: code:addons/date_range/wizard/date_range_generator.py:0
 #, python-format
 msgid "No ranges to generate with these settings"
@@ -304,18 +302,21 @@ msgid "Parameters"
 msgstr ""
 
 #. module: date_range
+#. odoo-python
 #: code:addons/date_range/models/date_range_search_mixin.py:0
 #, python-format
 msgid "Period"
 msgstr ""
 
 #. module: date_range
+#. odoo-python
 #: code:addons/date_range/wizard/date_range_generator.py:0
 #, python-format
 msgid "Please enter an end date, or the number of ranges to generate."
 msgstr ""
 
 #. module: date_range
+#. odoo-python
 #: code:addons/date_range/wizard/date_range_generator.py:0
 #, python-format
 msgid "Please set a prefix or an expression to generate the range names."
@@ -345,17 +346,18 @@ msgid "Ranges"
 msgstr "Plages"
 
 #. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_search
+msgid "Start Date"
+msgstr ""
+
+#. module: date_range
 #: model:ir.model.fields,field_description:date_range.field_date_range__date_start
 #: model:ir.model.fields,field_description:date_range.field_date_range_generator__date_start
 msgid "Start date"
 msgstr "Date de début"
 
 #. module: date_range
-#: model_terms:ir.ui.view,arch_db:date_range.date_range_generator_view_form
-msgid "Submit"
-msgstr "Soumettre"
-
-#. module: date_range
+#. odoo-python
 #: code:addons/date_range/wizard/date_range_generator.py:0
 #, python-format
 msgid ""
@@ -364,14 +366,6 @@ msgid ""
 msgstr ""
 "La société dans le générateur de plage de dates et dans le type de plage de "
 "dates doit être la même."
-
-#. module: date_range
-#: code:addons/date_range/models/date_range.py:0
-#, python-format
-msgid "The Company in the Date Range and in Date Range Type must be the same."
-msgstr ""
-"La société dans la plage de dates et dans le type de plage de dates doit "
-"être la même."
 
 #. module: date_range
 #: model:ir.model.fields,help:date_range.field_date_range_type__active
@@ -410,14 +404,13 @@ msgid "Until"
 msgstr ""
 
 #. module: date_range
+#. odoo-python
 #: code:addons/date_range/models/date_range_type.py:0
 #, python-format
 msgid ""
-"You cannot change the company, as this Date Range Type is  assigned to Date "
-"Range (%s)."
+"You cannot change the company, as this Date Range Type is assigned to Date "
+"Range '%s'."
 msgstr ""
-"Vous ne pouvez pas modifier la société, car ce type de plage de dates est "
-"attribué à la plage de dates (%s)."
 
 #. module: date_range
 #: model:ir.model.fields.selection,name:date_range.selection__date_range_generator__unit_of_time__3
@@ -462,6 +455,46 @@ msgstr "semaines"
 #: model:ir.model.fields.selection,name:date_range.selection__date_range_type__unit_of_time__0
 msgid "years"
 msgstr "années"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Dernière modification le"
+
+#~ msgid "If sets date range of same type must not overlap."
+#~ msgstr ""
+#~ "Si elle est définie, les plages de dates de même type ne doivent pas se "
+#~ "chevaucher."
+
+#~ msgid "Submit"
+#~ msgstr "Soumettre"
+
+#, python-format
+#~ msgid ""
+#~ "You cannot change the company, as this Date Range Type is  assigned to "
+#~ "Date Range (%s)."
+#~ msgstr ""
+#~ "Vous ne pouvez pas modifier la société, car ce type de plage de dates est "
+#~ "attribué à la plage de dates (%s)."
+
+#, python-format
+#~ msgid "%s is not a valid range (%s > %s)"
+#~ msgstr "%s n'est pas une plage valide (%s > %s)"
+
+#, python-format
+#~ msgid "%s overlaps %s"
+#~ msgstr "%s chevauchements %s"
+
+#~ msgid "Date range"
+#~ msgstr "Plage de dates"
+
+#~ msgid "Date range type"
+#~ msgstr "Type de plage de dates"
+
+#, python-format
+#~ msgid ""
+#~ "The Company in the Date Range and in Date Range Type must be the same."
+#~ msgstr ""
+#~ "La société dans la plage de dates et dans le type de plage de dates doit "
+#~ "être la même."
 
 #~ msgid "Date Start"
 #~ msgstr "Date de début"

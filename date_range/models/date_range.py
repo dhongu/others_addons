@@ -1,5 +1,5 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -8,7 +8,8 @@ from odoo.exceptions import ValidationError
 class DateRange(models.Model):
     _name = "date.range"
     _description = "Date Range"
-    _order = "type_name,date_start"
+    _order = "type_name, date_start"
+    _check_company_auto = True
 
     @api.model
     def _default_company(self):
@@ -23,10 +24,8 @@ class DateRange(models.Model):
         index=1,
         required=True,
         ondelete="restrict",
-        domain="['|', ('company_id', '=', company_id), " "('company_id', '=', False)]",
-        store=True,
-        compute="_compute_type_id",
-        readonly=False,
+        domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]",
+        check_company=True,
     )
     type_name = fields.Char(related="type_id.name", store=True, string="Type Name")
     company_id = fields.Many2one(
@@ -35,7 +34,9 @@ class DateRange(models.Model):
     active = fields.Boolean(
         help="The active field allows you to hide the date range without "
         "removing it.",
-        default=True,
+        compute="_compute_active",
+        readonly=False,
+        store=True,
     )
 
     _sql_constraints = [
@@ -46,29 +47,13 @@ class DateRange(models.Model):
         )
     ]
 
-    @api.depends("company_id", "type_id.company_id")
-    def _compute_type_id(self):
-        """Enforce check of company consistency when changing company, here
-        or in the type.
-        """
-        self._check_company_id_type_id()
-
-    @api.constrains("company_id", "type_id")
-    def _check_company_id_type_id(self):
-        for rec in self.sudo():
-            if (
-                rec.company_id
-                and rec.type_id.company_id
-                and rec.company_id != rec.type_id.company_id
-            ):
-                raise ValidationError(
-                    _("%(name)s is not a valid range (%(date_start)s > %(date_end)s)")
-                    % {
-                        "name": rec.name,
-                        "date_start": rec.date_start,
-                        "date_end": rec.date_end,
-                    }
-                )
+    @api.depends("type_id.active")
+    def _compute_active(self):
+        for date in self:
+            if date.type_id.active:
+                date.active = True
+            else:
+                date.active = False
 
     @api.constrains("type_id", "date_start", "date_end", "company_id")
     def _validate_range(self):

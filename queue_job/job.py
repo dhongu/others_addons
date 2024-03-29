@@ -89,23 +89,18 @@ def identity_exact(job_):
     Usually you will probably always want to include at least the name of the
     model and method.
     """
-    hasher = identity_exact_hasher(job_)
-    return hasher.hexdigest()
-
-
-def identity_exact_hasher(job_):
-    """Prepare hasher object for identity_exact."""
     hasher = hashlib.sha1()
     hasher.update(job_.model_name.encode("utf-8"))
     hasher.update(job_.method_name.encode("utf-8"))
     hasher.update(str(sorted(job_.recordset.ids)).encode("utf-8"))
     hasher.update(str(job_.args).encode("utf-8"))
     hasher.update(str(sorted(job_.kwargs.items())).encode("utf-8"))
-    return hasher
+
+    return hasher.hexdigest()
 
 
 @total_ordering
-class Job(object):
+class Job:
     """A Job is a task to execute. It is the in-memory representation of a job.
 
     Jobs are stored in the ``queue.job`` Odoo Model, but they are handled
@@ -676,9 +671,9 @@ class Job(object):
     def func_string(self):
         model = repr(self.recordset)
         args = [repr(arg) for arg in self.args]
-        kwargs = ["{}={!r}".format(key, val) for key, val in self.kwargs.items()]
+        kwargs = [f"{key}={val!r}" for key, val in self.kwargs.items()]
         all_args = ", ".join(args + kwargs)
-        return "{}.{}({})".format(model, self.method_name, all_args)
+        return f"{model}.{self.method_name}({all_args})"
 
     def __eq__(self, other):
         return self.uuid == other.uuid
@@ -748,7 +743,7 @@ class Job(object):
         elif self.func.__doc__:
             return self.func.__doc__.splitlines()[0].strip()
         else:
-            return "{}.{}".format(self.model_name, self.func.__name__)
+            return f"{self.model_name}.{self.func.__name__}"
 
     @property
     def uuid(self):
@@ -856,7 +851,7 @@ class Job(object):
                     break
         elif not seconds:
             seconds = RETRY_INTERVAL
-        if isinstance(seconds, (list, tuple)):
+        if isinstance(seconds, (list | tuple)):
             seconds = randint(seconds[0], seconds[1])
         return seconds
 

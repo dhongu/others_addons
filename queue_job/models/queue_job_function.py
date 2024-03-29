@@ -139,7 +139,7 @@ class QueueJobFunction(models.Model):
 
     @staticmethod
     def job_function_name(model_name, method_name):
-        return "<{}>.{}".format(model_name, method_name)
+        return f"<{model_name}>.{method_name}"
 
     def job_default_config(self):
         return self.JobConfig(
@@ -248,15 +248,15 @@ class QueueJobFunction(models.Model):
                 new_vals_list.append(vals)
             vals_list = new_vals_list
         records |= super().create(vals_list)
-        self.clear_caches()
+        self.env.registry.clear_cache()
         return records
 
     def write(self, values):
         res = super().write(values)
-        self.clear_caches()
+        self.env.registry.clear_cache()
         return res
 
     def unlink(self):
         res = super().unlink()
-        self.clear_caches()
+        self.env.registry.clear_cache()
         return res

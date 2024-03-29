@@ -259,7 +259,7 @@ def _async_http_get(scheme, host, port, user, password, db_name, job_uuid):
     thread.start()
 
 
-class Database(object):
+class Database:
     def __init__(self, db_name):
         self.db_name = db_name
         connection_info = _connection_info_for(db_name)
@@ -322,7 +322,7 @@ class Database(object):
         query = (
             "SELECT channel, uuid, id as seq, date_created, "
             "priority, EXTRACT(EPOCH FROM eta), state "
-            "FROM queue_job WHERE %s" % (where,)
+            f"FROM queue_job WHERE {where}"
         )
         with closing(self.conn.cursor("select_jobs", withhold=True)) as cr:
             cr.execute(query, args)
@@ -344,7 +344,7 @@ class Database(object):
             )
 
 
-class QueueJobRunner(object):
+class QueueJobRunner:
     def __init__(
         self,
         scheme="http",
@@ -398,6 +398,12 @@ class QueueJobRunner(object):
         return runner
 
     def get_db_names(self):
+        """
+        >>> runner = QueueJobRunner()
+        >>> config["db_name"] = None
+        >>> runner.get_db_names()
+        ['odoo']
+        """
         if config["db_name"]:
             db_names = config["db_name"].split(",")
         else:

@@ -94,7 +94,7 @@ class QueueJob(models.Model):
     state = fields.Selection(STATES, readonly=True, required=True, index=True)
     priority = fields.Integer()
     exc_name = fields.Char(string="Exception", readonly=True)
-    exc_message = fields.Char(string="Exception Message", readonly=True, tracking=True)
+    exc_message = fields.Char(string="Exception Message", readonly=True)
     exc_info = fields.Text(string="Exception Info", readonly=True)
     result = fields.Text(readonly=True)
 
@@ -210,10 +210,8 @@ class QueueJob(models.Model):
         }
         return {
             "id": self.id,
-            "title": "<strong>%s</strong><br/>%s"
-            % (
-                html_escape(self.display_name),
-                html_escape(self.func_string),
+            "title": "<strong>{}</strong><br/>{}".format(
+                html_escape(self.display_name), html_escape(self.func_string)
             ),
             "color": colors.get(self.state, default)[0],
             "border": colors.get(self.state, default)[1],
@@ -379,9 +377,8 @@ class QueueJob(models.Model):
         """
         self.ensure_one()
         return _(
-            "Something bad happened during the execution of job %s. "
-            "More details in the 'Exception Information' section.",
-            self.uuid,
+            "Something bad happened during the execution of the job. "
+            "More details in the 'Exception Information' section."
         )
 
     def _needaction_domain_get(self):

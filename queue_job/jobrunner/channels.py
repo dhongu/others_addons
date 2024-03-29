@@ -14,7 +14,7 @@ NOT_DONE = (WAIT_DEPENDENCIES, PENDING, ENQUEUED, STARTED, FAILED)
 _logger = logging.getLogger(__name__)
 
 
-class PriorityQueue(object):
+class PriorityQueue:
     """A priority queue that supports removing arbitrary objects.
 
     Adding an object already in the queue is a no op.
@@ -123,7 +123,7 @@ class SafeSet(set):
 
 
 @total_ordering
-class ChannelJob(object):
+class ChannelJob:
     """A channel job is attached to a channel and holds the properties of a
     job that are necessary to prioritise them.
 
@@ -225,7 +225,7 @@ class ChannelJob(object):
         return self.sorting_key() < other.sorting_key()
 
 
-class ChannelQueue(object):
+class ChannelQueue:
     """A channel queue is a priority queue for jobs.
 
     Jobs with an eta are set aside until their eta is past due, at
@@ -354,7 +354,7 @@ class ChannelQueue(object):
         return wakeup_time
 
 
-class Channel(object):
+class Channel:
     """A channel for jobs, with a maximum capacity.
 
     When jobs are created by queue_job modules, they may be associated
@@ -601,7 +601,7 @@ def split_strip(s, sep, maxsplit=-1):
     return [x.strip() for x in s.split(sep, maxsplit)]
 
 
-class ChannelManager(object):
+class ChannelManager:
     """High level interface for channels
 
     This class handles:
@@ -866,7 +866,7 @@ class ChannelManager(object):
             name = config_items[0]
             if not name:
                 raise ValueError(
-                    "Invalid channel config %s: missing channel name" % config_string
+                    f"Invalid channel config {config_string}: missing channel name"
                 )
             config["name"] = name
             if len(config_items) > 1:
@@ -875,8 +875,8 @@ class ChannelManager(object):
                     config["capacity"] = int(capacity)
                 except Exception as ex:
                     raise ValueError(
-                        "Invalid channel config %s: "
-                        "invalid capacity %s" % (config_string, capacity)
+                        f"Invalid channel config {config_string}: "
+                        f"invalid capacity {capacity}"
                     ) from ex
                 for config_item in config_items[2:]:
                     kv = split_strip(config_item, "=")
@@ -886,13 +886,13 @@ class ChannelManager(object):
                         k, v = kv
                     else:
                         raise ValueError(
-                            "Invalid channel config %s: "
-                            "incorrect config item %s" % (config_string, config_item)
+                            f"Invalid channel config {config_string}: "
+                            f"incorrect config item {config_item}"
                         )
                     if k in config:
                         raise ValueError(
-                            "Invalid channel config %s: "
-                            "duplicate key %s" % (config_string, k)
+                            f"Invalid channel config {config_string}: "
+                            f"duplicate key {k}"
                         )
                     config[k] = v
             else:

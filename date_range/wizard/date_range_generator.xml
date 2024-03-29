@@ -8,7 +8,8 @@
                 <sheet>
                     <group>
                         <group col="2" colspan="4" string="Parameters">
-                            <field name="type_id" groups="base.group_multi_company"/>
+                            <field name="type_id" />
+                            <field name="company_id" invisible="1" />
                             <field
                                 groups="base.group_multi_company"
                                 name="company_id"
@@ -28,12 +29,12 @@
                                 <field
                                     class="oe_inline"
                                     name="date_end"
-                                    attrs="{'required': [('count', '=', 0)]}"
+                                    required="not count"
                                 />,
                                 or generate <field
                                     class="oe_inline"
                                     name="count"
-                                    attrs="{'required': [('date_end', '=', False)]}"
+                                    required="not date_end"
                                 /> entries.
                             </div>
                             <label for="name_prefix" />
@@ -41,12 +42,12 @@
                                 <field
                                     name="name_prefix"
                                     class="oe_inline"
-                                    attrs="{'required': [('unit_of_time', '!=', False), ('name_expr', '=', False)]}"
+                                    required="unit_of_time and not name_expr"
                                 /> or enter a complex expression below
                             </div>
                             <field
                                 name="name_expr"
-                                attrs="{'required': [('unit_of_time', '!=', False), ('name_prefix', '=', False)]}"
+                                required="unit_of_time and not name_prefix"
                             />
                             <field name="range_name_preview" />
                         </group>
@@ -56,7 +57,7 @@
                     <button
                         class="btn btn-sm btn-primary"
                         name="action_apply"
-                        string="Submit"
+                        string="Generate"
                         type="object"
                     />
                     <button

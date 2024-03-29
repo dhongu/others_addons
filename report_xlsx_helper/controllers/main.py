@@ -21,7 +21,6 @@ class ReportController(ReportController):
     def report_routes(self, reportname, docids=None, converter=None, **data):
         report = request.env["ir.actions.report"]._get_report_from_name(reportname)
         if converter == "xlsx" and not report:
-
             context = dict(request.env.context)
             if docids:
                 docids = [int(i) for i in docids.split(",")]
@@ -32,7 +31,9 @@ class ReportController(ReportController):
                 context.update(data["context"])
             context["report_name"] = reportname
 
-            xlsx = report.with_context(**context)._render_xlsx(docids, data=data)[0]
+            xlsx = report.with_context(**context)._render_xlsx(
+                reportname, docids, data=data
+            )[0]
             report_file = context.get("report_file")
             if not report_file:
                 active_model = context.get("active_model", "export")

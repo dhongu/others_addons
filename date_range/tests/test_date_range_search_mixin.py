@@ -1,6 +1,6 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # Copyright 2021 Opener B.V. <stefan@opener.amsterdam>
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 from dateutil.rrule import MONTHLY
 from odoo_test_helper import FakeModelLoader
 
@@ -44,11 +44,11 @@ class TestDateRangeearchMixin(TransactionCase):
         """The search field is injected in the model's search view"""
         self.assertIn(
             '<separator/><field name="date_range_search_id" string="Period"/>',
-            self.model.fields_view_get(view_type="search")["arch"],
+            self.model.get_view(view_type="search")["arch"],
         )
         self.assertNotIn(
             '<separator/><field name="date_range_search_id" string="Period"/>',
-            self.model.fields_view_get(view_type="form")["arch"],
+            self.model.get_view(view_type="form")["arch"],
         )
         # Having a view with a group element in it
         view = self.env["ir.ui.view"].create(
@@ -67,7 +67,7 @@ class TestDateRangeearchMixin(TransactionCase):
         )
         self.assertIn(
             '<separator/><field name="date_range_search_id" string="Period"/>',
-            self.model.fields_view_get(view_type="search")["arch"],
+            self.model.get_view(view_type="search")["arch"],
         )
         # Having a view in which the field is added explicitely
         view.arch = """
@@ -81,7 +81,7 @@ class TestDateRangeearchMixin(TransactionCase):
         """
         self.assertNotIn(
             '<separator/><field name="date_range_search_id" string="Period"/>',
-            self.model.fields_view_get(view_type="search")["arch"],
+            self.model.get_view(view_type="search")["arch"],
         )
 
     def test_02_search_result(self):
@@ -149,7 +149,7 @@ class TestDateRangeearchMixin(TransactionCase):
 
     def test_04_load_views(self):
         """Technical field label is replaced in `load_views`"""
-        field = self.model.load_views([(None, "form")])["fields"][
+        field = self.model.get_views([(None, "form")])["models"][self.model._name][
             "date_range_search_id"
         ]
         self.assertNotIn("technical", field["string"])

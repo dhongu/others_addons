@@ -1,6 +1,7 @@
 # Copyright 2009-2016 Camptocamp
 # Copyright 2010 Akretion
 # Copyright 2019-2020 Brainbean Apps (https://brainbeanapps.com)
+# Copyright 2021 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 import logging
@@ -24,14 +25,14 @@ class ResCurrencyRateProvider(models.Model):
         string="Company",
         comodel_name="res.company",
         required=True,
-        default=lambda self: self._default_company_id(),
+        default=lambda self: self.env.company,
     )
     currency_name = fields.Char(
         string="Currency Name", related="company_id.currency_id.name"
     )
     active = fields.Boolean(default=True)
     service = fields.Selection(
-        string="Source Service",
+        string="Provider",
         selection=[("none", "None")],
         default="none",
         required=True,
@@ -49,34 +50,33 @@ class ResCurrencyRateProvider(models.Model):
         required=True,
         help="Currencies to be updated by this provider",
     )
-    name = fields.Char(string="Name", compute="_compute_name", store=True)
+    name = fields.Char(compute="_compute_name", store=True)
     interval_type = fields.Selection(
-        string="Units of scheduled update interval",
+        string="Scheduled Update Interval Unit",
         selection=[("days", "Day(s)"), ("weeks", "Week(s)"), ("months", "Month(s)")],
         default="days",
         required=True,
     )
     interval_number = fields.Integer(
-        string="Scheduled update interval", default=1, required=True
+        string="Scheduled Update Interval", default=1, required=True
     )
-    update_schedule = fields.Char(
-        string="Update Schedule", compute="_compute_update_schedule"
-    )
-    last_successful_run = fields.Date(string="Last successful update")
+    update_schedule = fields.Char(compute="_compute_update_schedule")
+    last_successful_run = fields.Date(string="Last Successful Update")
     next_run = fields.Date(
-        string="Next scheduled update", default=fields.Date.today, required=True
+        string="Next Scheduled Update", default=fields.Date.today, required=True
     )
+    daily = fields.Boolean(compute="_compute_daily", store=True)
 
     _sql_constraints = [
         (
             "service_company_id_uniq",
             "UNIQUE(service, company_id)",
-            "Service can only be used in one provider per company!",
+            "This provider has already been setup in this company.",
         ),
         (
             "valid_interval_number",
             "CHECK(interval_number > 0)",
-            "Scheduled update interval must be greater than zero!",
+            "Scheduled update interval must be strictly positive.",
         ),
     ]
 
@@ -116,6 +116,13 @@ class ResCurrencyRateProvider(models.Model):
                 [("name", "in", provider._get_supported_currencies())]
             )
 
+    @api.depends("interval_type", "interval_number")
+    def _compute_daily(self):
+        for provider in self:
+            provider.daily = False
+            if provider.interval_type == "days" and provider.interval_number == 1:
+                provider.daily = True
+
     def _update(self, date_from, date_to, newest_only=False):
         Currency = self.env["res.currency"]
         CurrencyRate = self.env["res.currency.rate"]
@@ -127,42 +134,47 @@ class ResCurrencyRateProvider(models.Model):
                     provider.currency_ids.mapped("name"),
                     date_from,
                     date_to,
-                ).items()
+                )
+                if data:
+                    data = data.items()
             except BaseException as e:
                 _logger.warning(
-                    'Currency Rate Provider "%s" failed to obtain data since'
-                    " %s until %s"
-                    % (
-                        provider.name,
-                        date_from,
-                        date_to,
+                    (
+                        'Currency Rate Provider "{name}" failed to obtain data since'
+                        " {date_from} until {date_to}"
+                    ).format(
+                        name=provider.name,
+                        date_from=date_from,
+                        date_to=date_to,
                     ),
                     exc_info=True,
                 )
                 provider.message_post(
                     subject=_("Currency Rate Provider Failure"),
                     body=_(
-                        'Currency Rate Provider "%s" failed to obtain data'
-                        " since %s until %s:\n%s"
+                        'Currency Rate Provider "%(name)s" failed to obtain data'
+                        " since %(date_from)s until %(date_to)s:\n%(error)s"
                     )
-                    % (
-                        provider.name,
-                        date_from,
-                        date_to,
-                        str(e) if e else _("N/A"),
-                    ),
+                    % {
+                        "name": provider.name,
+                        "date_from": date_from,
+                        "date_to": date_to,
+                        "error": str(e) if e else _("N/A"),
+                    },
                 )
                 continue
 
             if not data:
-                if is_scheduled:
-                    provider._schedule_next_run()
+                # Try again if there is no data yet
                 continue
             if newest_only:
                 data = [max(data, key=lambda x: fields.Date.from_string(x[0]))]
 
+            newest_date = False
             for content_date, rates in data:
                 timestamp = fields.Date.from_string(content_date)
+                if not newest_date or timestamp > newest_date:
+                    newest_date = timestamp
                 for currency_name, rate in rates.items():
                     if currency_name == provider.company_id.currency_id.name:
                         continue
@@ -197,13 +209,17 @@ class ResCurrencyRateProvider(models.Model):
                         )
 
             if is_scheduled:
-                provider._schedule_next_run()
+                provider._schedule_last_successful_run(newest_date)
+                provider._schedule_next_run(newest_date)
 
-    def _schedule_next_run(self):
+    def _schedule_last_successful_run(self, newest_date):
+        self.last_successful_run = newest_date
+
+    def _schedule_next_run(self, newest_date):
+        # next_run is not used when daily is true, but we are updating the value anyway.
         self.ensure_one()
-        self.last_successful_run = self.next_run
         self.next_run = (
-            datetime.combine(self.next_run, time.min) + self._get_next_run_period()
+            datetime.combine(newest_date, time.min) + self._get_next_run_period()
         ).date()
 
     def _process_rate(self, currency, rate):
@@ -216,12 +232,12 @@ class ResCurrencyRateProvider(models.Model):
             limit=1,
         )
 
-        if type(rate) is dict:
+        if isinstance(rate, dict):
             inverted = rate.get("inverted", None)
             direct = rate.get("direct", None)
             if inverted is None and direct is None:
                 raise UserError(
-                    _("Invalid rate from %(provider)s for %(currency)s : %(rate)s")
+                    _("Invalid rate from %(provider)s for %(currency)s: %(rate)s")
                     % {"provider": self.name, "currency": currency.name, "rate": rate}
                 )
             elif inverted is None:
@@ -236,7 +252,7 @@ class ResCurrencyRateProvider(models.Model):
         value = direct
         if (
             currency_rate_inverted
-            and currency.with_context(force_company=self.company_id.id).rate_inverted
+            and currency.with_company(self.company_id).rate_inverted
         ):
             value = inverted
 
@@ -253,18 +269,18 @@ class ResCurrencyRateProvider(models.Model):
             return relativedelta(months=self.interval_number)
 
     @api.model
-    def _default_company_id(self):
-        return self.env["res.company"]._company_default_get()
-
-    @api.model
     def _scheduled_update(self):
         _logger.info("Scheduled currency rates update...")
 
+        today = fields.Date.context_today(self)
+        # When daily is true, the provider should always be picked for scheduled update.
         providers = self.search(
             [
                 ("company_id.currency_rates_autoupdate", "=", True),
                 ("active", "=", True),
-                ("next_run", "<=", fields.Date.today()),
+                "|",
+                ("next_run", "<=", today),
+                ("daily", "=", True),
             ]
         )
         if providers:
@@ -272,15 +288,19 @@ class ResCurrencyRateProvider(models.Model):
                 "Scheduled currency rates update of: %s"
                 % ", ".join(providers.mapped("name"))
             )
-            for provider in providers.with_context({"scheduled": True}):
+            for provider in providers.with_context(**{"scheduled": True}):
                 date_from = (
                     (provider.last_successful_run + relativedelta(days=1))
                     if provider.last_successful_run
                     else (provider.next_run - provider._get_next_run_period())
                 )
+                newest_only = True
                 date_to = provider.next_run
-                provider._update(date_from, date_to, newest_only=True)
-
+                # Fetch next_run to today data
+                if provider.daily:
+                    newest_only = False
+                    date_to = today
+                provider._update(date_from, date_to, newest_only=newest_only)
         _logger.info("Scheduled currency rates update complete.")
 
     def _get_supported_currencies(self):

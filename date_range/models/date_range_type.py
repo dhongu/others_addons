@@ -1,5 +1,5 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 import logging
 
 from dateutil.relativedelta import relativedelta
@@ -19,7 +19,7 @@ class DateRangeType(models.Model):
 
     name = fields.Char(required=True, translate=True)
     allow_overlap = fields.Boolean(
-        help="If sets date range of same type must not overlap.", default=False
+        help="If set, date ranges of same type must not overlap.", default=False
     )
     active = fields.Boolean(
         help="The active field allows you to hide the date range type "
@@ -83,16 +83,16 @@ class DateRangeType(models.Model):
                     continue
                 if bool(
                     rec.date_range_ids.filtered(
-                        lambda r: r.company_id and r.company_id != rec.company_id
+                        lambda r, drt=rec: r.company_id
+                        and r.company_id != drt.company_id
                     )
                 ):
                     raise ValidationError(
                         _(
                             "You cannot change the company, as this "
-                            "Date Range Type is  assigned to Date Range "
-                            "(%s)."
+                            "Date Range Type is assigned to Date Range '%s'."
                         )
-                        % (rec.date_range_ids.name_get()[0][1])
+                        % (rec.date_range_ids.display_name)
                     )
 
     @api.depends("name_expr", "name_prefix")
@@ -145,5 +145,5 @@ class DateRangeType(models.Model):
             except Exception as e:
                 logger.warning(
                     "Error autogenerating ranges for date range type "
-                    "%s: %s" % (dr_type.name, e)
+                    f"{dr_type.name}: {e}"
                 )

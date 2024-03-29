@@ -221,9 +221,7 @@ class Base(models.AbstractModel):
             else:
                 # replace the synchronous call by a job on itself
                 method_name = auto_delay_wrapper.origin.__name__
-                job_options_method = getattr(
-                    self, "{}_job_options".format(method_name), None
-                )
+                job_options_method = getattr(self, f"{method_name}_job_options", None)
                 job_options = {}
                 if job_options_method:
                     job_options.update(job_options_method(*args, **kwargs))
@@ -265,3 +263,12 @@ class Base(models.AbstractModel):
             for key, value in self.env.context.items()
             if key in self._job_prepare_context_before_enqueue_keys()
         }
+
+    @classmethod
+    def _patch_method(cls, name, method):
+        origin = getattr(cls, name)
+        method.origin = origin
+        # propagate decorators from origin to method, and apply api decorator
+        wrapped = api.propagate(origin, method)
+        wrapped.origin = origin
+        setattr(cls, name, wrapped)

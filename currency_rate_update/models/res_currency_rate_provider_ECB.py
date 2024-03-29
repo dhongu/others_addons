@@ -7,6 +7,7 @@ import xml.sax
 from collections import defaultdict
 from datetime import date, timedelta
 from urllib.request import urlopen
+from xml.sax import make_parser
 
 from odoo import fields, models
 
@@ -93,8 +94,10 @@ class ResCurrencyRateProviderECB(models.Model):
             url = url + "/eurofxref-hist.xml"
 
         handler = EcbRatesHandler(currencies, date_from, date_to)
-        with urlopen(url) as response:
-            xml.sax.parse(response, handler)
+        with urlopen(url, timeout=10) as response:
+            parser = make_parser()
+            parser.setContentHandler(handler)
+            parser.parse(response)
         content = handler.content
         if invert_calculation:
             for k in content.keys():

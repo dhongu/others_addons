@@ -11,6 +11,8 @@ from odoo.http import (
     content_disposition,
     request,
     route,
+)
+from odoo.http import (
     serialize_exception as _serialize_exception,
 )
 from odoo.tools import html_escape
@@ -69,8 +71,9 @@ class ReportController(ReportController):
                         url_decode(url.split("?")[1]).items()
                     )  # decoding the args represented in JSON
                     if "context" in data:
-                        context, data_context = json.loads(context or "{}"), json.loads(
-                            data.pop("context")
+                        context, data_context = (
+                            json.loads(context or "{}"),
+                            json.loads(data.pop("context")),
                         )
                         context = json.dumps({**context, **data_context})
                     response = self.report_routes(
@@ -80,7 +83,7 @@ class ReportController(ReportController):
                 report = request.env["ir.actions.report"]._get_report_from_name(
                     reportname
                 )
-                filename = "%s.%s" % (report.name, "xlsx")
+                filename = f"{report.name}.xlsx"
 
                 if docids:
                     ids = [int(x) for x in docids.split(",")]
@@ -89,7 +92,7 @@ class ReportController(ReportController):
                         report_name = safe_eval(
                             report.print_report_name, {"object": obj, "time": time}
                         )
-                        filename = "%s.%s" % (report_name, "xlsx")
+                        filename = f"{report_name}.xlsx"
                 if not response.headers.get("Content-Disposition"):
                     response.headers.add(
                         "Content-Disposition", content_disposition(filename)

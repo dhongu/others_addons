@@ -1,19 +1,19 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl)
 
 from dateutil.relativedelta import relativedelta
 from dateutil.rrule import MONTHLY, YEARLY
 from psycopg2 import IntegrityError
 
 from odoo import fields
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
 
 
 class DateRangeTypeTest(TransactionCase):
     def setUp(self):
-        super(DateRangeTypeTest, self).setUp()
+        super().setUp()
         self.type = self.env["date.range.type"]
         self.company = self.env["res.company"].create({"name": "Test company"})
         self.company_2 = self.env["res.company"].create(
@@ -59,7 +59,7 @@ class DateRangeTypeTest(TransactionCase):
             }
         )
         drt.company_id = self.company.id
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(UserError):
             dr.company_id = self.company_2
 
     def test_autogeneration(self):
@@ -155,7 +155,7 @@ class DateRangeTypeTest(TransactionCase):
         )
         # Inject invalid value
         self.env.cr.execute("UPDATE date_range_type SET name_expr = 'invalid'")
-        dr_type.refresh()
+        dr_type.invalidate_model()
         with mute_logger("odoo.addons.date_range.models.date_range_type"):
             self.env["date.range.type"].autogenerate_ranges()
         self.assertFalse(dr_type.date_ranges_exist)
