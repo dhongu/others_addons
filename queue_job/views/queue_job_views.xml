@@ -142,7 +142,7 @@
     </record>
 
     <record id="view_queue_job_tree" model="ir.ui.view">
-        <field name="name">queue.job.tree</field>
+        <field name="name">queue.job.list</field>
         <field name="model">queue.job</field>
         <field name="arch" type="xml">
             <list

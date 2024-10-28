@@ -28,7 +28,7 @@
     </record>
 
     <record id="view_queue_job_channel_tree" model="ir.ui.view">
-        <field name="name">queue.job.channel.tree</field>
+        <field name="name">queue.job.channel.list</field>
         <field name="model">queue.job.channel</field>
         <field name="arch" type="xml">
             <list>
