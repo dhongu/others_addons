@@ -38,6 +38,7 @@ class ReportAction(models.Model):
 
             # XML with spaces before the <?xml tag will fail, and trailing ones
             # do nothing, so let's strip them and make everyone happier
+            result = result.replace('<?xml version="1.0" encoding="UTF-8"?>', '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!DOCTYPE SdDataSlice SYSTEM "m2Data_Partner.dtd">')
             result = (result.strip(), "xml")
         else:
             result = super(ReportAction, self).render_report(
