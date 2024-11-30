@@ -485,7 +485,7 @@ class QueueJob(models.Model):
             action.update(
                 {
                     "name": _("Related Records"),
-                    "view_mode": "list,form",
+                    "view_mode": "tree,form",
                     "domain": [("id", "in", records.ids)],
                 }
             )
