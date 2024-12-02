@@ -10,11 +10,11 @@
     "summary": "Hide product prices on the shop",
     "depends": ["website_sale"],
     "data": [
-        # "data/product_snippet_template_data.xml",
-        # "views/partner_view.xml",
-        # "views/product_template_views.xml",
-        # "views/res_config_settings_views.xml",
-        # "views/website_sale_template.xml",
+        "data/product_snippet_template_data.xml",
+        "views/partner_view.xml",
+        "views/product_template_views.xml",
+        "views/res_config_settings_views.xml",
+        "views/website_sale_template.xml",
     ],
     "installable": True,
     "assets": {
