@@ -69,7 +69,7 @@ class TestProductSupplierinfoForCustomer(SavepointCase):
         self.assertNotEqual(
             len(customerinfos), 0, "Error: Customer not found in Supplierinfo"
         )
-        price, rule_id = self.pricelist.get_product_price_rule(
+        price, rule_id = self.pricelist._get_product_price_rule(
             self.product, 1, partner=self.customer
         )
         self.assertEqual(
