@@ -29,12 +29,12 @@
                                 <field
                                     class="oe_inline"
                                     name="date_end"
-                                    required="not count"
+                                    attrs="{'required': [('count', '=', 0)]}"
                                 />,
                                 or generate <field
                                     class="oe_inline"
                                     name="count"
-                                    required="not date_end"
+                                    attrs="{'required': [('date_end', '=', False)]}"
                                 /> entries.
                             </div>
                             <label for="name_prefix" />
@@ -42,12 +42,12 @@
                                 <field
                                     name="name_prefix"
                                     class="oe_inline"
-                                    required="unit_of_time and not name_expr"
+                                    attrs="{'required': [('unit_of_time', '!=', False), ('name_expr', '=', False)]}"
                                 /> or enter a complex expression below
                             </div>
                             <field
                                 name="name_expr"
-                                required="unit_of_time and not name_prefix"
+                                attrs="{'required': [('unit_of_time', '!=', False), ('name_prefix', '=', False)]}"
                             />
                             <field name="range_name_preview" />
                         </group>

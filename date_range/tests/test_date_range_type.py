@@ -13,7 +13,7 @@ from odoo.tools import mute_logger
 
 class DateRangeTypeTest(TransactionCase):
     def setUp(self):
-        super().setUp()
+        super(DateRangeTypeTest, self).setUp()
         self.type = self.env["date.range.type"]
         self.company = self.env["res.company"].create({"name": "Test company"})
         self.company_2 = self.env["res.company"].create(
