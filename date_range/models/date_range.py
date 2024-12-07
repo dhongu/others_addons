@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError
 class DateRange(models.Model):
     _name = "date.range"
     _description = "Date Range"
-    _order = "type_name, date_start"
+    _order = "type_id, date_start"
     _check_company_auto = True
 
     @api.model
@@ -27,14 +27,15 @@ class DateRange(models.Model):
         domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]",
         check_company=True,
     )
-    type_name = fields.Char(related="type_id.name", store=True, string="Type Name")
     company_id = fields.Many2one(
         comodel_name="res.company", string="Company", index=1, default=_default_company
     )
     active = fields.Boolean(
         help="The active field allows you to hide the date range without "
         "removing it.",
-        default=True,
+        compute="_compute_active",
+        readonly=False,
+        store=True,
     )
 
     _sql_constraints = [
@@ -44,6 +45,14 @@ class DateRange(models.Model):
             "A date range must be unique per company !",
         )
     ]
+
+    @api.depends("type_id.active")
+    def _compute_active(self):
+        for date in self:
+            if date.type_id.active:
+                date.active = True
+            else:
+                date.active = False
 
     @api.constrains("type_id", "date_start", "date_end", "company_id")
     def _validate_range(self):

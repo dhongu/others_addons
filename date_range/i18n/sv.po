@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-08-01 02:44+0000\n"
-"PO-Revision-Date: 2024-02-28 11:36+0000\n"
+"PO-Revision-Date: 2024-06-12 12:39+0000\n"
 "Last-Translator: jakobkrabbe <jakob@syscare.se>\n"
 "Language-Team: Swedish (https://www.transifex.com/oca/teams/23907/sv/)\n"
 "Language: sv\n"
@@ -37,7 +37,7 @@ msgstr "%(thisname)s överlappar %(dtname)s"
 #: model_terms:ir.ui.view,arch_db:date_range.date_range_generator_view_form
 #: model_terms:ir.ui.view,arch_db:date_range.view_date_range_type_form_view
 msgid "&amp;nbsp;"
-msgstr "&amp;nbsp;"
+msgstr "&amp; nbsp;"
 
 #. module: date_range
 #: model_terms:ir.ui.view,arch_db:date_range.date_range_generator_view_form
@@ -51,12 +51,12 @@ msgstr ""
 #. module: date_range
 #: model:ir.model.constraint,message:date_range.constraint_date_range_date_range_uniq
 msgid "A date range must be unique per company !"
-msgstr "Ett datumintervall måste vara unikt per företag!"
+msgstr "Ett datumintervall måste vara unikt för varje företag!"
 
 #. module: date_range
 #: model:ir.model.constraint,message:date_range.constraint_date_range_type_date_range_type_uniq
 msgid "A date range type must be unique per company !"
-msgstr "En datumintervalltyp måste vara unik per företag !"
+msgstr "En datumintervalltyp måste vara unik för varje företag!"
 
 #. module: date_range
 #: model:ir.model.fields,field_description:date_range.field_date_range__active
@@ -72,26 +72,24 @@ msgstr "Tillåt överlappning"
 #. module: date_range
 #: model_terms:ir.ui.view,arch_db:date_range.view_date_range_form_view
 #: model_terms:ir.ui.view,arch_db:date_range.view_date_range_search
-#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_type_form_view
 #: model_terms:ir.ui.view,arch_db:date_range.view_date_range_type_search
 msgid "Archived"
 msgstr "Arkiverad"
 
 #. module: date_range
 #: model:ir.actions.server,name:date_range.ir_cron_autocreate_ir_actions_server
-#: model:ir.cron,cron_name:date_range.ir_cron_autocreate
 msgid "Auto-generate date ranges"
 msgstr "Autogenererade datumintervall"
 
 #. module: date_range
 #: model_terms:ir.ui.view,arch_db:date_range.view_date_range_type_form_view
 msgid "Auto-generation settings"
-msgstr "Inställningar för automatisk generering"
+msgstr "Inställningar för autogenerering"
 
 #. module: date_range
 #: model:ir.model.fields,field_description:date_range.field_date_range_type__autogeneration_count
 msgid "Autogeneration Count"
-msgstr "Räkning av autogenerering"
+msgstr "Autogeneration Räkna"
 
 #. module: date_range
 #: model:ir.model.fields,field_description:date_range.field_date_range_type__autogeneration_date_start
@@ -114,7 +112,7 @@ msgstr "Avbryt"
 #: model:ir.model.fields,field_description:date_range.field_date_range_type__company_id
 #: model_terms:ir.ui.view,arch_db:date_range.view_date_range_search
 msgid "Company"
-msgstr "Bolag"
+msgstr "Företag"
 
 #. module: date_range
 #: model_terms:ir.ui.view,arch_db:date_range.view_date_range_type_form_view
@@ -188,7 +186,7 @@ msgstr "Standardvärden för generering av datumintervall"
 #: model:ir.model.fields,field_description:date_range.field_date_range_generator__display_name
 #: model:ir.model.fields,field_description:date_range.field_date_range_type__display_name
 msgid "Display Name"
-msgstr "Visningsnamn"
+msgstr "Visa namn"
 
 #. module: date_range
 #: model:ir.model.fields,field_description:date_range.field_date_range_generator__duration_count
@@ -216,8 +214,8 @@ msgid ""
 "'index' variable."
 msgstr ""
 "Utvärderat uttryck. T.ex. \"'FY%s' % date_start.strftime('%Y%m%d')\"\n"
-"Du kan använda datumtyperna \"date_end\" och \"date_start\" samt variabeln "
-"\"index\"."
+"Du kan använda datumtyperna 'date_end' och 'date_start' samt variabeln "
+"'index'."
 
 #. module: date_range
 #: model:ir.model.fields,field_description:date_range.field_date_range_search_mixin__date_range_search_id
@@ -239,7 +237,7 @@ msgstr "Generera datumintervall"
 #. module: date_range
 #: model_terms:ir.ui.view,arch_db:date_range.view_date_range_type_form_view
 msgid "Generation"
-msgstr "Generering"
+msgstr "Generation"
 
 #. module: date_range
 #: model:ir.model.fields,field_description:date_range.field_date_range__id
@@ -251,7 +249,8 @@ msgstr "ID"
 #. module: date_range
 #: model:ir.model.fields,help:date_range.field_date_range_type__allow_overlap
 msgid "If set, date ranges of same type must not overlap."
-msgstr "Om inställt får datumintervall av samma typ inte överlappa varandra."
+msgstr ""
+"Om den är inställd får datumintervall av samma typ inte överlappa varandra."
 
 #. module: date_range
 #. odoo-python
@@ -259,13 +258,6 @@ msgstr "Om inställt får datumintervall av samma typ inte överlappa varandra."
 #, python-format
 msgid "Invalid name expression: %s"
 msgstr "Ogiltigt namnuttryck: %s"
-
-#. module: date_range
-#: model:ir.model.fields,field_description:date_range.field_date_range____last_update
-#: model:ir.model.fields,field_description:date_range.field_date_range_generator____last_update
-#: model:ir.model.fields,field_description:date_range.field_date_range_type____last_update
-msgid "Last Modified on"
-msgstr "Senast redigerad den"
 
 #. module: date_range
 #: model:ir.model.fields,field_description:date_range.field_date_range__write_uid
@@ -279,12 +271,12 @@ msgstr "Senast uppdaterad av"
 #: model:ir.model.fields,field_description:date_range.field_date_range_generator__write_date
 #: model:ir.model.fields,field_description:date_range.field_date_range_type__write_date
 msgid "Last Updated on"
-msgstr "Senast uppdaterad på"
+msgstr "Senast uppdaterad"
 
 #. module: date_range
 #: model:ir.model,name:date_range.model_date_range_search_mixin
 msgid "Mixin class to add a Many2one style period search field"
-msgstr "Mixin-klass för att lägga till ett sökfält i Many2one-stil"
+msgstr "Mixin-klass för att lägga till ett periodsökfält i Many2one-stil"
 
 #. module: date_range
 #: model:ir.model.fields,field_description:date_range.field_date_range__name
@@ -302,12 +294,12 @@ msgstr "Inga intervall att generera med dessa inställningar"
 #. module: date_range
 #: model:ir.model.fields,field_description:date_range.field_date_range_generator__count
 msgid "Number of ranges to generate"
-msgstr "Antal områden att generera"
+msgstr "Antal intervall som ska genereras"
 
 #. module: date_range
 #: model:ir.model.fields,help:date_range.field_date_range_type__autogeneration_date_start
 msgid "Only applies when there are no date ranges of this type yet"
-msgstr "Gäller endast när det ännu inte finns några datumintervall av denna typ"
+msgstr "Gäller endast om det ännu inte finns några datumintervall av denna typ"
 
 #. module: date_range
 #: model_terms:ir.ui.view,arch_db:date_range.date_range_generator_view_form
@@ -345,18 +337,18 @@ msgstr "Förhandsgranskning av intervallnamn"
 #: model:ir.model.fields,field_description:date_range.field_date_range_generator__name_expr
 #: model:ir.model.fields,field_description:date_range.field_date_range_type__name_expr
 msgid "Range name expression"
-msgstr "Uttryck för namn på intervall"
+msgstr "Uttryck för intervallets namn"
 
 #. module: date_range
 #: model:ir.model.fields,field_description:date_range.field_date_range_generator__name_prefix
 #: model:ir.model.fields,field_description:date_range.field_date_range_type__name_prefix
 msgid "Range name prefix"
-msgstr "Prefix för namn på intervall"
+msgstr "Prefix för intervallnamn"
 
 #. module: date_range
 #: model:ir.model.fields,field_description:date_range.field_date_range_type__date_range_ids
 msgid "Ranges"
-msgstr "Räckvidd"
+msgstr "Intervall"
 
 #. module: date_range
 #: model_terms:ir.ui.view,arch_db:date_range.view_date_range_search
@@ -377,7 +369,8 @@ msgid ""
 "The Company in the Date Range Generator and in Date Range Type must be the "
 "same."
 msgstr ""
-"Företaget i Datumintervallgenerator och i Datumintervalltyp måste vara samma."
+"Företaget i Datumintervallgenerator och i Datumintervalltyp måste vara "
+"detsamma."
 
 #. module: date_range
 #: model:ir.model.fields,help:date_range.field_date_range_type__active
@@ -399,11 +392,6 @@ msgid "Type"
 msgstr "Typ"
 
 #. module: date_range
-#: model:ir.model.fields,field_description:date_range.field_date_range__type_name
-msgid "Type Name"
-msgstr "Namntyp"
-
-#. module: date_range
 #: model:ir.model.fields,field_description:date_range.field_date_range_generator__unit_of_time
 #: model:ir.model.fields,field_description:date_range.field_date_range_type__unit_of_time
 msgid "Unit Of Time"
@@ -422,8 +410,8 @@ msgid ""
 "You cannot change the company, as this Date Range Type is assigned to Date "
 "Range '%s'."
 msgstr ""
-"Du kan inte ändra företaget, eftersom denna datumintervalltyp är tilldelad "
-"datumintervallet '%s'."
+"Du kan inte ändra företaget, eftersom denna datumintervallstyp är tilldelad "
+"datumintervallet \"%s\"."
 
 #. module: date_range
 #: model:ir.model.fields.selection,name:date_range.selection__date_range_generator__unit_of_time__3
@@ -435,7 +423,7 @@ msgstr "dagar"
 #. module: date_range
 #: model_terms:ir.ui.view,arch_db:date_range.date_range_generator_view_form
 msgid "entries."
-msgstr "verifikat."
+msgstr "poster."
 
 #. module: date_range
 #: model_terms:ir.ui.view,arch_db:date_range.view_date_range_type_form_view
@@ -468,3 +456,10 @@ msgstr "veckor"
 #: model:ir.model.fields.selection,name:date_range.selection__date_range_type__unit_of_time__0
 msgid "years"
 msgstr "år"
+
+#, fuzzy
+#~ msgid "Type Name"
+#~ msgstr "Namn"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Senast redigerad"
