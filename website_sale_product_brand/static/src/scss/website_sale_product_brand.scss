@@ -5,3 +5,31 @@
         width: 200px;
     }
 }
+
+.row .brand_img
+{
+	@include media-breakpoint-down(md)
+	{
+		width: auto;
+	}
+	@include media-breakpoint-down(sm)
+	{
+		padding: 0;
+	}
+}
+
+.product_brand_img
+{
+	max-width: 130px;
+	margin: 15px 0px 7px;
+	@include media-breakpoint-down(sm)
+	{
+		margin-left: 15px;
+		max-width: 100px;
+	}
+}
+.product_brand_desc
+{
+	color: rgba(33, 37, 41, 0.7) !important; /* it's text-muted class color */
+	margin: 15px 0px 7px;
+}
