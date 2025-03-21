@@ -11,7 +11,7 @@ class AccountInvoiceReport(models.Model):
     product_brand_id = fields.Many2one(comodel_name="product.brand", string="Brand")
 
     @api.model
-    def _select(self):
+    def _select(self) -> SQL:
         select_str = super()._select().code
         select_str += """
             , template.product_brand_id as product_brand_id
