@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="ai_completion_view_form_openai" model="ir.ui.view">
+        <field name="name">ai.completion.view.form.openai</field>
+        <field name="model">ai.completion</field>
+        <field name="inherit_id" ref="ai_connector.ai_completion_view_form"/>
+        <field name="arch" type="xml">
+            <group name="params_left" position="inside">
+                <field name="ai_provider" invisible="1"/>
+                <field name="n" invisible="ai_provider != 'openai'"/>
+                <field name="stop" invisible="ai_provider != 'openai'"/>
+            </group>
+            <group name="params_right">
+                <field name="frequency_penalty" invisible="ai_provider != 'openai'"/>
+                <field name="presence_penalty" invisible="ai_provider != 'openai'"/>
+            </group>
+        </field>
+    </record>
+</odoo>

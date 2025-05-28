@@ -1,0 +1,19 @@
+# Copyright (C) 2024 - Michel Perrocheau (https://github.com/myrrkel).
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+
+from odoo import models, fields, api, _
+import logging
+
+_logger = logging.getLogger(__name__)
+
+
+class ResPartner(models.Model):
+    _inherit = 'res.partner'
+
+    is_ai_bot = fields.Boolean('Is AI Bot')
+
+    def _compute_im_status(self):
+        super(ResPartner, self)._compute_im_status()
+        ai_bot_user_id = self.env['ir.model.data']._xmlid_to_res_id('ai_chat.partner_ai')
+        for user in self.filtered(lambda u: u.id == ai_bot_user_id):
+            user.im_status = 'online'

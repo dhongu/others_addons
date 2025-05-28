@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="ai_completion_view_form" model="ir.ui.view">
+        <field name="name">ai.completion.view.form</field>
+        <field name="model">ai.completion</field>
+        <field name="arch" type="xml">
+            <form string="AI Completion">
+                <sheet>
+                    <header>
+                        <button name="run" type="object"
+                                string="Run Completion" class="btn-primary" data-hotkey="r"/>
+                    </header>
+                    <group name="top">
+                        <group name="top_left">
+                            <field name="name"/>
+                            <field name="model_id"/>
+                            <field name="domain"/>
+                            <field name="save_on_target_field"/>
+                            <field name="save_answer"/>
+                            <field name="add_completion_action_menu"/>
+                        </group>
+                        <group name="top_right">
+                            <field name="active" widget="boolean_toggle"/>
+                            <field name="target_field_id" domain="[('model_id', '=', model_id)]"/>
+                            <field name="answer_lang_id" context="{'active_test': False}"/>
+                            <field name="response_format"/>
+                            <field name="post_process"/>
+                        </group>
+                    </group>
+
+                    <group name="params" string="AI Parameters">
+                        <group name="params_left">
+                            <field name="ai_provider_id"/>
+                            <field name="ai_model_id" domain="[('ai_provider_id', '=', ai_provider_id)]"/>
+                            <field name="temperature"/>
+                        </group>
+                        <group name="params_right">
+                            <field name="max_tokens"/>
+                            <field name="top_p"/>
+                        </group>
+                    </group>
+
+                    <group name="middle">
+                        <group>
+                            <field name="system_template_id" domain="[('type', '=', 'qweb')]"/>
+                        </group>
+                        <field name="system_template" widget="ace" options="{'mode': 'xml'}"
+                               invisible="system_template_id != False"/>
+                    </group>
+
+                    <group name="tools" string="AI Tools (Function Calling)">
+                        <field name="tool_ids">
+                            <tree string="Tools">
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </group>
+
+                    <group name="bottom">
+                        <group>
+                            <field name="prompt_template_id" domain="[('type', '=', 'qweb')]"/>
+                        </group>
+                        <field name="prompt_template" widget="ace" options="{'mode': 'xml'}"
+                               invisible="prompt_template_id != False"/>
+                    </group>
+
+                    <div class="oe_edit_only alert alert-info alert-info-center mt-3" role="alert">
+                        <b>Available in prompt template:</b><br/>
+                        object : Current record<br/>
+                        answer_lang : Language name<br/>
+                        html2plaintext : Convert html to text
+                    </div>
+
+
+                    <group name="tests" col="1">
+                        <button name="run_test_prompt" type="object"
+                                string="Test Prompt" class="btn btn-primary btn-center" icon="fa-terminal"/>
+                        <group col="2">
+                            <field name="test_prompt"/>
+                        </group>
+
+                        <button name="run_test_completion" type="object"
+                                string="Test Completion" class="btn btn-primary btn-center" icon="fa-cogs"/>
+                        <group col="2">
+                            <field name="test_answer"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ai_completion_view_tree" model="ir.ui.view">
+        <field name="name">ai.completion.view.tree</field>
+        <field name="model">ai.completion</field>
+        <field name="arch" type="xml">
+            <tree string="AI Completion">
+                <field name="name"/>
+                <field name="ai_provider_id"/>
+                <field name="ai_model_id"/>
+                <field name="model_id"/>
+                <field name="target_field_id"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ai_completion_view_search" model="ir.ui.view">
+        <field name="name">ai.completion.view.search</field>
+        <field name="model">ai.completion</field>
+        <field name="arch" type="xml">
+            <search string="Search AI Completion">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="ai_completion_action" model="ir.actions.act_window">
+        <field name="name">AI Completions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ai.completion</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="ai_completion_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new AI Completion
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_ai_completion" name="AI Completion"
+              action="ai_completion_action"
+              sequence="3"
+              parent="ai_connector.menu_ai"/>
+</odoo>

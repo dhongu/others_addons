@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="ai_fine_tuning_view_form" model="ir.ui.view">
+        <field name="name">ai.fine.tuning.view.form</field>
+        <field name="model">ai.fine.tuning</field>
+        <field name="arch" type="xml">
+            <form string="OpenAI Fine-Tunings">
+                <header>
+                    <button name="action_create_fine_tuning" string="Create Fine-Tuning Job" type="object"
+                            title="Create Fine-Tuning Job" class="btn-primary" icon="fa-cogs"
+                            invisible="training_file_id != False"/>
+                    <button name="update_fine_tuned_model" string="Update Job Status" type="object"
+                            title="Update Job Status" class="btn-primary" icon="fa-refresh"
+                            invisible="fine_tuning_job_id == False"/>
+                </header>
+                <sheet>
+                    <group name="top">
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group/>
+                        <group name="top_left">
+                            <field name="ai_provider_id"/>
+                            <field name="question_answer_domain" string="Domain"/>
+                            <field name="training_steps"/>
+                        </group>
+                        <group name="top_right">
+                            <field name="ai_model_id"/>
+                            <field name="question_answer_tag_ids" widget="many2many_tags"
+                                   options="{'color_field': 'color'}"/>
+                            <field name="learning_rate"/>
+                        </group>
+                    </group>
+
+                    <group col="2">
+                        <field name="system_role_content"/>
+                    </group>
+
+                    <group name="top2">
+                        <group name="top2_left">
+                            <field name="training_file_id"/>
+                            <field name="job_status"/>
+
+                        </group>
+                        <group name="top2_right">
+                            <field name="fine_tuning_job_id"/>
+                            <field name="fine_tuned_model"/>
+                        </group>
+                    </group>
+
+                    <group name="question_answer" col="1">
+                        <field name="graph_checkpoints" widget="fine_tuning_graph" width="80%"
+                               invisible="graph_checkpoints == False"/>
+
+                        <group col="2">
+                            <field name="question_answer_ids"
+                                   invisible="training_file_id != False">
+                                <tree name="question_answer" limit="10" default_order="id desc">
+                                    <field name="model_id"/>
+                                    <field name="resource_ref"/>
+                                    <field name="answer_completion_id"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </group>
+                    <group name="training_question_answer" col="1">
+                        <group col="2">
+                            <field name="training_question_answer_ids"
+                                   invisible="training_file_id == False">
+                                <tree name="training_question_answer" limit="10" default_order="id desc">
+                                    <field name="model_id"/>
+                                    <field name="resource_ref"/>
+                                    <field name="answer_completion_id"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ai_fine_tuning_view_tree" model="ir.ui.view">
+        <field name="name">ai.fine.tuning.view.tree</field>
+        <field name="model">ai.fine.tuning</field>
+        <field name="arch" type="xml">
+            <tree string="AI Fine-Tunings">
+                <field name="name"/>
+                <field name="job_status"/>
+                <field name="ai_provider_id"/>
+                <field name="ai_model_id"/>
+                <field name="question_answer_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="question_answer_domain" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ai_fine_tuning_action" model="ir.actions.act_window">
+        <field name="name">AI Fine-Tunings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ai.fine.tuning</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No AI Fine-Tunings
+            </p>
+        </field>
+    </record>
+
+    <record id="ai_create_training_file_action" model="ir.actions.server">
+        <field name="name">Create Training File</field>
+        <field name="model_id" ref="ai_connector.model_ai_fine_tuning"/>
+        <field name="binding_model_id" ref="ai_connector.model_ai_fine_tuning"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_create_training_file()</field>
+    </record>
+
+    <record id="ai_create_fine_tuning_action" model="ir.actions.server">
+        <field name="name">Create Fine-Tuning</field>
+        <field name="model_id" ref="ai_connector.model_ai_fine_tuning"/>
+        <field name="binding_model_id" ref="ai_connector.model_ai_fine_tuning"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_create_fine_tuning()</field>
+    </record>
+
+    <record id="ai_update_fine_tuned_model_action" model="ir.actions.server">
+        <field name="name">Update Fine-Tuned Model</field>
+        <field name="model_id" ref="ai_connector.model_ai_fine_tuning"/>
+        <field name="binding_model_id" ref="ai_connector.model_ai_fine_tuning"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_update_fine_tuned_model()</field>
+    </record>
+
+    <menuitem id="menu_ai_fine_tuning" name="AI Fine-Tunings"
+              action="ai_fine_tuning_action"
+              sequence="7"
+              parent="ai_connector.menu_ai"/>
+</odoo>

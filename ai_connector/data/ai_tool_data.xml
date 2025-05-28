@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record model="ai.tool" id="search_question_answer">
+        <field name="name">search_question_answer</field>
+        <field name="description">Search by keywords in the frequently asked questions database. Returns a list of questions with their answers</field>
+        <field name="type">function</field>
+        <field name="model_id" ref="ai_connector.model_ai_question_answer"/>
+        <field name="property_ids">
+            <record model="ai.tool.property" id="search_question_answer_property_1">
+                <field name="name">keywords</field>
+                <field name="description">The keywords to search for in the frequently asked questions database as a list of comma separated keywords.</field>
+                <field name="type">string</field>
+                <field name="required">true</field>
+            </record>
+        </field>
+    </record>
+
+</odoo>

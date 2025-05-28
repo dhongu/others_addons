@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="ai_question_answer_view_form" model="ir.ui.view">
+        <field name="name">ai.question.answer.view.form</field>
+        <field name="model">ai.question.answer</field>
+        <field name="arch" type="xml">
+            <form string="AI Question Answers">
+                <sheet>
+                    <group name="top">
+                        <field name="resource_ref" class="oe_inline"/>
+                        <group name="top_left">
+                            <field name="answer_completion_id"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        </group>
+                    </group>
+
+                    <group name="result" col="1">
+                        <group col="2">
+                            <field name="name"/>
+                            <field name="answer"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ai_question_answer_view_tree" model="ir.ui.view">
+        <field name="name">ai.question.answer.view.tree</field>
+        <field name="model">ai.question.answer</field>
+        <field name="arch" type="xml">
+            <tree string="AI Question Answers">
+                <field name="model_id"/>
+                <field name="resource_ref"/>
+                <field name="answer_completion_id"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="name" optional="hide"/>
+                <field name="answer" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ai_question_answer_view_search" model="ir.ui.view">
+        <field name="name">ai.question.answer.view.search</field>
+        <field name="model">ai.question.answer</field>
+        <field name="arch" type="xml">
+            <search string="AI Question Answers">
+                <field name="name"/>
+                <field name="tag_ids"/>
+                <field name="answer_completion_id"/>
+                <field name="model_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Completion" name="group_by_answer_completion_id" domain="[]"
+                            context="{'group_by': 'answer_completion_id'}"/>
+                    <filter string="Model" name="group_by_model_id" domain="[]"
+                            context="{'group_by': 'model_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="ai_question_answer_action" model="ir.actions.act_window">
+        <field name="name">AI Question Answers</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ai.question.answer</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No AI Question Answers
+            </p>
+        </field>
+    </record>
+
+    <record id="ai_answer_question_action" model="ir.actions.server">
+        <field name="name">Answer Question</field>
+        <field name="model_id" ref="ai_connector.model_ai_question_answer"/>
+        <field name="binding_model_id" ref="ai_connector.model_ai_question_answer"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_answer_question()</field>
+    </record>
+
+    <menuitem id="menu_ai_question_answer" name="AI Question Answers"
+              action="ai_question_answer_action"
+              sequence="5"
+              parent="ai_connector.menu_ai"/>
+</odoo>

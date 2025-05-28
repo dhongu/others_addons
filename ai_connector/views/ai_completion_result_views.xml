@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="ai_completion_result_view_form" model="ir.ui.view">
+        <field name="name">ai.completion.result.view.form</field>
+        <field name="model">ai.completion.result</field>
+        <field name="arch" type="xml">
+            <form string="AI Completion Result">
+                <sheet>
+                    <header>
+                        <button name="action_apply" type="object"
+                                string="Apply Completion" class="btn-primary"/>
+                    </header>
+                    <group name="top">
+                        <group name="top_left">
+                            <field name="completion_id"/>
+                            <field name="resource_ref"/>
+                            <field name="prompt_tokens"/>
+                            <field name="total_tokens"/>
+                        </group>
+                        <group name="top_right">
+                            <field name="model_id"/>
+                            <field name="target_field_id"/>
+                            <field name="completion_tokens"/>
+                        </group>
+                    </group>
+
+                    <group name="result" col="1">
+                        <group col="2">
+                            <field name="answer"/>
+                            <field name="origin_answer" invisible="origin_answer == False"/>
+                            <field name="prompt"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ai_completion_result_view_tree" model="ir.ui.view">
+        <field name="name">ai.completion.result.view.tree</field>
+        <field name="model">ai.completion.result</field>
+        <field name="arch" type="xml">
+            <tree string="AI Completion Results" create="false">
+                <field name="completion_id"/>
+                <field name="model_id"/>
+                <field name="target_field_id"/>
+                <field name="resource_ref"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ai_completion_result_simple_view_tree" model="ir.ui.view">
+        <field name="name">ai.completion.result.simple.view.tree</field>
+        <field name="model">ai.completion.result</field>
+        <field name="arch" type="xml">
+            <tree string="AI Completion Results" create="false">
+                <field name="resource_ref"/>
+                <field name="name"/>
+                <field name="completion_id" optional="hide"/>
+                <field name="model_id" optional="hide"/>
+                <field name="answer" optional="hide"/>
+                <button name="action_apply" type="object"
+                        string="Apply" class="btn-primary"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ai_completion_result_view_search" model="ir.ui.view">
+        <field name="name">ai.completion.result.view.search</field>
+        <field name="model">ai.completion.result</field>
+        <field name="arch" type="xml">
+            <search string="Search Completion Result">
+                <field name="name"/>
+                <group expand="0" string="Group By">
+                    <filter string="Completion" name="group_by_completion_id" domain="[]"
+                            context="{'group_by': 'completion_id'}"/>
+                    <filter string="Model" name="group_by_model_id" domain="[]"
+                            context="{'group_by': 'model_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="ai_completion_result_action" model="ir.actions.act_window">
+        <field name="name">AI Completion Results</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ai.completion.result</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No AI Completion Result
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_ai_completion_result" name="AI Completion Results"
+              action="ai_completion_result_action"
+              sequence="4"
+              parent="ai_connector.menu_ai"/>
+</odoo>

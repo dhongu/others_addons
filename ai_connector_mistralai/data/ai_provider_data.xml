@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record model="ai.provider" id="mistralai">
+        <field name="name">Mistral AI</field>
+        <field name="code">mistralai</field>
+    </record>
+
+</odoo>

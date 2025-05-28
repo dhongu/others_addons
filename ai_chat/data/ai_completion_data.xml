@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="completion_chat" model="ai.completion">
+            <field name="name">AI Chat</field>
+            <field name="model_id" ref="mail.model_discuss_channel"/>
+            <field name="domain">[]</field>
+            <field name="max_tokens">4096</field>
+            <field name="temperature">1</field>
+            <field name="top_p">1</field>
+            <field name="system_template">Your name is Odoo AI Bot. You are an expert of Odoo. You help Odoo users and developers. Your answers are precise and technical.</field>
+        </record>
+    </data>
+</odoo>

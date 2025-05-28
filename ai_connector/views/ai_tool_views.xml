@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="ai_tool_view_form" model="ir.ui.view">
+        <field name="name">ai.tool.view.form</field>
+        <field name="model">ai.tool</field>
+        <field name="arch" type="xml">
+            <form string="AI Tool">
+                <sheet>
+                    <group name="top">
+                        <field name="name"/>
+                        <field name="description"/>
+                        <field name="model_id"/>
+                        <field name="type"/>
+                    </group>
+
+                    <group name="result" col="1">
+                        <group col="2">
+                            <field name="property_ids" context="{'tool_id': id}">
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="tool_id" invisible="1"/>
+                                            <field name="name"/>
+                                            <field name="type"/>
+                                            <field name="description"/>
+                                            <field name="required"/>
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                            <field name="required_property_ids"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ai_tool_view_tree" model="ir.ui.view">
+        <field name="name">ai.tool.view.tree</field>
+        <field name="model">ai.tool</field>
+        <field name="arch" type="xml">
+            <tree string="AI Tools">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ai_tool_action" model="ir.actions.act_window">
+        <field name="name">AI Tools</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ai.tool</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No AI Tool
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_ai_tool" name="AI Tools"
+              action="ai_tool_action"
+              sequence="6"
+              parent="ai_connector.menu_ai"/>
+</odoo>

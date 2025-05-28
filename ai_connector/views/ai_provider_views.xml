@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="ai_provider_view_form" model="ir.ui.view">
+        <field name="name">ai.provider.view.form</field>
+        <field name="model">ai.provider</field>
+        <field name="arch" type="xml">
+            <form string="AI Provider">
+                <sheet>
+                    <group name="top">
+                        <group name="top_left">
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="api_key" password="True"/>
+                            <field name="base_url"/>
+                            <field name="organization_id"/>
+                        </group>
+                        <group name="top_right">
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <group name="buttons">
+                        <group name="top_left" col="1">
+                            <button name="action_load_ai_models" string="Load AI Models"
+                                    type="object" class="oe_highlight"/>
+                        </group>
+                    </group>
+                    <group name="bottom" string="AI Models" col="1">
+                        <group col="1">
+                            <field name="ai_model_ids" string=""/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ai_provider_view_tree" model="ir.ui.view">
+        <field name="name">ai.provider.view.tree</field>
+        <field name="model">ai.provider</field>
+        <field name="arch" type="xml">
+            <tree string="AI Provider" default_order="sequence">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ai_provider_view_search" model="ir.ui.view">
+        <field name="name">ai.provider.view.search</field>
+        <field name="model">ai.provider</field>
+        <field name="arch" type="xml">
+            <search string="Search AI Provider">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="ai_provider_action" model="ir.actions.act_window">
+        <field name="name">AI Providers</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ai.provider</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="ai_provider_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new AI Provider
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_ai" name="AI" parent="base.menu_custom" sequence="25"/>
+    <menuitem id="menu_ai_provider" name="AI Provider"
+              action="ai_provider_action"
+              sequence="1"
+              parent="ai_connector.menu_ai"/>
+</odoo>

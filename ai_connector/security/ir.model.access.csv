@@ -1,0 +1,19 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+access_ai_provider_user,access_ai_provider user,ai_connector.model_ai_provider,base.group_user,1,0,0,0
+access_ai_provider_admin,access_ai_provider admin,ai_connector.model_ai_provider,base.group_erp_manager,1,1,1,1
+access_ai_model_user,access_ai_model user,ai_connector.model_ai_model,base.group_user,1,0,0,0
+access_ai_model_admin,access_ai_model admin,ai_connector.model_ai_model,base.group_erp_manager,1,1,1,1
+access_ai_completion_user,access_ai_completion user,ai_connector.model_ai_completion,base.group_user,1,0,0,0
+access_ai_completion_admin,access_ai_completion admin,ai_connector.model_ai_completion,base.group_erp_manager,1,1,1,1
+access_ai_completion_result_user,access_ai_completion_result user,ai_connector.model_ai_completion_result,base.group_user,1,1,1,1
+access_ai_tool_user,access_ai_tool user,ai_connector.model_ai_tool,base.group_user,1,0,0,0
+access_ai_tool_admin,access_ai_tool admin,ai_connector.model_ai_tool,base.group_erp_manager,1,1,1,1
+access_ai_tool_property_user,access_ai_tool_property user,ai_connector.model_ai_tool_property,base.group_user,1,0,0,0
+access_ai_tool_property_admin,access_ai_tool_property admin,ai_connector.model_ai_tool_property,base.group_erp_manager,1,1,1,1
+access_ai_question_answer_user,access_ai_question_answer user,ai_connector.model_ai_question_answer,base.group_user,1,1,1,1
+access_ai_question_answer_tag_user,access_ai_question_answer_tag user,ai_connector.model_ai_question_answer_tag,base.group_user,1,0,0,0
+access_ai_question_answer_tag_admin,access_ai_question_answer_tag admin,ai_connector.model_ai_question_answer_tag,base.group_erp_manager,1,1,1,1
+access_create_question_answer_wizard_admin,access_create_question_answer_wizard admin,ai_connector.model_create_question_answer_wizard,base.group_erp_manager,1,1,1,0
+access_question_answer_dump_wizard_admin,access_question_answer_dump_wizard admin,ai_connector.model_question_answer_dump_wizard,base.group_erp_manager,1,1,1,0
+access_ai_fine_tuning_user,access_ai_fine_tuning user,ai_connector.model_ai_fine_tuning,base.group_user,1,0,0,0
+access_ai_fine_tuning_admin,access_ai_fine_tuning admin,ai_connector.model_ai_fine_tuning,base.group_erp_manager,1,1,1,1

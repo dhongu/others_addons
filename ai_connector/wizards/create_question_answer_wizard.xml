@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="create_question_answer_wizard_view" model="ir.ui.view">
+        <field name="name">Create Question Answer</field>
+        <field name="model">create.question.answer.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create Question Answer">
+                <group>
+                    <field name="answer_type"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                </group>
+                <footer>
+                    <button string="Create Question Answer" name="create_question_answer"
+                            type="object" class="btn-primary" />
+                    <button string="Cancel" class="btn-default" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_create_question_answer_wizard" model="ir.actions.act_window">
+        <field name="name">Create Question Answer</field>
+        <field name="res_model">create.question.answer.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="binding_model_id" ref="ai_connector.model_ai_completion_result"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

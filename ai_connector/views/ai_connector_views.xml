@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <menuitem
+        id="root_ai_connector"
+        name="AI Tools"
+        sequence="6"
+        web_icon="ai_connector,static/description/icon.png"
+        groups="base.group_system"
+    />
+    <menuitem
+        id="main_menu_ai_model"
+        name="Completions"
+        parent="root_ai_connector"
+        sequence="0"
+    />
+    <menuitem
+        id="main_menu_ai_provider"
+        name="Providers"
+        parent="root_ai_connector"
+        action="ai_provider_action"
+        sequence="0"
+    />
+    <menuitem
+        id="main_menu_ai_completion"
+        name="Completions"
+        parent="root_ai_connector"
+        sequence="1"
+    />
+    <menuitem
+        id="main_menu_question_answer"
+        name="Question Answers"
+        parent="root_ai_connector"
+        action="ai_question_answer_action"
+        sequence="2"
+    />
+    <menuitem
+        id="main_menu_ai_fine_tuning"
+        name="Fine-Tunings"
+        parent="root_ai_connector"
+        action="ai_fine_tuning_action"
+        sequence="3"
+    />
+    <menuitem
+        id="main_menu_ai_model"
+        name="Models"
+        parent="root_ai_connector"
+        action="ai_model_action"
+        sequence="4"
+    />
+    <menuitem
+        id="menu_ai_completion"
+        name="Completions"
+        parent="main_menu_ai_completion"
+        action="ai_completion_action"
+        sequence="0"
+    />
+    <menuitem
+        id="menu_ai_completion_result"
+        name="Completion Results"
+        parent="main_menu_ai_completion"
+        action="ai_completion_result_action"
+        sequence="1"
+    />
+    <menuitem
+        id="menu_ai_completion_tools"
+        name="Completion Tools"
+        parent="main_menu_ai_completion"
+        action="ai_tool_action"
+        sequence="2"
+    />
+
+</odoo>
