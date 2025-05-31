@@ -40,13 +40,13 @@ class DateRange(models.Model):
         store=True,
     )
 
-    _sql_constraints = [
-        (
-            "date_range_uniq",
-            "unique (name,type_id, company_id)",
-            "A date range must be unique per company !",
-        )
-    ]
+    # _sql_constraints = [
+    #     (
+    #         "date_range_uniq",
+    #         "unique (name,type_id, company_id)",
+    #         "A date range must be unique per company !",
+    #     )
+    # ]
 
     @api.depends("type_id.active")
     def _compute_active(self):
