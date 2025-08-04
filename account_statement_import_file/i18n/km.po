@@ -78,6 +78,12 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_statement_import_file
+#. odoo-python
+#: code:addons/account_statement_import_file/models/account_journal.py:0
+msgid "Import (OCA) (%s)"
+msgstr ""
+
+#. module: account_statement_import_file
 #: model:ir.actions.act_window,name:account_statement_import_file.account_statement_import_action
 #, fuzzy
 msgid "Import Bank Statement File"
@@ -227,31 +233,3 @@ msgid ""
 "You have already imported this file, or this file only contains already "
 "imported transactions."
 msgstr ""
-
-#~ msgid "Last Modified on"
-#~ msgstr "កាលបរិច្ឆេតកែប្រែចុងក្រោយ"
-
-#~ msgid "or"
-#~ msgstr "ឬ​"
-
-#, fuzzy
-#~ msgid "Partner Bank Account"
-#~ msgstr "គណនីធនាគារ"
-
-#~ msgid "Active"
-#~ msgstr "សកម្ម"
-
-#~ msgid "Bank"
-#~ msgstr "ធនាគារ"
-
-#~ msgid "Company"
-#~ msgstr "ក្រុមហ៊ុន"
-
-#~ msgid "Currency"
-#~ msgstr "រូបិយវត្ថុ"
-
-#~ msgid "Sequence"
-#~ msgstr "លំដាប់"
-
-#~ msgid "Type"
-#~ msgstr "ប្រភេទ"
