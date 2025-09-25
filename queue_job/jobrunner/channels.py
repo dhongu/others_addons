@@ -2,6 +2,7 @@
 # Copyright 2015-2016 Camptocamp SA
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html)
 import logging
+from collections import namedtuple
 from functools import total_ordering
 from heapq import heappop, heappush
 from weakref import WeakValueDictionary
@@ -10,6 +11,7 @@ from ..exception import ChannelNotFound
 from ..job import CANCELLED, DONE, ENQUEUED, FAILED, PENDING, STARTED, WAIT_DEPENDENCIES
 
 NOT_DONE = (WAIT_DEPENDENCIES, PENDING, ENQUEUED, STARTED, FAILED)
+JobSortingKey = namedtuple("SortingKey", "eta priority date_created seq")
 
 _logger = logging.getLogger(__name__)
 
@@ -75,8 +77,7 @@ class PriorityQueue:
     def add(self, o):
         if o is None:
             raise ValueError()
-        if o in self._removed:
-            self._removed.remove(o)
+        self._removed.discard(o)
         if o in self._known:
             return
         self._known.add(o)
@@ -87,8 +88,7 @@ class PriorityQueue:
             raise ValueError()
         if o not in self._known:
             return
-        if o not in self._removed:
-            self._removed.add(o)
+        self._removed.add(o)
 
     def pop(self):
         while True:
@@ -104,31 +104,13 @@ class PriorityQueue:
                 return o
 
 
-class SafeSet(set):
-    """A set that does not raise KeyError when removing non-existent items.
-
-    >>> s = SafeSet()
-    >>> s.remove(1)
-    >>> len(s)
-    0
-    >>> s.remove(1)
-    """
-
-    def remove(self, o):
-        # pylint: disable=missing-return,except-pass
-        try:
-            super().remove(o)
-        except KeyError:
-            pass
-
-
 @total_ordering
 class ChannelJob:
     """A channel job is attached to a channel and holds the properties of a
     job that are necessary to prioritise them.
 
     Channel jobs are comparable according to the following rules:
-        * jobs with an eta come before all other jobs
+        * jobs with an eta cannot be compared with jobs without
         * then jobs with a smaller eta come first
         * then jobs with a smaller priority come first
         * then jobs with a smaller creation time come first
@@ -155,14 +137,18 @@ class ChannelJob:
     >>> j3 < j1
     True
 
-    j4 and j5 comes even before j3, because they have an eta
+    j4 and j5 have an eta, they cannot be compared with j3
 
     >>> j4 = ChannelJob(None, None, 4,
     ...                 seq=0, date_created=4, priority=9, eta=9)
     >>> j5 = ChannelJob(None, None, 5,
     ...                 seq=0, date_created=5, priority=9, eta=9)
-    >>> j4 < j5 < j3
+    >>> j4 < j5
     True
+    >>> j4 < j3
+    Traceback (most recent call last):
+     ...
+    TypeError: '<' not supported between instances of 'int' and 'NoneType'
 
     j6 has same date_created and priority as j5 but a smaller eta
 
@@ -173,7 +159,7 @@ class ChannelJob:
 
     Here is the complete suite:
 
-    >>> j6 < j4 < j5 < j3 < j1 < j2
+    >>> j6 < j4 < j5 and j3 < j1 < j2
     True
 
     j0 has the same properties as j1 but they are not considered
@@ -193,14 +179,13 @@ class ChannelJob:
 
     """
 
+    __slots__ = ("db_name", "channel", "uuid", "_sorting_key", "__weakref__")
+
     def __init__(self, db_name, channel, uuid, seq, date_created, priority, eta):
         self.db_name = db_name
         self.channel = channel
         self.uuid = uuid
-        self.seq = seq
-        self.date_created = date_created
-        self.priority = priority
-        self.eta = eta
+        self._sorting_key = JobSortingKey(eta, priority, date_created, seq)
 
     def __repr__(self):
         return f"<ChannelJob {self.uuid}>"
@@ -211,18 +196,36 @@ class ChannelJob:
     def __hash__(self):
         return id(self)
 
+    def set_no_eta(self):
+        self._sorting_key = JobSortingKey(None, *self._sorting_key[1:])
+
+    @property
+    def seq(self):
+        return self._sorting_key.seq
+
+    @property
+    def date_created(self):
+        return self._sorting_key.date_created
+
+    @property
+    def priority(self):
+        return self._sorting_key.priority
+
+    @property
+    def eta(self):
+        return self._sorting_key.eta
+
     def sorting_key(self):
-        return self.eta, self.priority, self.date_created, self.seq
+        # DEPRECATED
+        return self._sorting_key
 
     def sorting_key_ignoring_eta(self):
-        return self.priority, self.date_created, self.seq
+        return self._sorting_key[1:]
 
     def __lt__(self, other):
-        if self.eta and not other.eta:
-            return True
-        elif not self.eta and other.eta:
-            return False
-        return self.sorting_key() < other.sorting_key()
+        # Do not compare job where ETA is set with job where it is not
+        # If one job 'eta' is set, and the other is None, it raises TypeError
+        return self._sorting_key < other._sorting_key
 
 
 class ChannelQueue:
@@ -332,7 +335,7 @@ class ChannelQueue:
     def pop(self, now):
         while self._eta_queue and self._eta_queue[0].eta <= now:
             eta_job = self._eta_queue.pop()
-            eta_job.eta = None
+            eta_job.set_no_eta()
             self._queue.add(eta_job)
         if self.sequential and self._eta_queue and self._queue:
             eta_job = self._eta_queue[0]
@@ -408,8 +411,8 @@ class Channel:
             self.parent.children[name] = self
         self.children = {}
         self._queue = ChannelQueue()
-        self._running = SafeSet()
-        self._failed = SafeSet()
+        self._running = set()
+        self._failed = set()
         self._pause_until = 0  # utc seconds since the epoch
         self.capacity = capacity
         self.throttle = throttle  # seconds
@@ -463,8 +466,8 @@ class Channel:
     def remove(self, job):
         """Remove a job from the channel."""
         self._queue.remove(job)
-        self._running.remove(job)
-        self._failed.remove(job)
+        self._running.discard(job)
+        self._failed.discard(job)
         if self.parent:
             self.parent.remove(job)
 
@@ -484,8 +487,8 @@ class Channel:
         """
         if job not in self._queue:
             self._queue.add(job)
-            self._running.remove(job)
-            self._failed.remove(job)
+            self._running.discard(job)
+            self._failed.discard(job)
             if self.parent:
                 self.parent.remove(job)
             _logger.debug("job %s marked pending in channel %s", job.uuid, self)
@@ -498,7 +501,7 @@ class Channel:
         if job not in self._running:
             self._queue.remove(job)
             self._running.add(job)
-            self._failed.remove(job)
+            self._failed.discard(job)
             if self.parent:
                 self.parent.set_running(job)
             _logger.debug("job %s marked running in channel %s", job.uuid, self)
@@ -507,7 +510,7 @@ class Channel:
         """Mark the job as failed."""
         if job not in self._failed:
             self._queue.remove(job)
-            self._running.remove(job)
+            self._running.discard(job)
             self._failed.add(job)
             if self.parent:
                 self.parent.remove(job)

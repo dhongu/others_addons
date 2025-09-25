@@ -11,7 +11,8 @@ from io import StringIO
 from psycopg2 import OperationalError, errorcodes
 from werkzeug.exceptions import BadRequest, Forbidden
 
-from odoo import SUPERUSER_ID, _, api, http, registry
+from odoo import SUPERUSER_ID, _, api, http
+from odoo.modules.registry import Registry
 from odoo.service.model import PG_CONCURRENCY_ERRORS_TO_RETRY
 
 from ..delay import chain, group
@@ -31,6 +32,8 @@ class RunJobController(http.Controller):
         job.set_started()
         job.store()
         env.cr.commit()
+        job.lock()
+
         _logger.debug("%s started", job)
 
         job.perform()
@@ -72,14 +75,20 @@ class RunJobController(http.Controller):
             else:
                 break
 
-    @http.route("/queue_job/runjob", type="http", auth="none", save_session=False)
+    @http.route(
+        "/queue_job/runjob",
+        type="http",
+        auth="none",
+        save_session=False,
+        readonly=False,
+    )
     def runjob(self, db, job_uuid, **kw):
         http.request.session.db = db
         env = http.request.env(user=SUPERUSER_ID)
 
         def retry_postpone(job, message, seconds=None):
             job.env.clear()
-            with registry(job.env.cr.dbname).cursor() as new_cr:
+            with Registry(job.env.cr.dbname).cursor() as new_cr:
                 job.env = api.Environment(new_cr, SUPERUSER_ID, {})
                 job.postpone(result=message, seconds=seconds)
                 job.set_pending(reset_retry=False)
@@ -130,7 +139,7 @@ class RunJobController(http.Controller):
             traceback_txt = buff.getvalue()
             _logger.error(traceback_txt)
             job.env.clear()
-            with registry(job.env.cr.dbname).cursor() as new_cr:
+            with Registry(job.env.cr.dbname).cursor() as new_cr:
                 job.env = job.env(cr=new_cr)
                 vals = self._get_failure_values(job, traceback_txt, orig_exception)
                 job.set_failed(**vals)
@@ -149,7 +158,9 @@ class RunJobController(http.Controller):
         exception_name = orig_exception.__class__.__name__
         if hasattr(orig_exception, "__module__"):
             exception_name = orig_exception.__module__ + "." + exception_name
-        exc_message = getattr(orig_exception, "name", str(orig_exception))
+        exc_message = (
+            orig_exception.args[0] if orig_exception.args else str(orig_exception)
+        )
         return {
             "exc_info": traceback_txt,
             "exc_name": exception_name,

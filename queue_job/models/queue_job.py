@@ -6,8 +6,7 @@ import random
 from datetime import datetime, timedelta
 
 from odoo import _, api, exceptions, fields, models
-from odoo.osv import expression
-from odoo.tools import config, html_escape
+from odoo.tools import config, html_escape, index_exists
 
 from odoo.addons.base_sparse_field.models.fields import Serialized
 
@@ -89,7 +88,7 @@ class QueueJob(models.Model):
     func_string = fields.Char(string="Task", readonly=True)
 
     state = fields.Selection(STATES, readonly=True, required=True, index=True)
-    priority = fields.Integer()
+    priority = fields.Integer(aggregator=False)
     exc_name = fields.Char(string="Exception", readonly=True)
     exc_message = fields.Char(string="Exception Message", readonly=True, tracking=True)
     exc_info = fields.Text(string="Exception Info", readonly=True)
@@ -128,15 +127,20 @@ class QueueJob(models.Model):
     worker_pid = fields.Integer(readonly=True)
 
     def init(self):
-        self._cr.execute(
-            "SELECT indexname FROM pg_indexes WHERE indexname = %s ",
-            ("queue_job_identity_key_state_partial_index",),
-        )
-        if not self._cr.fetchone():
+        index_1 = "queue_job_identity_key_state_partial_index"
+        index_2 = "queue_job_channel_date_done_date_created_index"
+        if not index_exists(self._cr, index_1):
+            # Used by Job.job_record_with_same_identity_key
             self._cr.execute(
                 "CREATE INDEX queue_job_identity_key_state_partial_index "
                 "ON queue_job (identity_key) WHERE state in ('pending', "
                 "'enqueued', 'wait_dependencies') AND identity_key IS NOT NULL;"
+            )
+        if not index_exists(self._cr, index_2):
+            # Used by <queue.job>.autovacuum
+            self._cr.execute(
+                "CREATE INDEX queue_job_channel_date_done_date_created_index "
+                "ON queue_job (channel, date_done, date_created);"
             )
 
     @api.depends("dependencies")
@@ -230,13 +234,8 @@ class QueueJob(models.Model):
             record.graph_jobs_count = count_per_graph_uuid.get(record.graph_uuid) or 0
 
     @api.model_create_multi
+    @api.private
     def create(self, vals_list):
-        if self.env.context.get("_job_edit_sentinel") is not self.EDIT_SENTINEL:
-            # Prevent to create a queue.job record "raw" from RPC.
-            # ``with_delay()`` must be used.
-            raise exceptions.AccessError(
-                _("Queue jobs must be created by calling 'with_delay()'.")
-            )
         return super(
             QueueJob,
             self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True),
@@ -399,6 +398,7 @@ class QueueJob(models.Model):
                         ("date_cancelled", "<=", deadline),
                         ("channel", "=", channel.complete_name),
                     ],
+                    order="date_done, date_created",
                     limit=1000,
                 )
                 if jobs:
@@ -408,55 +408,6 @@ class QueueJob(models.Model):
                 else:
                     break
         return True
-
-    def requeue_stuck_jobs(self, enqueued_delta=5, started_delta=0):
-        """Fix jobs that are in a bad states
-
-        :param in_queue_delta: lookup time in minutes for jobs
-                                that are in enqueued state
-
-        :param started_delta: lookup time in minutes for jobs
-                                that are in enqueued state,
-                                0 means that it is not checked
-        """
-        self._get_stuck_jobs_to_requeue(
-            enqueued_delta=enqueued_delta, started_delta=started_delta
-        ).requeue()
-        return True
-
-    def _get_stuck_jobs_domain(self, queue_dl, started_dl):
-        domain = []
-        now = fields.datetime.now()
-        if queue_dl:
-            queue_dl = now - timedelta(minutes=queue_dl)
-            domain.append(
-                [
-                    "&",
-                    ("date_enqueued", "<=", fields.Datetime.to_string(queue_dl)),
-                    ("state", "=", "enqueued"),
-                ]
-            )
-        if started_dl:
-            started_dl = now - timedelta(minutes=started_dl)
-            domain.append(
-                [
-                    "&",
-                    ("date_started", "<=", fields.Datetime.to_string(started_dl)),
-                    ("state", "=", "started"),
-                ]
-            )
-        if not domain:
-            raise exceptions.ValidationError(
-                _("If both parameters are 0, ALL jobs will be requeued!")
-            )
-        return expression.OR(domain)
-
-    def _get_stuck_jobs_to_requeue(self, enqueued_delta, started_delta):
-        job_model = self.env["queue.job"]
-        stuck_jobs = job_model.search(
-            self._get_stuck_jobs_domain(enqueued_delta, started_delta)
-        )
-        return stuck_jobs
 
     def related_action_open_record(self):
         """Open a form view with the record(s) of the job.
