@@ -9,7 +9,7 @@
                 <field name="run_as_queue_job" />
                 <field
                     name="no_parallel_queue_job_run"
-                    invisible="run_as_queue_job == False"
+                    invisible="not run_as_queue_job"
                 />
                 <field
                     name="channel_id"
