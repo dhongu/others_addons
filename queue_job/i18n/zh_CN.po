@@ -30,6 +30,7 @@ msgstr ""
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/controllers/main.py:0
+#, python-format
 msgid "Access Denied"
 msgstr "拒绝访问"
 
@@ -110,18 +111,21 @@ msgstr "已取消"
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job.py:0
-msgid "Cancelled by {}"
-msgstr ""
+#, python-format
+msgid "Cancelled by %s"
+msgstr "被%s取消"
 
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job_channel.py:0
+#, python-format
 msgid "Cannot change the root channel"
 msgstr "无法更改root频道"
 
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job_channel.py:0
+#, python-format
 msgid "Cannot remove the root channel"
 msgstr "无法删除root频道"
 
@@ -396,6 +400,7 @@ msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job_function.py:0
+#, python-format
 msgid "Invalid job function: {}"
 msgstr "无效的作业函数：{}"
 
@@ -403,6 +408,13 @@ msgstr "无效的作业函数：{}"
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__message_is_follower
 msgid "Is Follower"
 msgstr "关注者"
+
+#. module: queue_job
+#. odoo-javascript
+#: code:addons/queue_job/static/src/views/fields/job_direct_graph/job_direct_graph.esm.js:0
+#, python-format
+msgid "Job %(id)s"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model,name:queue_job.model_queue_job_channel
@@ -447,6 +459,13 @@ msgid "Job failed"
 msgstr "作业失败"
 
 #. module: queue_job
+#. odoo-python
+#: code:addons/queue_job/controllers/main.py:0
+#, python-format
+msgid "Job interrupted and set to Done: nothing to do."
+msgstr "作业中断并设置为已完成：无需执行任何操作。"
+
+#. module: queue_job
 #: model:ir.actions.act_window,name:queue_job.action_queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_jobs_to_cancelled__job_ids
 #: model:ir.model.fields,field_description:queue_job.field_queue_jobs_to_done__job_ids
@@ -462,6 +481,7 @@ msgstr "作业"
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job.py:0
+#, python-format
 msgid "Jobs for graph %s"
 msgstr "图表 %s 的作业"
 
@@ -506,8 +526,9 @@ msgstr "最后更新时间"
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job.py:0
-msgid "Manually set to done by {}"
-msgstr ""
+#, python-format
+msgid "Manually set to done by %s"
+msgstr "由%s手动设置为完成"
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__max_retries
@@ -544,6 +565,7 @@ msgstr "模型"
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job_function.py:0
+#, python-format
 msgid "Model {} not found"
 msgstr "模型 {} 未找到"
 
@@ -576,12 +598,14 @@ msgstr "下一活动类型"
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job.py:0
+#, python-format
 msgid "No action available for this job"
 msgstr "此作业无法执行任何操作"
 
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job.py:0
+#, python-format
 msgid "Not allowed to change field(s): {}"
 msgstr "不允许更改字段：{}"
 
@@ -613,6 +637,7 @@ msgstr "父频道"
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job_channel.py:0
+#, python-format
 msgid "Parent channel required."
 msgstr "父频道必填。"
 
@@ -641,7 +666,6 @@ msgstr "等待"
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__priority
-#: model_terms:ir.ui.view,arch_db:queue_job.view_queue_job_search
 msgid "Priority"
 msgstr "优先级"
 
@@ -660,6 +684,18 @@ msgstr "队列作业"
 #: model:ir.model,name:queue_job.model_queue_job_lock
 msgid "Queue Job Lock"
 msgstr ""
+
+#. module: queue_job
+#. odoo-python
+#: code:addons/queue_job/models/queue_job.py:0
+#, python-format
+msgid "Queue jobs must be created by calling 'with_delay()'."
+msgstr "队列任务必须通过调用'with_delay()'方法来创建。"
+
+#. module: queue_job
+#: model:ir.model.fields,field_description:queue_job.field_queue_job__record_ids
+msgid "Record"
+msgstr "记录"
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__records
@@ -684,12 +720,14 @@ msgstr "相关操作（已序列化）"
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job.py:0
+#, python-format
 msgid "Related Record"
 msgstr "相关记录"
 
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job.py:0
+#, python-format
 msgid "Related Records"
 msgstr "相关记录"
 
@@ -778,6 +816,7 @@ msgstr "图的唯一共享标识符。对于单个任务，则为空。"
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job.py:0
+#, python-format
 msgid ""
 "Something bad happened during the execution of the job. More details in the "
 "'Exception Information' section."
@@ -866,11 +905,6 @@ msgid "Time required to execute this job in seconds. Average when grouped."
 msgstr "以秒为单位执行此任务所需的时间。分组时为平均值。"
 
 #. module: queue_job
-#: model_terms:ir.ui.view,arch_db:queue_job.view_queue_job_search
-msgid "Tried many times"
-msgstr ""
-
-#. module: queue_job
 #: model:ir.model.fields,help:queue_job.field_queue_job__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "记录的异常活动的类型。"
@@ -883,6 +917,7 @@ msgstr "UUID"
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job_function.py:0
+#, python-format
 msgid ""
 "Unexpected format of Related Action for {}.\n"
 "Example of valid format:\n"
@@ -897,6 +932,7 @@ msgstr ""
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job_function.py:0
+#, python-format
 msgid ""
 "Unexpected format of Retry Pattern for {}.\n"
 "Example of valid formats:\n"
@@ -925,33 +961,6 @@ msgstr "重新排队向导所选的作业"
 msgid "Worker Pid"
 msgstr "工作进程PID"
 
-#~ msgid "If both parameters are 0, ALL jobs will be requeued!"
-#~ msgstr "如果两个参数都为0，所有任务都将被重新排队！"
-
-#~ msgid "Jobs Garbage Collector"
-#~ msgstr "作业垃圾收集器"
-
-#~ msgid "Queue jobs must be created by calling 'with_delay()'."
-#~ msgstr "队列任务必须通过调用'with_delay()'方法来创建。"
-
-#~ msgid "SMS Delivery error"
-#~ msgstr "短信传递错误"
-
-#, python-format
-#~ msgid "Cancelled by %s"
-#~ msgstr "被%s取消"
-
-#, python-format
-#~ msgid "Job interrupted and set to Done: nothing to do."
-#~ msgstr "作业中断并设置为已完成：无需执行任何操作。"
-
-#, python-format
-#~ msgid "Manually set to done by %s"
-#~ msgstr "由%s手动设置为完成"
-
-#~ msgid "Record"
-#~ msgstr "记录"
-
 #, python-format
 #~ msgid ""
 #~ "Unexpected format of Retry Pattern for {}.\n"
@@ -960,6 +969,16 @@ msgstr "工作进程PID"
 #~ msgstr ""
 #~ "对于 {}，重试模式的格式不符合预期。 有效格式的示例：\n"
 #~ "{{1: 300, 5: 600, 10: 1200, 15: 3000}}"
+
+#, python-format
+#~ msgid "If both parameters are 0, ALL jobs will be requeued!"
+#~ msgstr "如果两个参数都为0，所有任务都将被重新排队！"
+
+#~ msgid "Jobs Garbage Collector"
+#~ msgstr "作业垃圾收集器"
+
+#~ msgid "SMS Delivery error"
+#~ msgstr "短信传递错误"
 
 #~ msgid "Last Modified on"
 #~ msgstr "最后修改日"

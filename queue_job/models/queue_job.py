@@ -6,7 +6,7 @@ import random
 from datetime import datetime, timedelta
 
 from odoo import _, api, exceptions, fields, models
-from odoo.tools import config, html_escape, index_exists
+from odoo.tools import config, html_escape
 
 from odoo.addons.base_sparse_field.models.fields import Serialized
 
@@ -74,6 +74,9 @@ class QueueJob(models.Model):
 
     model_name = fields.Char(string="Model", readonly=True)
     method_name = fields.Char(readonly=True)
+    # record_ids field is only for backward compatibility (e.g. used in related
+    # actions), can be removed (replaced by "records") in 14.0
+    record_ids = JobSerialized(compute="_compute_record_ids", base_type=list)
     records = JobSerialized(
         string="Record(s)",
         readonly=True,
@@ -88,7 +91,7 @@ class QueueJob(models.Model):
     func_string = fields.Char(string="Task", readonly=True)
 
     state = fields.Selection(STATES, readonly=True, required=True, index=True)
-    priority = fields.Integer(aggregator=False)
+    priority = fields.Integer()
     exc_name = fields.Char(string="Exception", readonly=True)
     exc_message = fields.Char(string="Exception Message", readonly=True, tracking=True)
     exc_info = fields.Text(string="Exception Info", readonly=True)
@@ -100,7 +103,7 @@ class QueueJob(models.Model):
     date_done = fields.Datetime(readonly=True)
     exec_time = fields.Float(
         string="Execution Time (avg)",
-        aggregator="avg",
+        group_operator="avg",
         help="Time required to execute this job in seconds. Average when grouped.",
     )
     date_cancelled = fields.Datetime(readonly=True)
@@ -127,21 +130,21 @@ class QueueJob(models.Model):
     worker_pid = fields.Integer(readonly=True)
 
     def init(self):
-        index_1 = "queue_job_identity_key_state_partial_index"
-        index_2 = "queue_job_channel_date_done_date_created_index"
-        if not index_exists(self._cr, index_1):
-            # Used by Job.job_record_with_same_identity_key
+        self._cr.execute(
+            "SELECT indexname FROM pg_indexes WHERE indexname = %s ",
+            ("queue_job_identity_key_state_partial_index",),
+        )
+        if not self._cr.fetchone():
             self._cr.execute(
                 "CREATE INDEX queue_job_identity_key_state_partial_index "
                 "ON queue_job (identity_key) WHERE state in ('pending', "
                 "'enqueued', 'wait_dependencies') AND identity_key IS NOT NULL;"
             )
-        if not index_exists(self._cr, index_2):
-            # Used by <queue.job>.autovacuum
-            self._cr.execute(
-                "CREATE INDEX queue_job_channel_date_done_date_created_index "
-                "ON queue_job (channel, date_done, date_created);"
-            )
+
+    @api.depends("records")
+    def _compute_record_ids(self):
+        for record in self:
+            record.record_ids = record.records.ids
 
     @api.depends("dependencies")
     def _compute_dependency_graph(self):
@@ -206,9 +209,8 @@ class QueueJob(models.Model):
         }
         return {
             "id": self.id,
-            "title": (
-                f"<strong>{html_escape(self.display_name)}</strong><br/>"
-                f"{html_escape(self.func_string)}"
+            "title": "<strong>{}</strong><br/>{}".format(
+                html_escape(self.display_name), html_escape(self.func_string)
             ),
             "color": colors.get(self.state, default)[0],
             "border": colors.get(self.state, default)[1],
@@ -234,8 +236,13 @@ class QueueJob(models.Model):
             record.graph_jobs_count = count_per_graph_uuid.get(record.graph_uuid) or 0
 
     @api.model_create_multi
-    @api.private
     def create(self, vals_list):
+        if self.env.context.get("_job_edit_sentinel") is not self.EDIT_SENTINEL:
+            # Prevent to create a queue.job record "raw" from RPC.
+            # ``with_delay()`` must be used.
+            raise exceptions.AccessError(
+                _("Queue jobs must be created by calling 'with_delay()'.")
+            )
         return super(
             QueueJob,
             self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True),
@@ -321,15 +328,15 @@ class QueueJob(models.Model):
                 record.env["queue.job"].flush_model()
                 job_.cancel_dependent_jobs()
             else:
-                raise ValueError(f"State not supported: {state}")
+                raise ValueError("State not supported: %s" % state)
 
     def button_done(self):
-        result = _("Manually set to done by {}").format(self.env.user.name)
+        result = _("Manually set to done by %s") % self.env.user.name
         self._change_job_state(DONE, result=result)
         return True
 
     def button_cancelled(self):
-        result = _("Cancelled by {}").format(self.env.user.name)
+        result = _("Cancelled by %s") % self.env.user.name
         self._change_job_state(CANCELLED, result=result)
         return True
 
@@ -398,7 +405,6 @@ class QueueJob(models.Model):
                         ("date_cancelled", "<=", deadline),
                         ("channel", "=", channel.complete_name),
                     ],
-                    order="date_done, date_created",
                     limit=1000,
                 )
                 if jobs:
@@ -436,7 +442,7 @@ class QueueJob(models.Model):
             action.update(
                 {
                     "name": _("Related Records"),
-                    "view_mode": "list,form",
+                    "view_mode": "tree,form",
                     "domain": [("id", "in", records.ids)],
                 }
             )

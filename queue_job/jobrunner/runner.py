@@ -123,6 +123,7 @@ Caveat
        of running Odoo is obviously not for production purposes.
 """
 
+import datetime
 import logging
 import os
 import selectors
@@ -169,10 +170,15 @@ def _channels():
     )
 
 
-def _odoo_now():
+def _datetime_to_epoch(dt):
     # important: this must return the same as postgresql
     # EXTRACT(EPOCH FROM TIMESTAMP dt)
-    return time.time()
+    return (dt - datetime.datetime(1970, 1, 1)).total_seconds()
+
+
+def _odoo_now():
+    dt = datetime.datetime.utcnow()
+    return _datetime_to_epoch(dt)
 
 
 def _connection_info_for(db_name):
@@ -180,7 +186,7 @@ def _connection_info_for(db_name):
 
     for p in ("host", "port", "user", "password"):
         cfg = os.environ.get(
-            f"ODOO_QUEUE_JOB_JOBRUNNER_DB_{p.upper()}"
+            "ODOO_QUEUE_JOB_JOBRUNNER_DB_%s" % p.upper()
         ) or queue_job_config.get("jobrunner_db_" + p)
 
         if cfg:
@@ -194,7 +200,9 @@ def _async_http_get(scheme, host, port, user, password, db_name, job_uuid):
     #       if this was python3 I would be doing this with
     #       asyncio, aiohttp and aiopg
     def urlopen():
-        url = f"{scheme}://{host}:{port}/queue_job/runjob?db={db_name}&job_uuid={job_uuid}"
+        url = "{}://{}:{}/queue_job/runjob?db={}&job_uuid={}".format(
+            scheme, host, port, db_name, job_uuid
+        )
         # pylint: disable=except-pass
         try:
             auth = None
@@ -429,17 +437,6 @@ class QueueJobRunner:
         self.db_by_name = {}
         self._stop = False
         self._stop_pipe = os.pipe()
-
-    def __del__(self):
-        # pylint: disable=except-pass
-        try:
-            os.close(self._stop_pipe[0])
-        except OSError:
-            pass
-        try:
-            os.close(self._stop_pipe[1])
-        except OSError:
-            pass
 
     @classmethod
     def from_environ_or_config(cls):

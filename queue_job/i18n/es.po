@@ -30,6 +30,7 @@ msgstr ""
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/controllers/main.py:0
+#, python-format
 msgid "Access Denied"
 msgstr "Acceso denegado"
 
@@ -110,18 +111,21 @@ msgstr "Cancelada"
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job.py:0
-msgid "Cancelled by {}"
-msgstr ""
+#, python-format
+msgid "Cancelled by %s"
+msgstr "Cancelado por %s"
 
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job_channel.py:0
+#, python-format
 msgid "Cannot change the root channel"
 msgstr "No se puede cambiar el canal raíz"
 
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job_channel.py:0
+#, python-format
 msgid "Cannot remove the root channel"
 msgstr "No se puede eliminar el canal raíz"
 
@@ -397,6 +401,7 @@ msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job_function.py:0
+#, python-format
 msgid "Invalid job function: {}"
 msgstr "Función del trabajo no válida: {}"
 
@@ -404,6 +409,13 @@ msgstr "Función del trabajo no válida: {}"
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__message_is_follower
 msgid "Is Follower"
 msgstr "Es un seguidor"
+
+#. module: queue_job
+#. odoo-javascript
+#: code:addons/queue_job/static/src/views/fields/job_direct_graph/job_direct_graph.esm.js:0
+#, python-format
+msgid "Job %(id)s"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model,name:queue_job.model_queue_job_channel
@@ -448,6 +460,13 @@ msgid "Job failed"
 msgstr "Trabajo fallido"
 
 #. module: queue_job
+#. odoo-python
+#: code:addons/queue_job/controllers/main.py:0
+#, python-format
+msgid "Job interrupted and set to Done: nothing to do."
+msgstr "Trabajo interrumpido y marcado como hecho: nada que hacer."
+
+#. module: queue_job
 #: model:ir.actions.act_window,name:queue_job.action_queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_jobs_to_cancelled__job_ids
 #: model:ir.model.fields,field_description:queue_job.field_queue_jobs_to_done__job_ids
@@ -463,6 +482,7 @@ msgstr "Trabajos"
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job.py:0
+#, python-format
 msgid "Jobs for graph %s"
 msgstr "Trabajos para gráfico %s"
 
@@ -507,8 +527,9 @@ msgstr "Última actualización el"
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job.py:0
-msgid "Manually set to done by {}"
-msgstr ""
+#, python-format
+msgid "Manually set to done by %s"
+msgstr "Marcado como hecho a mano por %s"
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__max_retries
@@ -545,6 +566,7 @@ msgstr "Modelo"
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job_function.py:0
+#, python-format
 msgid "Model {} not found"
 msgstr "No se ha encontrado el modelo {}"
 
@@ -577,12 +599,14 @@ msgstr "Siguiente tipo de actividad"
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job.py:0
+#, python-format
 msgid "No action available for this job"
 msgstr "No hay ninguna acción disponible para este trabajo"
 
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job.py:0
+#, python-format
 msgid "Not allowed to change field(s): {}"
 msgstr "No se permite cambiar los campos: {}"
 
@@ -614,6 +638,7 @@ msgstr "Canal padre"
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job_channel.py:0
+#, python-format
 msgid "Parent channel required."
 msgstr "Se requiere un canal padre."
 
@@ -644,7 +669,6 @@ msgstr "Pendiente"
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__priority
-#: model_terms:ir.ui.view,arch_db:queue_job.view_queue_job_search
 msgid "Priority"
 msgstr "Prioridad"
 
@@ -663,6 +687,18 @@ msgstr "Cola de trabajos"
 #: model:ir.model,name:queue_job.model_queue_job_lock
 msgid "Queue Job Lock"
 msgstr ""
+
+#. module: queue_job
+#. odoo-python
+#: code:addons/queue_job/models/queue_job.py:0
+#, python-format
+msgid "Queue jobs must be created by calling 'with_delay()'."
+msgstr "Los trabajos en cola deben crearse llamando a 'with_delay()'."
+
+#. module: queue_job
+#: model:ir.model.fields,field_description:queue_job.field_queue_job__record_ids
+msgid "Record"
+msgstr "Registro"
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__records
@@ -687,12 +723,14 @@ msgstr "Acción relacionada (en serie)"
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job.py:0
+#, python-format
 msgid "Related Record"
 msgstr "Registro relacionado"
 
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job.py:0
+#, python-format
 msgid "Related Records"
 msgstr "Registros relacionados"
 
@@ -782,6 +820,7 @@ msgstr ""
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job.py:0
+#, python-format
 msgid ""
 "Something bad happened during the execution of the job. More details in the "
 "'Exception Information' section."
@@ -875,11 +914,6 @@ msgstr ""
 "agrupa."
 
 #. module: queue_job
-#: model_terms:ir.ui.view,arch_db:queue_job.view_queue_job_search
-msgid "Tried many times"
-msgstr ""
-
-#. module: queue_job
 #: model:ir.model.fields,help:queue_job.field_queue_job__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Tipo de actividad de excepción registrada."
@@ -892,6 +926,7 @@ msgstr "UUID"
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job_function.py:0
+#, python-format
 msgid ""
 "Unexpected format of Related Action for {}.\n"
 "Example of valid format:\n"
@@ -906,6 +941,7 @@ msgstr ""
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job_function.py:0
+#, python-format
 msgid ""
 "Unexpected format of Retry Pattern for {}.\n"
 "Example of valid formats:\n"
@@ -934,35 +970,6 @@ msgstr "Asistente para volver a poner en cola una selección de trabajos"
 msgid "Worker Pid"
 msgstr "Pid del trabajador"
 
-#~ msgid "If both parameters are 0, ALL jobs will be requeued!"
-#~ msgstr ""
-#~ "Si ambos parámetros son 0, ¡TODOS los trabajos se volverán a poner en la "
-#~ "cola!"
-
-#~ msgid "Jobs Garbage Collector"
-#~ msgstr "Recolector de basura de trabajos"
-
-#~ msgid "Queue jobs must be created by calling 'with_delay()'."
-#~ msgstr "Los trabajos en cola deben crearse llamando a 'with_delay()'."
-
-#~ msgid "SMS Delivery error"
-#~ msgstr "Error de entrega del SMS"
-
-#, python-format
-#~ msgid "Cancelled by %s"
-#~ msgstr "Cancelado por %s"
-
-#, python-format
-#~ msgid "Job interrupted and set to Done: nothing to do."
-#~ msgstr "Trabajo interrumpido y marcado como hecho: nada que hacer."
-
-#, python-format
-#~ msgid "Manually set to done by %s"
-#~ msgstr "Marcado como hecho a mano por %s"
-
-#~ msgid "Record"
-#~ msgstr "Registro"
-
 #, python-format
 #~ msgid ""
 #~ "Unexpected format of Retry Pattern for {}.\n"
@@ -972,6 +979,18 @@ msgstr "Pid del trabajador"
 #~ "Formato inesperado en el patrón de reintentos de {}.\n"
 #~ "Ejemplo de un formato válido:\n"
 #~ "{{1: 300, 5: 600, 10: 1200, 15: 3000}}"
+
+#, python-format
+#~ msgid "If both parameters are 0, ALL jobs will be requeued!"
+#~ msgstr ""
+#~ "Si ambos parámetros son 0, ¡TODOS los trabajos se volverán a poner en la "
+#~ "cola!"
+
+#~ msgid "Jobs Garbage Collector"
+#~ msgstr "Recolector de basura de trabajos"
+
+#~ msgid "SMS Delivery error"
+#~ msgstr "Error de entrega del SMS"
 
 #~ msgid "Last Modified on"
 #~ msgstr "Última modificación el"

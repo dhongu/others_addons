@@ -11,12 +11,11 @@ from io import StringIO
 from psycopg2 import OperationalError, errorcodes
 from werkzeug.exceptions import BadRequest, Forbidden
 
-from odoo import SUPERUSER_ID, _, api, http
-from odoo.modules.registry import Registry
+from odoo import SUPERUSER_ID, _, api, http, registry, tools
 from odoo.service.model import PG_CONCURRENCY_ERRORS_TO_RETRY
 
 from ..delay import chain, group
-from ..exception import FailedJobError, RetryableJobError
+from ..exception import FailedJobError, NothingToDoJob, RetryableJobError
 from ..job import ENQUEUED, Job
 
 _logger = logging.getLogger(__name__)
@@ -75,20 +74,14 @@ class RunJobController(http.Controller):
             else:
                 break
 
-    @http.route(
-        "/queue_job/runjob",
-        type="http",
-        auth="none",
-        save_session=False,
-        readonly=False,
-    )
+    @http.route("/queue_job/runjob", type="http", auth="none", save_session=False)
     def runjob(self, db, job_uuid, **kw):
         http.request.session.db = db
         env = http.request.env(user=SUPERUSER_ID)
 
         def retry_postpone(job, message, seconds=None):
             job.env.clear()
-            with Registry(job.env.cr.dbname).cursor() as new_cr:
+            with registry(job.env.cr.dbname).cursor() as new_cr:
                 job.env = api.Environment(new_cr, SUPERUSER_ID, {})
                 job.postpone(result=message, seconds=seconds)
                 job.set_pending(reset_retry=False)
@@ -121,7 +114,18 @@ class RunJobController(http.Controller):
                     raise
 
                 _logger.debug("%s OperationalError, postponed", job)
-                raise RetryableJobError(err.pgerror, seconds=PG_RETRY) from err
+                raise RetryableJobError(
+                    tools.ustr(err.pgerror, errors="replace"), seconds=PG_RETRY
+                ) from err
+
+        except NothingToDoJob as err:
+            if str(err):
+                msg = str(err)
+            else:
+                msg = _("Job interrupted and set to Done: nothing to do.")
+            job.set_done(msg)
+            job.store()
+            env.cr.commit()
 
         except RetryableJobError as err:
             # delay the job later, requeue
@@ -139,7 +143,7 @@ class RunJobController(http.Controller):
             traceback_txt = buff.getvalue()
             _logger.error(traceback_txt)
             job.env.clear()
-            with Registry(job.env.cr.dbname).cursor() as new_cr:
+            with registry(job.env.cr.dbname).cursor() as new_cr:
                 job.env = job.env(cr=new_cr)
                 vals = self._get_failure_values(job, traceback_txt, orig_exception)
                 job.set_failed(**vals)
@@ -295,6 +299,6 @@ class RunJobController(http.Controller):
 
         root_delayable.delay()
 
-        return (
-            f"graph uuid: {list(root_delayable._head())[0]._generated_job.graph_uuid}"
+        return "graph uuid: {}".format(
+            list(root_delayable._head())[0]._generated_job.graph_uuid
         )

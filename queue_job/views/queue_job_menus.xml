@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+
     <menuitem
         id="menu_queue_job_root"
         name="Job Queue"
@@ -29,4 +30,5 @@
         sequence="14"
         parent="menu_queue"
     />
+
 </odoo>
