@@ -9,7 +9,6 @@ import sys
 import uuid
 import weakref
 from datetime import datetime, timedelta
-from functools import total_ordering
 from random import randint
 
 import odoo
@@ -39,19 +38,6 @@ DEFAULT_MAX_RETRIES = 5
 RETRY_INTERVAL = 10 * 60  # seconds
 
 _logger = logging.getLogger(__name__)
-
-
-# TODO remove in 15.0 or 16.0, used to keep compatibility as the
-# class has been moved in 'delay'.
-def DelayableRecordset(*args, **kwargs):
-    # prevent circular import
-    from .delay import DelayableRecordset as dr
-
-    _logger.debug(
-        "DelayableRecordset moved from the queue_job.job"
-        " to the queue_job.delay python module"
-    )
-    return dr(*args, **kwargs)
 
 
 def identity_exact(job_):
@@ -89,17 +75,21 @@ def identity_exact(job_):
     Usually you will probably always want to include at least the name of the
     model and method.
     """
+    hasher = identity_exact_hasher(job_)
+    return hasher.hexdigest()
+
+
+def identity_exact_hasher(job_):
+    """Prepare hasher object for identity_exact."""
     hasher = hashlib.sha1()
     hasher.update(job_.model_name.encode("utf-8"))
     hasher.update(job_.method_name.encode("utf-8"))
     hasher.update(str(sorted(job_.recordset.ids)).encode("utf-8"))
     hasher.update(str(job_.args).encode("utf-8"))
     hasher.update(str(sorted(job_.kwargs.items())).encode("utf-8"))
+    return hasher
 
-    return hasher.hexdigest()
 
-
-@total_ordering
 class Job:
     """A Job is a task to execute. It is the in-memory representation of a job.
 
@@ -219,9 +209,7 @@ class Job:
         """
         stored = cls.db_records_from_uuids(env, [job_uuid])
         if not stored:
-            raise NoSuchJobError(
-                "Job %s does no longer exist in the storage." % job_uuid
-            )
+            raise NoSuchJobError(f"Job {job_uuid} does no longer exist in the storage.")
         return cls._load_from_db_record(stored)
 
     @classmethod
@@ -232,6 +220,61 @@ class Job:
         """
         recordset = cls.db_records_from_uuids(env, job_uuids)
         return {cls._load_from_db_record(record) for record in recordset}
+
+    def add_lock_record(self):
+        """
+        Create row in db to be locked while the job is being performed.
+        """
+        self.env.cr.execute(
+            """
+            INSERT INTO
+                queue_job_lock (id, queue_job_id)
+            SELECT
+                id, id
+            FROM
+                queue_job
+            WHERE
+                uuid = %s
+            ON CONFLICT(id)
+            DO NOTHING;
+        """,
+            [self.uuid],
+        )
+
+    def lock(self):
+        """
+        Lock row of job that is being performed
+
+        If a job cannot be locked,
+        it means that the job wasn't started,
+        a RetryableJobError is thrown.
+        """
+        self.env.cr.execute(
+            """
+            SELECT
+                *
+            FROM
+                queue_job_lock
+            WHERE
+                queue_job_id in (
+                    SELECT
+                        id
+                    FROM
+                        queue_job
+                    WHERE
+                        uuid = %s
+                        AND state='started'
+                )
+            FOR UPDATE;
+        """,
+            [self.uuid],
+        )
+
+        # 1 job should be locked
+        if 1 != len(self.env.cr.fetchall()):
+            raise RetryableJobError(
+                f"Trying to lock job that wasn't started, uuid: {self.uuid}"
+            )
 
     @classmethod
     def _load_from_db_record(cls, job_db_record):
@@ -307,71 +350,6 @@ class Job:
         )
         return existing
 
-    # TODO to deprecate (not called anymore)
-    @classmethod
-    def enqueue(
-        cls,
-        func,
-        args=None,
-        kwargs=None,
-        priority=None,
-        eta=None,
-        max_retries=None,
-        description=None,
-        channel=None,
-        identity_key=None,
-    ):
-        """Create a Job and enqueue it in the queue. Return the job uuid.
-
-        This expects the arguments specific to the job to be already extracted
-        from the ones to pass to the job function.
-
-        If the identity key is the same than the one in a pending job,
-        no job is created and the existing job is returned
-
-        """
-        new_job = cls(
-            func=func,
-            args=args,
-            kwargs=kwargs,
-            priority=priority,
-            eta=eta,
-            max_retries=max_retries,
-            description=description,
-            channel=channel,
-            identity_key=identity_key,
-        )
-        return new_job._enqueue_job()
-
-    # TODO to deprecate (not called anymore)
-    def _enqueue_job(self):
-        if self.identity_key:
-            existing = self.job_record_with_same_identity_key()
-            if existing:
-                _logger.debug(
-                    "a job has not been enqueued due to having "
-                    "the same identity key (%s) than job %s",
-                    self.identity_key,
-                    existing.uuid,
-                )
-                return Job._load_from_db_record(existing)
-        self.store()
-        _logger.debug(
-            "enqueued %s:%s(*%r, **%r) with uuid: %s",
-            self.recordset,
-            self.method_name,
-            self.args,
-            self.kwargs,
-            self.uuid,
-        )
-        return self
-
-    @staticmethod
-    def db_record_from_uuid(env, job_uuid):
-        # TODO remove in 15.0 or 16.0
-        _logger.debug("deprecated, use 'db_records_from_uuids")
-        return Job.db_records_from_uuids(env, [job_uuid])
-
     @staticmethod
     def db_records_from_uuids(env, job_uuids):
         model = env["queue.job"].sudo()
@@ -419,11 +397,11 @@ class Job:
             args = ()
         if isinstance(args, list):
             args = tuple(args)
-        assert isinstance(args, tuple), "%s: args are not a tuple" % args
+        assert isinstance(args, tuple), f"{args}: args are not a tuple"
         if kwargs is None:
             kwargs = {}
 
-        assert isinstance(kwargs, dict), "%s: kwargs are not a dict" % kwargs
+        assert isinstance(kwargs, dict), f"{kwargs}: kwargs are not a dict"
 
         if not _is_model_method(func):
             raise TypeError("Job accepts only methods of Models")
@@ -534,8 +512,8 @@ class Job:
 
         return self.result
 
-    def enqueue_waiting(self):
-        sql = """
+    def _get_common_dependent_jobs_query(self):
+        return """
             UPDATE queue_job
             SET state = %s
             FROM (
@@ -563,7 +541,15 @@ class Job:
             AND %s = ALL(jobs.parent_states)
             AND state = %s;
         """
+
+    def enqueue_waiting(self):
+        sql = self._get_common_dependent_jobs_query()
         self.env.cr.execute(sql, (PENDING, self.uuid, DONE, WAIT_DEPENDENCIES))
+        self.env["queue.job"].invalidate_model(["state"])
+
+    def cancel_dependent_jobs(self):
+        sql = self._get_common_dependent_jobs_query()
+        self.env.cr.execute(sql, (CANCELLED, self.uuid, CANCELLED, WAIT_DEPENDENCIES))
         self.env["queue.job"].invalidate_model(["state"])
 
     def store(self):
@@ -680,16 +666,6 @@ class Job:
 
     def __hash__(self):
         return self.uuid.__hash__()
-
-    def sorting_key(self):
-        return self.eta, self.priority, self.date_created, self.seq
-
-    def __lt__(self, other):
-        if self.eta and not other.eta:
-            return True
-        elif not self.eta and other.eta:
-            return False
-        return self.sorting_key() < other.sorting_key()
 
     def db_record(self):
         return self.db_records_from_uuids(self.env, [self.uuid])
@@ -814,6 +790,7 @@ class Job:
         self.state = STARTED
         self.date_started = datetime.now()
         self.worker_pid = os.getpid()
+        self.add_lock_record()
 
     def set_done(self, result=None):
         self.state = DONE

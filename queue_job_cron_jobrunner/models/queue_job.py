@@ -8,15 +8,11 @@ from io import StringIO
 
 from psycopg2 import OperationalError
 
-from odoo import _, api, models, tools
+from odoo import api, models, tools
 from odoo.service.model import PG_CONCURRENCY_ERRORS_TO_RETRY
 
 from odoo.addons.queue_job.controllers.main import PG_RETRY
-from odoo.addons.queue_job.exception import (
-    FailedJobError,
-    NothingToDoJob,
-    RetryableJobError,
-)
+from odoo.addons.queue_job.exception import FailedJobError, RetryableJobError
 from odoo.addons.queue_job.job import Job
 
 _logger = logging.getLogger(__name__)
@@ -40,7 +36,7 @@ class QueueJob(models.Model):
             FROM queue_job
             WHERE state = 'pending'
             AND (eta IS NULL OR eta <= (now() AT TIME ZONE 'UTC'))
-            ORDER BY date_created DESC
+            ORDER BY priority, date_created
             LIMIT 1 FOR NO KEY UPDATE SKIP LOCKED
             """
         )
@@ -59,7 +55,7 @@ class QueueJob(models.Model):
         #       while the job is processing. However, doing this will release the
         #       lock on the db, so we need to find another way.
         # if commit:
-        #     self.flush()
+        #     self.env.flush_all()
         #     self.env.cr.commit()
 
         # Actual processing
@@ -78,14 +74,6 @@ class QueueJob(models.Model):
                 job.set_pending(reset_retry=False)
                 job.store()
                 _logger.debug("%s OperationalError, postponed", job)
-
-        except NothingToDoJob as err:
-            if str(err):
-                msg = str(err)
-            else:
-                msg = _("Job interrupted and set to Done: nothing to do.")
-            job.set_done(msg)
-            job.store()
 
         except RetryableJobError as err:
             # delay the job later, requeue

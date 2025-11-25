@@ -227,12 +227,12 @@ class JobsTrap:
             return job.graph_uuid or ""
 
         sorted_jobs = sorted(self.enqueued_jobs, key=by_graph)
+        self.enqueued_jobs = []
         for graph_uuid, jobs in groupby(sorted_jobs, key=by_graph):
             if graph_uuid:
                 self._perform_graph_jobs(jobs)
             else:
                 self._perform_single_jobs(jobs)
-        self.enqueued_jobs = []
 
     def _perform_single_jobs(self, jobs):
         # we probably don't want to replicate a perfect order here, but at
@@ -255,6 +255,7 @@ class JobsTrap:
         if not job.identity_key or all(
             j.identity_key != job.identity_key for j in self.enqueued_jobs
         ):
+            self._prepare_context(job)
             self.enqueued_jobs.append(job)
 
             patcher = mock.patch.object(job, "store")
@@ -272,6 +273,13 @@ class JobsTrap:
             )
         )
         return job
+
+    def _prepare_context(self, job):
+        # pylint: disable=context-overridden
+        job_model = job.job_model.with_context({})
+        field_records = job_model._fields["records"]
+        # Filter the context to simulate store/load of the job
+        job.recordset = field_records.convert_to_write(job.recordset, job_model)
 
     def __enter__(self):
         return self
@@ -345,7 +353,7 @@ class JobMixin:
 
 
 @contextmanager
-def mock_with_delay():
+def mock_with_delay():  # pylint: disable=E501
     """Context Manager mocking ``with_delay()``
 
     DEPRECATED: use ``trap_jobs()'``.
@@ -390,9 +398,9 @@ def mock_with_delay():
                 self.assertDictEqual(delay_kwargs, {})
 
     An example of the first kind of test:
-    https://github.com/camptocamp/connector-jira/blob/0ca4261b3920d5e8c2ae4bb0fc352ea3f6e9d2cd/connector_jira/tests/test_batch_timestamp_import.py#L43-L76  # noqa
+    https://github.com/camptocamp/connector-jira/blob/0ca4261b3920d5e8c2ae4bb0fc352ea3f6e9d2cd/connector_jira/tests/test_batch_timestamp_import.py#L43-L76
     And the second kind:
-    https://github.com/camptocamp/connector-jira/blob/0ca4261b3920d5e8c2ae4bb0fc352ea3f6e9d2cd/connector_jira/tests/test_import_task.py#L34-L46  # noqa
+    https://github.com/camptocamp/connector-jira/blob/0ca4261b3920d5e8c2ae4bb0fc352ea3f6e9d2cd/connector_jira/tests/test_import_task.py#L34-L46
 
     """
     with mock.patch(
@@ -443,10 +451,6 @@ def load_doctests(module):
         Also extend the DocTestCase class trivially to fit the class teardown
         that Odoo backported for its own test classes from Python 3.8.
         """
-        # UP036 Version block is outdated for minimum Python version
-        # if sys.version_info < (3, 8):
-        #     doctest.DocTestCase.doClassCleanups = lambda: None
-        #     doctest.DocTestCase.tearDown_exceptions = []
 
         for idx, test in enumerate(doctest.DocTestSuite(module)):
             odoo_test = OdooDocTestCase(test, seq=idx)
