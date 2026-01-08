@@ -149,7 +149,7 @@ class TestJson(common.TransactionCase):
         self.assertEqual(json.loads(value_json), expected)
 
     def test_decoder_date(self):
-        value_json = '["a", 1, {"_type": "date_isoformat","value": "2017-04-19"}]'
+        value_json = '["a", 1, {"_type": "date_isoformat", "value": "2017-04-19"}]'
         expected = ["a", 1, date(2017, 4, 19)]
         value = json.loads(value_json, cls=JobDecoder, env=self.env)
         self.assertEqual(value, expected)

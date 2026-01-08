@@ -268,6 +268,3 @@ class Base(models.AbstractModel):
             for key, value in self.env.context.items()
             if key in self._job_prepare_context_before_enqueue_keys()
         }
-
-    # Note: no local _patch_method helper; if needed, patch methods
-    # directly in _register_hook as shown above.

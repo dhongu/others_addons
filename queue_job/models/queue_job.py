@@ -129,12 +129,10 @@ class QueueJob(models.Model):
 
     def init(self):
         cr = self.env.cr
-        index_1 = "queue_job_identity_key_state_partial_index"
-        index_2 = "queue_job_channel_date_done_date_created_index"
         # Used by Job.job_record_with_same_identity_key
         create_index(
             cr,
-            index_1,
+            "queue_job_identity_key_state_partial_index",
             "queue_job",
             ["identity_key"],
             where=(
@@ -146,7 +144,7 @@ class QueueJob(models.Model):
         # Used by <queue.job>.autovacuum
         create_index(
             cr,
-            index_2,
+            "queue_job_channel_date_done_date_created_index",
             "queue_job",
             ["channel", "date_done", "date_created"],
             comment="Queue Job: index to accelerate autovacuum",
@@ -154,17 +152,17 @@ class QueueJob(models.Model):
 
     @api.depends("dependencies")
     def _compute_dependency_graph(self):
-        uuids = [uuid for uuid in self.mapped("graph_uuid") if uuid]
-        ids_per_graph_uuid = {}
-        if uuids:
-            rows = self.env["queue.job"]._read_group(
-                [("graph_uuid", "in", uuids)],
-                groupby=["graph_uuid"],
-                aggregates=["id:recordset"],
+        graph_uuids = [uuid for uuid in self.mapped("graph_uuid") if uuid]
+        if graph_uuids:
+            ids_per_graph_uuid = dict(
+                self.env["queue.job"]._read_group(
+                    [("graph_uuid", "in", graph_uuids)],
+                    groupby=["graph_uuid"],
+                    aggregates=["id:array_agg"],
+                )
             )
-            # rows -> list of tuples: (graph_uuid, recordset)
-            for graph_uuid, recs in rows:
-                ids_per_graph_uuid[graph_uuid] = recs.ids
+        else:
+            ids_per_graph_uuid = {}
         for record in self:
             if not record.graph_uuid:
                 record.dependency_graph = {}
@@ -224,12 +222,13 @@ class QueueJob(models.Model):
     def _compute_graph_jobs_count(self):
         graph_uuids = [uuid for uuid in self.mapped("graph_uuid") if uuid]
         if graph_uuids:
-            rows = self.env["queue.job"]._read_group(
-                [("graph_uuid", "in", graph_uuids)],
-                ["graph_uuid"],
-                ["__count"],
+            count_per_graph_uuid = dict(
+                self.env["queue.job"]._read_group(
+                    [("graph_uuid", "in", graph_uuids)],
+                    groupby=["graph_uuid"],
+                    aggregates=["__count"],
+                )
             )
-            count_per_graph_uuid = {graph_uuid: cnt for graph_uuid, cnt in rows}
         else:
             count_per_graph_uuid = {}
         for record in self:
