@@ -2,7 +2,7 @@
     "name": "Queue Job Cron Jobrunner",
     "summary": "Run jobs without a dedicated JobRunner",
     "version": "18.0.1.0.1",
-    "development_status": "Production/Stable",
+    "development_status": "Alpha",
     "author": "Camptocamp SA, Odoo Community Association (OCA)",
     "maintainers": ["ivantodorovich"],
     "website": "https://github.com/OCA/queue",
