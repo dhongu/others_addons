@@ -31,10 +31,14 @@ class WebsiteSale(WebsiteSale):
         res["brand"] = request.context.get("brand_id")
         return res
 
-    def _get_search_domain(
+    def _get_shop_domain(
         self, search, category, attrib_values, search_in_description=True
     ):
-        domain = super()._get_search_domain(
+        # The product listing is filtered by brand through
+        # ``product.template._search_get_detail``. This method only builds the
+        # domain used for the price-filter min/max, so we narrow it here too to
+        # keep the price slider consistent with the displayed brand.
+        domain = super()._get_shop_domain(
             search, category, attrib_values, search_in_description=search_in_description
         )
         if "brand_id" in request.context:
