@@ -8,6 +8,7 @@ import os
 import sys
 import uuid
 import weakref
+from contextlib import contextmanager, nullcontext
 from datetime import datetime, timedelta
 from random import randint
 
@@ -222,7 +223,7 @@ class Job:
         recordset = cls.db_records_from_uuids(env, job_uuids)
         return {cls._load_from_db_record(record) for record in recordset}
 
-    def add_lock_record(self):
+    def add_lock_record(self) -> None:
         """
         Create row in db to be locked while the job is being performed.
         """
@@ -242,13 +243,11 @@ class Job:
             [self.uuid],
         )
 
-    def lock(self):
-        """
-        Lock row of job that is being performed
+    def lock(self) -> bool:
+        """Lock row of job that is being performed.
 
-        If a job cannot be locked,
-        it means that the job wasn't started,
-        a RetryableJobError is thrown.
+        Return False if a job cannot be locked: it means that the job is not in
+        STARTED state or is already locked by another worker.
         """
         self.env.cr.execute(
             """
@@ -264,18 +263,15 @@ class Job:
                         queue_job
                     WHERE
                         uuid = %s
-                        AND state='started'
+                        AND state = %s
                 )
-            FOR UPDATE;
+            FOR NO KEY UPDATE SKIP LOCKED;
         """,
-            [self.uuid],
+            [self.uuid, STARTED],
         )
 
         # 1 job should be locked
-        if 1 != len(self.env.cr.fetchall()):
-            raise RetryableJobError(
-                f"Trying to lock job that wasn't started, uuid: {self.uuid}"
-            )
+        return bool(self.env.cr.fetchall())
 
     @classmethod
     def _load_from_db_record(cls, job_db_record):
@@ -408,13 +404,8 @@ class Job:
             raise TypeError("Job accepts only methods of Models")
 
         recordset = func.__self__
-        env = recordset.env
         self.method_name = func.__name__
         self.recordset = recordset
-
-        self.env = env
-        self.job_model = self.env["queue.job"]
-        self.job_model_name = "queue.job"
 
         self.job_config = (
             self.env["queue.job.function"].sudo().job_config(self.job_function_name)
@@ -465,10 +456,10 @@ class Job:
         self.exc_message = None
         self.exc_info = None
 
-        if "company_id" in env.context:
-            company_id = env.context["company_id"]
+        if "company_id" in self.env.context:
+            company_id = self.env.context["company_id"]
         else:
-            company_id = env.company.id
+            company_id = self.env.company.id
         self.company_id = company_id
         self._eta = None
         self.eta = eta
@@ -493,7 +484,12 @@ class Job:
         """
         self.retry += 1
         try:
-            self.result = self.func(*tuple(self.args), **self.kwargs)
+            if self.job_config.allow_commit:
+                env_context_manager = self.in_temporary_env()
+            else:
+                env_context_manager = nullcontext()
+            with env_context_manager:
+                self.result = self.func(*tuple(self.args), **self.kwargs)
         except RetryableJobError as err:
             if err.ignore_retry:
                 self.retry -= 1
@@ -512,6 +508,16 @@ class Job:
             raise
 
         return self.result
+
+    @contextmanager
+    def in_temporary_env(self):
+        with self.env.registry.cursor() as new_cr:
+            env = self.env
+            self._env = env(cr=new_cr)
+            try:
+                yield
+            finally:
+                self._env = env
 
     def _get_common_dependent_jobs_query(self):
         return """
@@ -542,6 +548,9 @@ class Job:
             AND %s = ALL(jobs.parent_states)
             AND state = %s;
         """
+
+    def should_check_dependents(self):
+        return any(self.__reverse_depends_on_uuids)
 
     def enqueue_waiting(self):
         sql = self._get_common_dependent_jobs_query()
@@ -672,6 +681,14 @@ class Job:
         return self.db_records_from_uuids(self.env, [self.uuid])
 
     @property
+    def env(self):
+        return self.recordset.env
+
+    @env.setter
+    def _env(self, env):
+        self.recordset = self.recordset.with_env(env)
+
+    @property
     def func(self):
         recordset = self.recordset.with_context(job_uuid=self.uuid)
         return getattr(recordset, self.method_name)
@@ -735,7 +752,7 @@ class Job:
 
     @property
     def user_id(self):
-        return self.recordset.env.uid
+        return self.env.uid
 
     @property
     def eta(self):

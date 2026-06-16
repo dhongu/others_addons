@@ -3,6 +3,7 @@
 
 import logging
 import random
+import time
 from datetime import datetime, timedelta
 
 from odoo import api, exceptions, fields, models
@@ -12,11 +13,12 @@ from odoo.tools.sql import create_index
 from odoo.addons.base_sparse_field.models.fields import Serialized
 
 from ..delay import Graph
-from ..exception import JobError
+from ..exception import JobError, RetryableJobError
 from ..fields import JobSerialized
 from ..job import (
     CANCELLED,
     DONE,
+    ENQUEUED,
     FAILED,
     PENDING,
     STARTED,
@@ -101,6 +103,7 @@ class QueueJob(models.Model):
     date_done = fields.Datetime(readonly=True)
     exec_time = fields.Float(
         string="Execution Time (avg)",
+        readonly=True,
         aggregator="avg",
         help="Time required to execute this job in seconds. Average when grouped.",
     )
@@ -328,18 +331,26 @@ class QueueJob(models.Model):
                 raise ValueError(msg)
 
     def button_done(self):
+        # If job was set to STARTED or CANCELLED, do not set it to DONE
+        states_from = (WAIT_DEPENDENCIES, PENDING, ENQUEUED, FAILED)
         result = self.env._("Manually set to done by %s", self.env.user.name)
-        self._change_job_state(DONE, result=result)
+        records = self.filtered(lambda job_: job_.state in states_from)
+        records._change_job_state(DONE, result=result)
         return True
 
     def button_cancelled(self):
+        # If job was set to DONE do not cancel it
+        states_from = (WAIT_DEPENDENCIES, PENDING, ENQUEUED, FAILED)
         result = self.env._("Cancelled by %s", self.env.user.name)
-        self._change_job_state(CANCELLED, result=result)
+        records = self.filtered(lambda job_: job_.state in states_from)
+        records._change_job_state(CANCELLED, result=result)
         return True
 
     def requeue(self):
-        jobs_to_requeue = self.filtered(lambda job_: job_.state != WAIT_DEPENDENCIES)
-        jobs_to_requeue._change_job_state(PENDING)
+        # If job is already in queue or started, do not requeue it
+        states_from = (FAILED, DONE, CANCELLED)
+        records = self.filtered(lambda job_: job_.state in states_from)
+        records._change_job_state(PENDING)
         return True
 
     def _message_post_on_failure(self):
@@ -347,8 +358,11 @@ class QueueJob(models.Model):
         # at every job creation
         domain = self._subscribe_users_domain()
         base_users = self.env["res.users"].search(domain)
+        suscribe_job_creator = self._subscribe_job_creator()
         for record in self:
-            users = base_users | record.user_id
+            users = base_users
+            if suscribe_job_creator:
+                users |= record.user_id
             record.message_subscribe(partner_ids=users.mapped("partner_id").ids)
             msg = record._message_failed_job()
             if msg:
@@ -364,6 +378,14 @@ class QueueJob(models.Model):
         if companies:
             domain.append(("company_id", "in", companies.ids))
         return domain
+
+    @api.model
+    def _subscribe_job_creator(self):
+        """
+        Whether the user that created the job should be subscribed to the job,
+        in addition to users determined by `_subscribe_users_domain`
+        """
+        return True
 
     def _message_failed_job(self):
         """Return a message which will be posted on the job when it is failed.
@@ -407,7 +429,7 @@ class QueueJob(models.Model):
                     limit=1000,
                 )
                 if jobs:
-                    jobs.unlink()
+                    jobs.sudo().unlink()
                     if not config["test_enable"]:
                         self.env.cr.commit()  # pylint: disable=E8102
                 else:
@@ -447,7 +469,24 @@ class QueueJob(models.Model):
             )
         return action
 
-    def _test_job(self, failure_rate=0):
+    def _test_job(
+        self,
+        failure_rate=0,
+        job_duration=0,
+        commit_within_job=False,
+        failure_retry_seconds=0,
+    ):
         _logger.info("Running test job.")
         if random.random() <= failure_rate:
-            raise JobError("Job failed")
+            if failure_retry_seconds:
+                raise RetryableJobError(
+                    f"Retryable job failed, will be retried in "
+                    f"{failure_retry_seconds} seconds",
+                    seconds=failure_retry_seconds,
+                )
+            else:
+                raise JobError("Job failed")
+        if job_duration:
+            time.sleep(job_duration)
+        if commit_within_job:
+            self.env.cr.commit()  # pylint: disable=invalid-commit
