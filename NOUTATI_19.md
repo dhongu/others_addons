@@ -10,7 +10,7 @@ Sinteză a noutăților față de versiunea 18.0, pe 1 module. Detaliile fiecăr
 
 Pentru completitudine, în sens invers: module care există pe ramura 18.0 și nu au (încă) un echivalent pe 19.0.
 
-**Nemigrate încă (3)** — fără semnal de retragere; ultima modificare pe 18.0 în paranteze:
+**Nemigrate încă (3)** — ultima modificare de cod în paranteze:
 
 - `auth_signup_verify_email` — Verify email at signup (2026-04)
 - `queue_job_cron` — Scheduled Actions as Queue Jobs (2025-11)
