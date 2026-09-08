@@ -1,0 +1,312 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_sale_product_brand
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2016
+# Paolo Valier <paolo.valier@hotmail.it>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-03-28 02:55+0000\n"
+"PO-Revision-Date: 2026-07-23 09:46+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
+"Language-Team: Italian (https://www.transifex.com/oca/teams/23907/it/)\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15.2\n"
+
+#. module: website_sale_product_brand
+#: model_terms:ir.ui.view,arch_db:website_sale_product_brand.website_sale_filter_brand_products_brands
+msgid "<b>Brand</b>"
+msgstr "<b>Marchio</b>"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__align_brand_content
+msgid "Align Brand Content"
+msgstr "Allinea contenuto marca"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields.selection,name:website_sale_product_brand.selection__website__brand_filter_display_mode__letters
+msgid "Alphabetical accordion"
+msgstr "Schedario alfabetico"
+
+#. module: website_sale_product_brand
+#. odoo-javascript
+#: code:addons/website_sale_product_brand/static/src/website_builder/brand_filter_option.xml:0
+msgid "Brand"
+msgstr "Marca"
+
+#. module: website_sale_product_brand
+#: model_terms:ir.ui.view,arch_db:website_sale_product_brand.res_config_settings_view_form
+msgid "Brand Filter Display"
+msgstr "Visualizzatore filtro marca"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_res_config_settings__brand_filter_display_mode
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_website__brand_filter_display_mode
+msgid "Brand Filter Display Mode"
+msgstr "Modo visualizzazione filtro marca"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__can_publish
+msgid "Can Publish"
+msgstr "Può pubblicare"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields.selection,name:website_sale_product_brand.selection__product_brand__align_brand_content__center
+msgid "Center"
+msgstr "Centro"
+
+#. module: website_sale_product_brand
+#: model_terms:ir.ui.view,arch_db:website_sale_product_brand.res_config_settings_view_form
+msgid "Choose how product brands are displayed in the shop filters."
+msgstr ""
+"Definisce come le marche prodotto sono visualizzate nel filtri negozio."
+
+#. module: website_sale_product_brand
+#: model:ir.model,name:website_sale_product_brand.model_res_config_settings
+msgid "Config Settings"
+msgstr "Impostazioni configurazione"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,help:website_sale_product_brand.field_res_config_settings__brand_filter_display_mode
+#: model:ir.model.fields,help:website_sale_product_brand.field_website__brand_filter_display_mode
+msgid ""
+"Controls how brands are displayed in the shop filter: 'Full list' shows all "
+"brands, 'Limited list' shows the first 5 brands with an option to load more "
+"using 'Show more', and 'Alphabetical accordion' groups brands by letter when "
+"there are more than 50 brands."
+msgstr ""
+"Consente di controllare la visualizzazione dei marchi nel filtro del "
+"negozio: 'Elenco completo' mostra tutti i marchi, 'Elenco limitato' mostra i "
+"primi 5 marchi con la possibilità di caricarne altri tramite 'Mostra altro', "
+"e 'Schedario alfabetico' raggruppa i marchi per lettera quando ce ne sono "
+"più di 50."
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__cover_image
+msgid "Cover Image"
+msgstr "Immagine di copertina"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__display_name
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_website__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields.selection,name:website_sale_product_brand.selection__website__brand_filter_display_mode__list
+msgid "Full list"
+msgstr "Elenco completo"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__id
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_template__id
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_website__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__image_1920
+msgid "Image"
+msgstr "Immgine"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__image_1024
+msgid "Image 1024"
+msgstr "Immagine 1024"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__image_128
+msgid "Image 128"
+msgstr "Immagine 128"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__image_256
+msgid "Image 256"
+msgstr "Immagine 256"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__image_512
+msgid "Image 512"
+msgstr "Immagine 512"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__is_published
+msgid "Is Published"
+msgstr "È pubblicato"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields.selection,name:website_sale_product_brand.selection__product_brand__align_brand_content__left
+msgid "Left"
+msgstr "Sinistra"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields.selection,name:website_sale_product_brand.selection__website__brand_filter_display_mode__limited
+msgid "Limited list"
+msgstr "Elenco limitato"
+
+#. module: website_sale_product_brand
+#: model_terms:ir.ui.view,arch_db:website_sale_product_brand.product_brands
+msgid "No Brands Found."
+msgstr "Nessuna marca trovata."
+
+#. module: website_sale_product_brand
+#: model:ir.model,name:website_sale_product_brand.model_product_template
+msgid "Product"
+msgstr "Prodotto"
+
+#. module: website_sale_product_brand
+#: model:ir.model,name:website_sale_product_brand.model_product_brand
+msgid "Product Brand"
+msgstr "Marca del prodotto"
+
+#. module: website_sale_product_brand
+#: model:ir.ui.menu,name:website_sale_product_brand.menu_product_brand
+#: model_terms:ir.ui.view,arch_db:website_sale_product_brand.product_brands
+msgid "Product Brands"
+msgstr "Marche del prodotto"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__published_products_count
+msgid "Published Products Count"
+msgstr "Conteggio prodotti pubblicati"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,help:website_sale_product_brand.field_product_brand__website_id
+msgid "Restrict to a specific website."
+msgstr "Limita ad un sito web specifico."
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__is_seo_optimized
+msgid "SEO optimized"
+msgstr "Ottimizzato SEO"
+
+#. module: website_sale_product_brand
+#: model_terms:ir.ui.view,arch_db:website_sale_product_brand.product_brands
+msgid "Search"
+msgstr "Cerca"
+
+#. module: website_sale_product_brand
+#: model_terms:ir.ui.view,arch_db:website_sale_product_brand.product_brands
+msgid "Search..."
+msgstr "Cerca..."
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__seo_name
+msgid "Seo name"
+msgstr "Nome SEO"
+
+#. module: website_sale_product_brand
+#: model:website.menu,name:website_sale_product_brand.menu_website_sale_brand
+msgid "Shop by Brand"
+msgstr "Acquisto per marca"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__show_brand_description
+msgid "Show Brand Description"
+msgstr "Visualizza descrizione marca"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__show_brand_name
+msgid "Show Brand Name"
+msgstr "Visualizza nome marca"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__show_without_published_products
+msgid "Show Without Published Products"
+msgstr "Visualizza senza prodotti pubblicati"
+
+#. module: website_sale_product_brand
+#: model_terms:ir.ui.view,arch_db:website_sale_product_brand.website_sale_filter_brand_products_brands
+msgid "Show more"
+msgstr "Mostra di più"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,help:website_sale_product_brand.field_product_brand__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
+"L'URL assoluto completo per accedere al documento attraverso il sito web."
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,help:website_sale_product_brand.field_product_brand__website_url
+msgid "The full relative URL to access the document through the website."
+msgstr ""
+"L'URL relativo completo per accedere al documento attraverso il sito web."
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__website_published
+msgid "Visible on current website"
+msgstr "Visibile sul sito web attuale"
+
+#. module: website_sale_product_brand
+#: model:ir.model,name:website_sale_product_brand.model_website
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__website_id
+#: model_terms:ir.ui.view,arch_db:website_sale_product_brand.view_product_brand_form
+msgid "Website"
+msgstr "Sito web"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__website_absolute_url
+msgid "Website Absolute URL"
+msgstr "URL assoluto sito web"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__website_description
+msgid "Website Description"
+msgstr "Descrizione sito web"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__website_footer
+msgid "Website Footer"
+msgstr "Piè pagina sito web"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__website_url
+msgid "Website URL"
+msgstr "URL sito web"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__website_meta_description
+msgid "Website meta description"
+msgstr "Meta descrizione sito web"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Parole chiave sito web"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__website_meta_title
+msgid "Website meta title"
+msgstr "Meta titolo sito web"
+
+#. module: website_sale_product_brand
+#: model:ir.model.fields,field_description:website_sale_product_brand.field_product_brand__website_meta_og_img
+msgid "Website opengraph image"
+msgstr "Immagine opengraph sito web"
+
+#~ msgid ""
+#~ "<small class=\"mx-auto\">\n"
+#~ "                        <b>Clear Filters</b>\n"
+#~ "                    </small>\n"
+#~ "                    <i class=\"oi oi-close\" role=\"presentation\"/>"
+#~ msgstr ""
+#~ "<small class=\"mx-auto\">\n"
+#~ "                        <b>Pulisci filtri</b>\n"
+#~ "                    </small>\n"
+#~ "                    <i class=\"oi oi-close\" role=\"presentation\"/>"
+
+#~ msgid "Clear Filters"
+#~ msgstr "Pulisci filtri"
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr "L'URL completo per accedere al documento attraverso il sito web."
