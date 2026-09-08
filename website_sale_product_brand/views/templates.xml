@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="brand_filter_items" name="Brand Filter Items">
+        <t t-foreach="brands" t-as="brand">
+            <div class="form-check mb-1">
+                <input
+                    type="checkbox"
+                    name="brand"
+                    class="form-check-input"
+                    t-attf-id="brand_#{brand.id}"
+                    t-att-value="brand.id"
+                    t-att-checked="'checked' if brand.id in selected_brand_ids else None"
+                />
+                <label
+                    class="form-check-label fw-normal"
+                    t-attf-for="brand_#{brand.id}"
+                    t-field="brand.name"
+                />
+            </div>
+        </t>
+    </template>
+
+    <template
+        id="website_sale_filter_brand_products_brands"
+        inherit_id="website_sale.products"
+        name="Brands Filter"
+        active="True"
+        customize_show="True"
+        priority="999"
+    >
+        <xpath
+            expr="//aside[@id='products_grid_before']//div[hasclass('o_wsale_products_grid_before_rail')]"
+            position="inside"
+        >
+            <form
+                t-if="brands or brand_letters"
+                class="js_attributes wsale_accordion_collapsible accordion accordion-flush mb-3"
+                method="get"
+                t-att-action="keep(brand=0, brand_ids=0)"
+                t-att-data-brand-filter-mode="brand_filter_display_mode"
+                t-att-data-search="search or ''"
+                t-att-data-category-id="brand_filter_category_id or ''"
+                t-att-data-brand-limit="brand_filter_limit"
+                t-att-data-brand-letter-limit="brand_letter_limit"
+            >
+                <div class="accordion-item nav-item rounded-0">
+                    <div class="accordion-header h6 mb-0">
+                        <button
+                            class="accordion-button px-0 bg-transparent shadow-none py-1"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            t-attf-data-bs-target="#o_products_attributes_brand"
+                            t-attf-aria-controls="o_products_attributes_brand"
+                            aria-expanded="true"
+                        >
+                            <b>Brand</b>
+                        </button>
+                    </div>
+                    <div
+                        t-attf-id="o_products_attributes_brand"
+                        class="accordion-collapse collapse show pt-2"
+                    >
+                        <t t-if="brand_filter_display_mode in ('list', 'limited')">
+                            <div data-brand-filter-items="">
+                                <t
+                                    t-call="website_sale_product_brand.brand_filter_items"
+                                />
+                            </div>
+                            <button
+                                t-if="brand_filter_display_mode == 'limited' and brand_has_more"
+                                type="button"
+                                class="btn btn-link px-0 py-1 o_wsale_brand_load_more"
+                                t-att-data-offset="brand_next_offset"
+                                t-att-data-exclude-brand-ids="','.join([str(brand.id) for brand in brands])"
+                            >
+                                Show more
+                            </button>
+                        </t>
+                        <t t-if="brand_filter_display_mode == 'letters'">
+                            <div
+                                class="accordion accordion-flush o_wsale_brand_letters"
+                            >
+                                <t t-foreach="brand_letters" t-as="letter_data">
+                                    <div class="accordion-item rounded-0">
+                                        <div class="accordion-header">
+                                            <button
+                                                t-attf-class="accordion-button px-0 py-1 bg-transparent shadow-none #{'' if letter_data['active'] else 'collapsed'}"
+                                                type="button"
+                                                data-bs-toggle="collapse"
+                                                t-attf-data-bs-target="#o_products_brand_letter_#{letter_data['key']}"
+                                                t-attf-aria-controls="o_products_brand_letter_#{letter_data['key']}"
+                                                t-att-aria-expanded="letter_data['active']"
+                                            >
+                                                <span t-out="letter_data['letter']" />
+                                                <span class="text-muted ms-1">
+                                                    (<t t-out="letter_data['count']" />)
+                                                </span>
+                                            </button>
+                                        </div>
+                                        <div
+                                            t-attf-id="o_products_brand_letter_#{letter_data['key']}"
+                                            t-attf-class="accordion-collapse collapse #{'show' if letter_data['active'] else ''}"
+                                            t-att-data-letter="letter_data['letter']"
+                                            data-loaded="0"
+                                        >
+                                            <div data-brand-filter-items="">
+                                                <t
+                                                    t-set="brands"
+                                                    t-value="letter_data['brands']"
+                                                />
+                                                <t
+                                                    t-call="website_sale_product_brand.brand_filter_items"
+                                                />
+                                            </div>
+                                            <button
+                                                type="button"
+                                                class="btn btn-link px-0 py-1 o_wsale_brand_letter_load_more d-none"
+                                                data-offset="0"
+                                            >
+                                                Show more
+                                            </button>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </form>
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale_filter_brand_clear_filters"
+        inherit_id="website_sale.products"
+        name="Clear filters includes brands"
+        active="True"
+        priority="999"
+    >
+        <xpath
+            expr="//aside[@id='products_grid_before']//a[contains(@t-att-href, 'keep(attribute_values=0')]"
+            position="attributes"
+        >
+            <attribute
+                name="t-att-href"
+            >keep(attribute_values=0, tags=0, min_price=0, max_price=0, brand=0, brand_ids=0)</attribute>
+        </xpath>
+        <xpath
+            expr="//aside[@id='products_grid_before']//div[hasclass('py-3', 'border-bottom')][@t-if]"
+            position="attributes"
+        >
+            <attribute
+                name="t-if"
+            >attrib_values or tags or brand_ids or selected_brand_ids or (show_price_filter and isFilteringByPrice)</attribute>
+        </xpath>
+    </template>
+
+    <template
+        id="search_brands"
+        name="Search Box keeps brands"
+        inherit_id="website_sale.search"
+    >
+        <xpath expr="//t[@t-set='action']" position="after">
+            <t t-if="brand_ids">
+                <t t-foreach="brand_ids" t-as="brand">
+                    <input type="hidden" name="brand" t-att-value="brand" />
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale_products_brand_landing"
+        inherit_id="website_sale.products"
+    >
+        <xpath expr="//div[@id='products_grid']/header/h1" position="attributes">
+            <attribute name="t-if">not landing_brand</attribute>
+        </xpath>
+
+        <xpath
+            expr="//div[@id='oe_structure_products_header_shop']"
+            position="attributes"
+        >
+            <attribute name="t-if">not landing_brand</attribute>
+        </xpath>
+
+        <xpath expr="//div[@id='products_grid']/header" position="before">
+            <section
+                t-if="landing_brand"
+                id="brand_landing_header"
+                t-attf-class="o_brand_landing_header mb-4 text-#{landing_brand.align_brand_content}"
+            >
+                <div t-if="landing_brand.cover_image" class="mb-3">
+                    <img
+                        class="img-fluid w-100"
+                        t-att-src="'/web/image/product.brand/%s/cover_image' % landing_brand.id"
+                        t-att-alt="landing_brand.name"
+                    />
+                </div>
+
+                <div
+                    class="d-flex gap-3 align-items-center mb-3"
+                    t-if="landing_brand.show_brand_name and landing_brand.name"
+                >
+                    <h1
+                        t-if="landing_brand.show_brand_name"
+                        class="mb-0"
+                        t-out="landing_brand.name"
+                    />
+                </div>
+
+                <div
+                    t-if="landing_brand.show_brand_description"
+                    id="brand_header"
+                    t-field="landing_brand.website_description"
+                    t-att-data-editor-message="'Drag building blocks here to customize the header for &quot;%s&quot; brand.' % landing_brand.name"
+                />
+            </section>
+        </xpath>
+
+        <xpath expr="//div[@id='o_wsale_pager']" position="after">
+            <section t-if="landing_brand" id="brand_landing_footer" class="mb16">
+                <div>
+                    <div
+                        id="brand_footer"
+                        t-field="landing_brand.website_footer"
+                        t-att-data-editor-message="'Drag building blocks here to customize the footer for &quot;%s&quot; brand.' % landing_brand.name"
+                    />
+                </div>
+            </section>
+        </xpath>
+    </template>
+
+    <template
+        id="product_title_brand_logo"
+        inherit_id="website_sale.product_title"
+        name="Product Page Brand Logo"
+    >
+        <xpath expr="//h1[@t-field='product.name']" position="after">
+            <a
+                t-if="product.product_brand_id and product.product_brand_id.logo"
+                t-att-href="product.product_brand_id.website_url"
+                class="d-inline-block mb-3"
+            >
+                <img
+                    style="max-height: 48px; max-width: 160px; object-fit: contain;"
+                    t-att-src="'/web/image/product.brand/%s/logo/256x256' % product.product_brand_id.id"
+                    t-att-alt="product.product_brand_id.name"
+                    loading="lazy"
+                />
+            </a>
+        </xpath>
+    </template>
+</odoo>
