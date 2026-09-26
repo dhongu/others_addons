@@ -152,7 +152,7 @@
                 <filter
                     name="to_check"
                     string="To check"
-                    domain="[('checked', '=', False)]"
+                    domain="[('review_state', 'in', ('todo', 'anomaly'))]"
                 />
                 <separator />
                 <filter name="date" string="Date" date="date" />
