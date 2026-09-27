@@ -4,7 +4,7 @@
 
 from odoo import api, models
 
-from odoo.addons.base.models.res_bank import sanitize_account_number
+from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 
 
 class AccountJournal(models.Model):
@@ -21,10 +21,16 @@ class AccountJournal(models.Model):
         speeddict = {"account_number": {}}
         partner_banks = self.env["res.partner.bank"].search_read(
             [("company_id", "in", (False, self.company_id.id))],
-            ["acc_number", "partner_id"],
+            ["account_number", "partner_id"],
         )
         for partner_bank in partner_banks:
-            speeddict["account_number"][partner_bank["acc_number"]] = {
+            # Odoo 20 stores valid IBANs formatted with spaces, while the
+            # statement line account number is sanitized in the update hook:
+            # key the dict on the sanitized number so that they match.
+            account_number = self._sanitize_bank_account_number(
+                partner_bank["account_number"]
+            )
+            speeddict["account_number"][account_number] = {
                 "partner_id": partner_bank["partner_id"][0],
                 "partner_bank_id": partner_bank["id"],
             }
