@@ -1,3 +1,8 @@
+## 19.0.2.0.2
+
+- \[FIX\] Job form: the result is shown on the full width of the
+  Results tab instead of a narrow column.
+
 ## Next
 
 - \[ADD\] Run jobrunner as a worker process instead of a thread in the

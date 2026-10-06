@@ -106,7 +106,7 @@
                                 string="Result"
                                 invisible="result == False"
                             >
-                                <field nolabel="1" name="result" />
+                                <field colspan="2" nolabel="1" name="result" />
                             </group>
                             <group
                                 name="exc_info"
