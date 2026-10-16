@@ -29,7 +29,6 @@ class DateRangeType(models.Model):
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         index=1,
         default=lambda self: self._default_company(),
     )
@@ -84,8 +83,9 @@ class DateRangeType(models.Model):
                     continue
                 if bool(
                     rec.date_range_ids.filtered(
-                        lambda r, drt=rec: r.company_id
-                        and r.company_id != drt.company_id
+                        lambda r, drt=rec: (
+                            r.company_id and r.company_id != drt.company_id
+                        )
                     )
                 ):
                     raise ValidationError(
@@ -143,7 +143,7 @@ class DateRangeType(models.Model):
                     continue
                 with self.env.cr.savepoint():
                     wizard.action_apply(batch=True)
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 logger.warning(
                     f"Error autogenerating ranges for date range type "
                     f"{dr_type.name}: {e}"
