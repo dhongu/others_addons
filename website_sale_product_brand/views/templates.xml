@@ -28,15 +28,21 @@
         customize_show="True"
         priority="999"
     >
+        <xpath expr="//t[@t-set='hasLeftColumn']" position="after">
+            <t
+                t-set="hasLeftColumn"
+                t-value="hasLeftColumn or bool(brands or brand_letters)"
+            />
+        </xpath>
         <xpath
-            expr="//aside[@id='products_grid_before']//div[hasclass('o_wsale_products_grid_before_rail')]"
-            position="inside"
+            expr="//aside[@id='products_grid_before']//div[contains(@t-attf-class, 'products_attributes_filters')]"
+            position="after"
         >
             <form
                 t-if="brands or brand_letters"
-                class="js_attributes wsale_accordion_collapsible accordion accordion-flush mb-3"
+                class="js_attributes o_wsale_brand_filter wsale_accordion_collapsible accordion accordion-flush mb-3"
                 method="get"
-                t-att-action="keep(brand=0, brand_ids=0)"
+                t-att-action="keep(shop_path if landing_brand else None, brand=0)"
                 t-att-data-brand-filter-mode="brand_filter_display_mode"
                 t-att-data-search="search or ''"
                 t-att-data-category-id="brand_filter_category_id or ''"
@@ -137,35 +143,33 @@
         active="True"
         priority="999"
     >
-        <xpath
-            expr="//aside[@id='products_grid_before']//a[contains(@t-att-href, 'keep(attribute_values=0')]"
-            position="attributes"
-        >
-            <attribute
-                name="t-att-href"
-            >keep(attribute_values=0, tags=0, min_price=0, max_price=0, brand=0, brand_ids=0)</attribute>
+        <xpath expr="//t[@t-set='has_active_filters']" position="after">
+            <t
+                t-set="has_active_filters"
+                t-value="has_active_filters or (selected_brand_ids and not landing_brand)"
+            />
         </xpath>
         <xpath
-            expr="//aside[@id='products_grid_before']//div[hasclass('py-3', 'border-bottom')][@t-if]"
+            expr="//aside[@id='products_grid_before']//div[@t-if='has_active_filters']/a"
             position="attributes"
         >
-            <attribute
-                name="t-if"
-            >attrib_values or tags or brand_ids or selected_brand_ids or (show_price_filter and isFilteringByPrice)</attribute>
+            <attribute name="t-att-href">keep(brand=0, **reset_filters)</attribute>
         </xpath>
     </template>
 
     <template
-        id="search_brands"
-        name="Search Box keeps brands"
-        inherit_id="website_sale.search"
+        id="website_sale_offcanvas_brand_clear_filters"
+        inherit_id="website_sale.o_wsale_offcanvas"
+        name="Clear filters (mobile) includes brands"
     >
-        <xpath expr="//t[@t-set='action']" position="after">
-            <t t-if="brand_ids">
-                <t t-foreach="brand_ids" t-as="brand">
-                    <input type="hidden" name="brand" t-att-value="brand" />
-                </t>
-            </t>
+        <xpath expr="//t[@t-set='has_active_filters']" position="after">
+            <t
+                t-set="has_active_filters"
+                t-value="has_active_filters or (selected_brand_ids and not landing_brand)"
+            />
+        </xpath>
+        <xpath expr="//a[@t-att-href='keep(**reset_filters)']" position="attributes">
+            <attribute name="t-att-href">keep(brand=0, **reset_filters)</attribute>
         </xpath>
     </template>
 
@@ -173,8 +177,10 @@
         id="website_sale_products_brand_landing"
         inherit_id="website_sale.products"
     >
-        <xpath expr="//div[@id='products_grid']/header/h1" position="attributes">
-            <attribute name="t-if">not landing_brand</attribute>
+        <xpath expr="//div[hasclass('o_wsale_shop_title')]" position="attributes">
+            <attribute
+                name="t-if"
+            >not category and not search and not landing_brand</attribute>
         </xpath>
 
         <xpath

@@ -2,8 +2,7 @@
 <odoo>
     <!-- Page template for displaying Brands -->
     <template id="product_brands" name="Brands">
-        <t t-call="website.layout">
-            <t t-set="additional_title">Product Brands</t>
+        <t t-call="website.layout" additional_title.translate="Product Brands">
             <div id="wrap" t-attf-class="wrapper">
                 <div class="container">
                     <div class="row">
@@ -50,7 +49,7 @@
                                                 t-att-alt="o.name"
                                             />
                                             <div class="card-body border-0">
-                                                <span t-esc="o.name" />
+                                                <span t-out="o.name" />
                                             </div>
                                         </a>
                                     </div>

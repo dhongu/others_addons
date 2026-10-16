@@ -1,8 +1,9 @@
-import {WebsiteSale} from "@website_sale/interactions/website_sale";
+import {ShopPage} from "@website_sale/interactions/shop_page";
 import {patch} from "@web/core/utils/patch";
+import {redirect} from "@web/core/utils/urls";
 import {rpc} from "@web/core/network/rpc";
 
-patch(WebsiteSale.prototype, {
+patch(ShopPage.prototype, {
     start() {
         super.start(...arguments);
         this.setupBrandFilter();
@@ -13,22 +14,22 @@ patch(WebsiteSale.prototype, {
         if (!this.brandFilterForm) {
             return;
         }
+        // The core change handler is bound to the inputs present at start: the
+        // brands loaded later ("Show more", letters) are handled here.
+        const initialInputs = new Set(this.brandFilterForm.querySelectorAll("input"));
+        this.addListener(this.brandFilterForm, "change", (ev) => {
+            if (ev.target.matches("input[name='brand']") && !initialInputs.has(ev.target)) {
+                return this.onChangeAttribute({currentTarget: ev.target});
+            }
+        });
         const loadMoreButton = this.brandFilterForm.querySelector(
             ".o_wsale_brand_load_more"
         );
         if (loadMoreButton) {
-            this.onBrandLoadMore = this.loadMoreBrands.bind(this);
-            loadMoreButton.addEventListener("click", this.onBrandLoadMore);
-            this.registerCleanup(() =>
-                loadMoreButton.removeEventListener("click", this.onBrandLoadMore)
-            );
+            this.addListener(loadMoreButton, "click", this.loadMoreBrands);
         }
-        this.onBrandLetterShown = this.loadBrandLetter.bind(this);
         for (const letter of this.brandFilterForm.querySelectorAll("[data-letter]")) {
-            letter.addEventListener("shown.bs.collapse", this.onBrandLetterShown);
-            this.registerCleanup(() =>
-                letter.removeEventListener("shown.bs.collapse", this.onBrandLetterShown)
-            );
+            this.addListener(letter, "shown.bs.collapse", this.loadBrandLetter);
         }
         for (const openedLetter of this.brandFilterForm.querySelectorAll(
             "[data-letter].show"
@@ -39,10 +40,16 @@ patch(WebsiteSale.prototype, {
 
     getBrandRpcParams(extraParams = {}) {
         const url = new URL(window.location.href);
+        const attributeValues = {};
+        for (const [key, value] of url.searchParams.entries()) {
+            if (!["brand", "brand_ids", "search", "order", "page"].includes(key)) {
+                attributeValues[key] = value;
+            }
+        }
         return {
             search: this.brandFilterForm.dataset.search || "",
             category_id: this.brandFilterForm.dataset.categoryId || false,
-            attribute_values: url.searchParams.getAll("attribute_values"),
+            attribute_values: attributeValues,
             brand_ids: [
                 ...url.searchParams.getAll("brand"),
                 ...url.searchParams.getAll("brand_ids"),
@@ -101,9 +108,9 @@ patch(WebsiteSale.prototype, {
         if (button && result.has_more) {
             button.dataset.offset = result.next_offset;
             button.classList.remove("d-none");
-            const onClick = (clickEv) => this.loadMoreBrandLetter(clickEv, panel);
-            button.addEventListener("click", onClick);
-            this.registerCleanup(() => button.removeEventListener("click", onClick));
+            this.addListener(button, "click", (clickEv) =>
+                this.loadMoreBrandLetter(clickEv, panel)
+            );
         }
     },
 
@@ -134,53 +141,53 @@ patch(WebsiteSale.prototype, {
         }
     },
 
-    onChangeAttribute(ev) {
-        const container =
-            ev.currentTarget.closest(".o_wsale_products_grid_before_rail") ||
-            ev.currentTarget.closest(".oe_website_sale") ||
-            document;
-        const filters = container.querySelectorAll(
-            "form.js_attributes input:checked, form.js_attributes select"
-        );
-        const attributeValues = new Map();
-        const tags = new Set();
-        const brands = new Set();
-        for (const filter of filters) {
-            if (!filter.value) {
-                continue;
-            }
-            if (filter.name === "attribute_value") {
-                const [attributeId, attributeValueId] = filter.value.split("-");
-                const valueIds = attributeValues.get(attributeId) ?? new Set();
-                valueIds.add(attributeValueId);
-                attributeValues.set(attributeId, valueIds);
-            } else if (filter.name === "tags") {
-                tags.add(filter.value);
-            } else if (filter.name === "brand") {
-                brands.add(filter.value);
-            }
+    /**
+     * On a brand landing page, changing the brands leaves the landing page
+     * (its header is not part of the AJAX shop reload): full page load of the
+     * filtered shop.
+     *
+     * @override
+     */
+    async onChangeAttribute(ev) {
+        const form = ev.currentTarget.closest("form");
+        if (
+            form?.matches("[data-brand-filter-mode]") &&
+            this.el.querySelector("#brand_landing_header")
+        ) {
+            const url = new URL(form.action);
+            redirect(`${url.pathname}?${this._getSearchParams(form).toString()}`);
+            return;
         }
-        const url = new URL(window.location.href);
-        const searchParams = url.searchParams;
-        searchParams.delete("attribute_values");
-        searchParams.delete("tags");
+        return super.onChangeAttribute(...arguments);
+    },
+
+    /**
+     * The brand checkboxes live in their own `form.js_attributes`: the core
+     * handler only reads the inputs of the changed form, so for the brand form
+     * we keep the other filters from its action (`keep(brand=0)`) and add the
+     * checked brands as a single comma separated `brand` param (the shop
+     * reload RPC receives the search params as an object).
+     *
+     * @override
+     */
+    _getSearchParams(form) {
+        if (!form.matches("[data-brand-filter-mode]")) {
+            return super._getSearchParams(...arguments);
+        }
+        const searchParams = new URL(form.action).searchParams;
         searchParams.delete("brand");
         searchParams.delete("brand_ids");
         searchParams.delete("page");
-
-        for (const entry of attributeValues.entries()) {
-            searchParams.append(
-                "attribute_values",
-                `${entry[0]}-${[...entry[1]].join(",")}`
-            );
+        const brandIds = [
+            ...new Set(
+                Array.from(form.querySelectorAll("input[name='brand']:checked"))
+                    .map((input) => input.value)
+                    .filter(Boolean)
+            ),
+        ];
+        if (brandIds.length) {
+            searchParams.set("brand", brandIds.join(","));
         }
-        if (tags.size) {
-            searchParams.set("tags", [...tags].join(","));
-        }
-        for (const brandId of brands) {
-            searchParams.append("brand", brandId);
-        }
-
-        window.location.assign(`${url.pathname}?${searchParams.toString()}`);
+        return searchParams;
     },
 });

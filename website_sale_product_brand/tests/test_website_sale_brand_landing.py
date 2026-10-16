@@ -106,3 +106,41 @@ class TestWebsiteSaleBrandLandingHttp(HttpCase):
         )
         self.assertIn("/shop/brand/", response.url)
         self.assertIn("search=test", response.url)
+
+    def test_shop_brand_param_filters_products(self):
+        self.authenticate(None, None)
+        response = self.url_open(f"/shop?brand={self.brand_visible.id}")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Brand Product", response.text)
+        self.assertNotIn("Other Product", response.text)
+
+    def test_shop_reload_keeps_brand_filter(self):
+        """Odoo 20 filters the shop through the `/shop/reload` RPC: the brand
+        is sent as a (comma separated) param and must filter the products."""
+        self.authenticate(None, None)
+        result = self.make_jsonrpc_request(
+            "/shop/reload", {"brand": str(self.brand_visible.id)}
+        )
+        self.assertIn("Brand Product", result["html"])
+        self.assertNotIn("Other Product", result["html"])
+        self.assertEqual(result["product_count"], 1)
+
+    def test_landing_pager_stays_on_landing_page(self):
+        self.env["website"].browse(1).shop_ppg = 1
+        self.Product.create(
+            {
+                "name": "Brand Product 2",
+                "type": "consu",
+                "list_price": 16.0,
+                "website_published": True,
+                "sale_ok": True,
+                "product_brand_id": self.brand_visible.id,
+            }
+        )
+        self.authenticate(None, None)
+        response = self.url_open(self.brand_visible.website_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(f"{self.brand_visible.website_url}/page/2", response.text)
+        response = self.url_open(f"{self.brand_visible.website_url}/page/2")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Visible brand content", response.text)

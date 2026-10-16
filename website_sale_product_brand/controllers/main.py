@@ -1,17 +1,14 @@
 # © 2016 Serpent Consulting Services Pvt. Ltd. (http://www.serpentcs.com)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
 
-from odoo import http
 from odoo.fields import Domain
-from odoo.http import request
+from odoo.http import request, route
 
+from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_sale.const import SHOP_PATH
-from odoo.addons.website_sale.controllers.main import (
-    QueryURL,
-)
 from odoo.addons.website_sale.controllers.main import (
     WebsiteSale as WebsiteSaleBase,
 )
@@ -22,18 +19,29 @@ class WebsiteSale(WebsiteSaleBase):
     BRAND_LETTER_LIMIT = 50
 
     def _as_int_list(self, values):
-        return [int(value) for value in values if str(value).isdigit()]
+        """Return the brand ids found in ``values``.
+
+        Values can be ids, digit strings or comma separated digit strings
+        (``brand=1,2``: the shop filters are sent as a single query param on
+        Odoo 20, like the tags)."""
+        if values is None or isinstance(values, (int, str)):
+            values = [values]
+        ids = []
+        for value in values:
+            for part in str(value or "").split(","):
+                part = part.strip()
+                if part.isdigit() and int(part) not in ids:
+                    ids.append(int(part))
+        return ids
 
     def _get_brand_from_query(self, query_args, fallback_brand=None):
         brand_value = (
             query_args.get("brand") or query_args.get("brand_ids") or fallback_brand
         )
-        if isinstance(brand_value, (list, tuple)):
-            brand_value = brand_value[0] if brand_value else None
-        brand_id = int(brand_value) if str(brand_value).isdigit() else None
-        if not brand_id:
+        brand_ids = self._as_int_list(brand_value)
+        if not brand_ids:
             return request.env["product.brand"]
-        return request.env["product.brand"].browse(brand_id)
+        return request.env["product.brand"].browse(brand_ids[0])
 
     def _get_brand_from_slug(self, brand_slug):
         brand_id = request.env["ir.http"]._unslug(brand_slug)[1]
@@ -50,12 +58,13 @@ class WebsiteSale(WebsiteSaleBase):
             delattr(request, "_website_sale_brand")
 
     def _brand_visible_on_website(self, brand):
-        if not (brand and brand.website_published):
+        brand = brand.sudo().exists()
+        if not (brand and brand.is_published):
             return False
-        return brand.can_access_from_current_website()
+        return brand.website_id.id in (False, request.env.website.id)
 
-    def sitemap_brands(env, rule, qs):
-        website = env["website"].get_current_website()
+    def sitemap_brands(env, rule, qs):  # noqa: N805
+        website = env.website
         if website and website.ecommerce_access == "logged_in" and not qs:
             return
 
@@ -66,15 +75,6 @@ class WebsiteSale(WebsiteSaleBase):
             loc = f"{SHOP_PATH}/brand/{env['ir.http']._slug(brand)}"
             if not qs or qs.lower() in loc:
                 yield {"loc": loc}
-
-    def _get_shop_path(self, category=None, page=0):
-        path = WebsiteSaleBase._get_shop_path(category=category, page=page)
-        brand = self._get_current_brand()
-        if brand:
-            path = f"{SHOP_PATH}/brand/{request.env['ir.http']._slug(brand)}"
-            if page:
-                path += f"/page/{page}"
-        return path
 
     def _update_domain(self, brands_list, domain):
         selected_brand_ids = self._as_int_list(brands_list)
@@ -92,6 +92,8 @@ class WebsiteSale(WebsiteSaleBase):
         return domain_no_brand + [("product_brand_id", "in", selected_brand_ids)]
 
     def _get_brand_ids(self, req):
+        if not hasattr(req, "getlist"):
+            return []
         raw_brand_ids = req.getlist("brand") or req.getlist("brand_ids") or []
         return self._as_int_list(raw_brand_ids)
 
@@ -106,7 +108,9 @@ class WebsiteSale(WebsiteSaleBase):
         brand_model = request.env["product.brand"].sudo()
         domain = brand_model._website_public_domain()
         if not products:
-            domain = Domain.AND([domain, [("id", "in", selected_brand_ids)]])
+            domain = Domain.AND(
+                [domain, [("id", "in", self._as_int_list(selected_brand_ids))]]
+            )
         elif search or category:
             domain = Domain.AND([domain, [("product_ids", "in", search_products.ids)]])
         return brand_model.search(domain).filtered(
@@ -192,7 +196,7 @@ class WebsiteSale(WebsiteSaleBase):
         return [letters[letter] for letter in sorted(letters)]
 
     def _get_brand_filter_values(self, domain, selected_brand_ids):
-        mode = request.website.brand_filter_display_mode
+        mode = request.env.website.brand_filter_display_mode
         brands, brand_counts = self._get_available_brands(domain, selected_brand_ids)
         values = {
             "brand_filter_display_mode": mode,
@@ -226,10 +230,24 @@ class WebsiteSale(WebsiteSaleBase):
         return values
 
     def _get_brand_rpc_domain(self, search="", category_id=None, attribute_values=None):
+        """Shop domain without the brand filter, for the brand filter RPCs.
+
+        ``attribute_values`` is the dict of the shop attribute query params
+        (``{"color-1": "red-2,blue-3"}``, Odoo 20) or a list in the legacy
+        ``["<attribute_id>-<value_id>,<value_id>"]`` format."""
         category = None
         if category_id:
             category = request.env["product.public.category"].browse(int(category_id))
-        attribute_value_dict = self._get_attribute_value_dict(attribute_values or [])
+        attribute_values = attribute_values or {}
+        if isinstance(attribute_values, (list, tuple)):
+            attribute_values = dict(
+                pair.split("-")
+                for pair in attribute_values
+                if pair and pair.count("-") == 1
+            )
+        else:
+            attribute_values = self._get_attribute_value_params(attribute_values)
+        attribute_value_dict = self._get_attribute_value_dict(attribute_values)
         return self._get_shop_domain_no_brands(
             search,
             category,
@@ -238,11 +256,7 @@ class WebsiteSale(WebsiteSaleBase):
         )
 
     def _get_selected_brand_ids_from_request(self, brand_ids=None):
-        return [
-            int(brand_id)
-            for brand_id in brand_ids or []
-            if brand_id and str(brand_id).isdigit()
-        ]
+        return self._as_int_list(brand_ids or [])
 
     def _render_brand_items(self, brands, selected_brand_ids):
         return request.env["ir.ui.view"]._render_template(
@@ -254,13 +268,19 @@ class WebsiteSale(WebsiteSaleBase):
         )
 
     def _get_shop_domain_no_brands(
-        self, search, category, attribute_value_dict, search_in_description
+        self,
+        search,
+        category,
+        attribute_value_dict,
+        search_in_description,
+        tags=None,
     ):
         return super()._get_shop_domain(
             search,
             category,
             attribute_value_dict,
             search_in_description=search_in_description,
+            tags=tags,
         )
 
     def _remove_extra_brands(self, brands, search_products, attrib_values):
@@ -293,13 +313,19 @@ class WebsiteSale(WebsiteSaleBase):
         return res
 
     def _get_shop_domain(
-        self, search, category, attribute_value_dict, search_in_description=True
+        self,
+        search,
+        category,
+        attribute_value_dict,
+        search_in_description=True,
+        tags=None,
     ):
         domain = super()._get_shop_domain(
             search,
             category,
             attribute_value_dict,
             search_in_description=search_in_description,
+            tags=tags,
         )
         brand_ids = request.env.context.get("brand_ids") or self._get_brand_ids(
             request.httprequest.args
@@ -307,6 +333,14 @@ class WebsiteSale(WebsiteSaleBase):
         if brand_ids:
             domain = Domain.AND([domain, [("product_brand_id", "in", brand_ids)]])
         return domain
+
+    def _shop_get_query_url_kwargs(self, search, min_price, max_price, **kwargs):
+        """Keep the selected brands in the shop links (pager, sort, filters...)."""
+        res = super()._shop_get_query_url_kwargs(search, min_price, max_price, **kwargs)
+        brand_ids = request.env.context.get("brand_ids")
+        if brand_ids:
+            res["brand"] = ",".join(str(brand_id) for brand_id in brand_ids)
+        return res
 
     def _redirect_shop_brands_to_landing(self, fallback_brand=None):
         """
@@ -337,19 +371,21 @@ class WebsiteSale(WebsiteSaleBase):
             target = f"{target}?{query}"
         return request.redirect(target, code=301)
 
-    @http.route(
-        [
-            "/shop",
-            "/shop/page/<int:page>",
-            '/shop/category/<model("product.public.category"):category>',
-            '/shop/category/<model("product.public.category"):category'
-            ">/page/<int:page>",  # Continue previous line
-            "/shop/brands",
-        ],
-        type="http",
-        auth="public",
-        website=True,
-    )
+    def _get_landing_brand_from_referrer(self, brand_ids):
+        """On `/shop/reload` (AJAX filtering), detect that the page being
+        filtered is a brand landing page, to keep its header."""
+        if request.httprequest.path != "/shop/reload" or len(brand_ids) != 1:
+            return request.env["product.brand"]
+        referrer = request.httprequest.referrer or ""
+        path = urlsplit(referrer).path
+        if not path.startswith(f"{SHOP_PATH}/brand/"):
+            return request.env["product.brand"]
+        brand = self._get_brand_from_slug(path.split("/")[3])
+        if brand.id != brand_ids[0] or not self._brand_visible_on_website(brand):
+            return request.env["product.brand"]
+        return brand
+
+    @route()
     def shop(
         self,
         page=0,
@@ -357,79 +393,87 @@ class WebsiteSale(WebsiteSaleBase):
         search="",
         min_price=0.0,
         max_price=0.0,
-        ppg=False,
+        tags="",
+        on_sale=None,
+        in_stock=None,
         brand=None,
         **post,
     ):
-        redirect_response = self._redirect_shop_brands_to_landing(brand)
-        if redirect_response is not None:
-            return redirect_response
-
-        brands_list = self._get_brand_ids(request.httprequest.args)
+        brands_list = self._as_int_list(
+            self._get_brand_ids(request.httprequest.args) + self._as_int_list(brand)
+        )
         if brands_list:
             request.update_context(brand_ids=brands_list)
-        elif brand:
-            fallback_brand_ids = self._as_int_list([brand])
-            if fallback_brand_ids:
-                request.update_context(brand_ids=fallback_brand_ids)
+            # keep the brands in the pager links (built from ``post``)
+            post["brand"] = ",".join(str(brand_id) for brand_id in brands_list)
         res = super().shop(
             page=page,
             category=category,
             search=search,
             min_price=min_price,
             max_price=max_price,
-            ppg=ppg,
-            brand=brand,
+            tags=tags,
+            on_sale=on_sale,
+            in_stock=in_stock,
             **post,
         )
-        qcontext = getattr(res, "qcontext", None) or {}
-        attrib_values = qcontext.get("attrib_values")
-        products = qcontext.get("products")
-        if attrib_values is None or products is None:
+        qcontext = getattr(res, "qcontext", None)
+        if not qcontext or qcontext.get("products") is None:
             return res
-        attribute_values = request.httprequest.args.getlist("attribute_values")
-        if attribute_values:
-            post["attribute_values"] = attribute_values
         domain = self._get_shop_domain_no_brands(
-            search, category, attrib_values, search_in_description=False
+            qcontext.get("search") or "",
+            qcontext.get("category"),
+            qcontext.get("attrib_values") or {},
+            search_in_description=False,
         )
-        product_query = request.env["product.template"]._search(domain)
-        # build brands list
-        selected_brand_ids = brands_list
-        # use search() domain instead of mapped() for better performance:
-        # will basically search for product's related attribute values
-        attrib_valid_ids = (
-            request.env["product.attribute.value"]
-            .search(
-                [
-                    "&",
-                    (
-                        "pav_attribute_line_ids.product_tmpl_id",
-                        "in",
-                        product_query,
-                    ),
-                    ("pav_attribute_line_ids.value_ids", "!=", False),
-                ]
-            )
-            .ids
-        )
-        keep = qcontext.get("keep")
-        if keep and hasattr(keep, "args"):
-            keep.args["brand"] = brands_list
-            keep.args["brand_ids"] = selected_brand_ids
-        # assign values for usage in qweb
+        current_category = qcontext.get("category")
         qcontext.update(
             {
-                "selected_brand_ids": selected_brand_ids,
-                "attr_valid": attrib_valid_ids,
-                "brand_filter_category_id": category.id if category else False,
-                "brand_filter_attribute_values": attribute_values,
-                **self._get_brand_filter_values(domain, selected_brand_ids),
+                "selected_brand_ids": brands_list,
+                "brand_filter_category_id": current_category.id
+                if current_category
+                else False,
+                **self._get_brand_filter_values(domain, brands_list),
             }
         )
+        landing_brand = self._get_landing_brand_from_referrer(brands_list)
+        if landing_brand and "landing_brand" not in qcontext:
+            qcontext.update(
+                {"landing_brand": landing_brand, "main_object": landing_brand}
+            )
         return res
 
-    @http.route(
+    @route(["/shop/brands"], type="http", auth="public", website=True, sitemap=False)
+    def shop_brands(self, brand=None, **post):
+        redirect_response = self._redirect_shop_brands_to_landing(brand)
+        if redirect_response is not None:
+            return redirect_response
+        return self.shop(brand=brand, **post)
+
+    def _landing_url(self, url, brand):
+        """Move a shop URL (pager link) onto the brand landing page."""
+        if not isinstance(url, str):
+            return url
+        path, sep, query = url.partition("?")
+        if path == SHOP_PATH or path.startswith(f"{SHOP_PATH}/page/"):
+            path = brand.website_url + path[len(SHOP_PATH) :]
+        return f"{path}{sep}{query}"
+
+    def _set_landing_links(self, qcontext, brand):
+        pager = qcontext.get("pager")
+        if pager:
+            for value in pager.values():
+                entries = value if isinstance(value, list) else [value]
+                for entry in entries:
+                    if isinstance(entry, dict) and "url" in entry:
+                        entry["url"] = self._landing_url(entry["url"], brand)
+        keep = qcontext.get("keep")
+        if isinstance(keep, QueryURL) and keep.path == SHOP_PATH:
+            qcontext["keep"] = QueryURL(
+                brand.website_url, path_args=keep.path_args, **keep.args
+            )
+
+    @route(
         [
             f"{SHOP_PATH}/brand/<string:brand_slug>",
             f"{SHOP_PATH}/brand/<string:brand_slug>/page/<int:page>",
@@ -451,21 +495,23 @@ class WebsiteSale(WebsiteSaleBase):
     ):
         brand = self._get_brand_from_slug(brand_slug)
 
-        if not request.website.has_ecommerce_access():
+        if not request.env.website.has_ecommerce_access():
             return request.redirect(f"/web/login?redirect={request.httprequest.path}")
         if not self._brand_visible_on_website(brand):
             raise request.not_found()
 
         self._set_current_brand(brand)
-        request.update_context(brand_ids=[brand.id])
+        post.pop("brand", None)
+        post.pop("brand_ids", None)
         try:
-            response = super().shop(
+            response = self.shop(
                 page=page,
                 category=None,
                 search=search,
                 min_price=min_price,
                 max_price=max_price,
                 tags=tags,
+                brand=str(brand.id),
                 **post,
             )
             if hasattr(response, "qcontext"):
@@ -475,11 +521,12 @@ class WebsiteSale(WebsiteSaleBase):
                         "main_object": brand,
                     }
                 )
+                self._set_landing_links(response.qcontext, brand)
             return response
         finally:
             self._clear_current_brand()
 
-    @http.route(
+    @route(
         ["/shop/brand_filter/load_more"],
         type="jsonrpc",
         auth="public",
@@ -511,7 +558,7 @@ class WebsiteSale(WebsiteSaleBase):
             "next_offset": int(offset) + limit,
         }
 
-    @http.route(
+    @route(
         ["/shop/brand_filter/load_letter"],
         type="jsonrpc",
         auth="public",
@@ -546,7 +593,7 @@ class WebsiteSale(WebsiteSaleBase):
         }
 
     # Method to get the brands.
-    @http.route(["/page/product_brands"], type="http", auth="public", website=True)
+    @route(["/page/product_brands"], type="http", auth="public", website=True)
     def product_brands(self, **post):
         product_brand = request.env["product.brand"]
         domain = product_brand._website_public_domain()

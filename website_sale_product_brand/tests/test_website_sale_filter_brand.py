@@ -1,6 +1,5 @@
 from unittest.mock import patch
 
-from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.wrappers import Response
 
 from odoo import Command
@@ -64,6 +63,9 @@ class TestWebsiteSaleFilterBrandHttpCase(HttpCase):
 
 
 class WebsiteSale(BaseCommon):
+    # the tests configure websites and publish brands: run them as admin
+    _test_user_groups = ()
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -181,8 +183,6 @@ class WebsiteSale(BaseCommon):
             self.env,
             website=self.website,
         ):
-            request.httprequest.args = OrderedMultiDict([("attribute_values", "1")])
-
             with patch(
                 "odoo.addons.website_sale.controllers.main.WebsiteSale.shop"
             ) as mock_shop:
@@ -190,26 +190,45 @@ class WebsiteSale(BaseCommon):
                 res1 = self.WebsiteSaleController.shop(brand=str(self.brand.id))
                 self.assertEqual(request.env.context.get("brand_ids"), [self.brand.id])
                 self.assertEqual(res1.status_code, 200)
-
-                class KeepMock:
-                    args = {}
-
-                keep_mock = KeepMock()
-                mock_shop.return_value = MockResponse(
-                    qcontext={
-                        "attrib_values": [],
-                        "products": self.product,
-                        "keep": keep_mock,
-                    }
+                # the brands are kept in ``post`` for the pager links
+                self.assertEqual(
+                    mock_shop.call_args.kwargs.get("brand"), str(self.brand.id)
                 )
+
+                # the route wrapper re-wraps the response: check the qcontext
+                # dict updated in place
+                qcontext = {
+                    "attrib_values": {},
+                    "products": self.product,
+                    "category": self.env["product.public.category"],
+                }
+                mock_shop.return_value = MockResponse(qcontext=qcontext)
                 with patch.object(
                     self.WebsiteSaleController, "_get_shop_domain_no_brands"
                 ) as mock_domain:
                     mock_domain.return_value = [("id", "in", self.product.ids)]
-                    res2 = self.WebsiteSaleController.shop(brand=str(self.brand.id))
-                    self.assertEqual(keep_mock.args.get("brand"), [])
+                    res2 = self.WebsiteSaleController.shop(
+                        brand=f"{self.brand.id},{self.global_brand.id}"
+                    )
                     self.assertEqual(res2.status_code, 200)
-                    return True
+                    self.assertEqual(
+                        qcontext["selected_brand_ids"],
+                        [self.brand.id, self.global_brand.id],
+                    )
+                    self.assertIn(self.brand, qcontext["brands"])
+                    self.assertFalse(qcontext["brand_filter_category_id"])
+
+    def test_as_int_list(self):
+        controller = self.WebsiteSaleController
+        self.assertEqual(controller._as_int_list("1,2, 3"), [1, 2, 3])
+        self.assertEqual(controller._as_int_list(["4", "x", 4, "5,6"]), [4, 5, 6])
+        self.assertEqual(controller._as_int_list(None), [])
+
+    def test_query_url_kwargs_keep_brands(self):
+        with MockRequest(self.env, website=self.website):
+            request.update_context(brand_ids=[self.brand.id, self.global_brand.id])
+            kwargs = self.WebsiteSaleController._shop_get_query_url_kwargs("", 0.0, 0.0)
+        self.assertEqual(kwargs["brand"], f"{self.brand.id},{self.global_brand.id}")
 
     def test_product_brands_controller(self):
         self.brand.website_published = True

@@ -60,7 +60,7 @@ class ProductBrand(models.Model):
 
     @api.model
     def _website_scope_domain(self, website=None):
-        website = website or self.env["website"].get_current_website()
+        website = website or self.env.website
         website_id = website.id if website else False
         return Domain.OR(
             [
@@ -104,7 +104,7 @@ class ProductBrand(models.Model):
             "search_fields": search_fields,
             "fetch_fields": fetch_fields,
             "mapping": mapping,
-            "icon": "fa-tags",
+            "icon": "sell",
             "order": "name desc, id desc"
             if "name desc" in order
             else "name asc, id desc",
