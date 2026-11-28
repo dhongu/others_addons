@@ -10,7 +10,7 @@ class AuditlogLog(models.Model):
     _description = "Auditlog - Log"
     _order = "create_date desc"
 
-    name = fields.Char("Resource Name", size=64)
+    name = fields.Char("Resource Name")
     model_id = fields.Many2one("ir.model", index=True, ondelete="set null")
     model_name = fields.Char(readonly=True)
     model_model = fields.Char(string="Technical Model Name", readonly=True)

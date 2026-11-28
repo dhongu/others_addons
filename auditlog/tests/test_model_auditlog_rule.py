@@ -7,20 +7,24 @@ from odoo.addons.base.tests.common import BaseCommon
 
 
 class TestModelAuditlogRule(BaseCommon):
+    _test_user_groups = ("base.group_user", "auditlog.group_auditlog_manager")
+
     def test_model_required(self):
         """Model is required, but not as a field property."""
         model_id = self.env.ref("base.model_res_groups").id
         # Test create
-        with self.assertRaisesRegex(
-            UserError,
-            "No model defined to create line",
+        with (
+            self.assertRaisesRegex(
+                UserError,
+                "No model defined to create line",
+            ),
+            self.env.cr.savepoint(),
         ):
-            with self.env.cr.savepoint():
-                self.env["auditlog.rule"].create(
-                    {
-                        "name": "Test rule",
-                    },
-                )
+            self.env["auditlog.rule"].create(
+                {
+                    "name": "Test rule",
+                },
+            )
         rule = self.env["auditlog.rule"].create(
             {
                 "name": "Test rule",
@@ -28,9 +32,11 @@ class TestModelAuditlogRule(BaseCommon):
             },
         )
         # Test write
-        with self.assertRaisesRegex(
-            UserError,
-            "'model_id' cannot be empty",
+        with (
+            self.assertRaisesRegex(
+                UserError,
+                "'model_id' cannot be empty",
+            ),
+            self.env.cr.savepoint(),
         ):
-            with self.env.cr.savepoint():
-                rule.model_id = False
+            rule.model_id = False
